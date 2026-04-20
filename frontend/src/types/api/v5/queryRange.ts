@@ -37,9 +37,6 @@ export type FieldType =
 	| 'instrumentation_library'
 	| 'span';
 
-// Broader than the user-typeable context prefixes the filter autocomplete
-// surfaces — carries backend-only contexts that appear on query-range
-// responses: `metric`, `trace`, `event`, and the empty string.
 export type FieldContext =
 	| 'metric'
 	| 'log'

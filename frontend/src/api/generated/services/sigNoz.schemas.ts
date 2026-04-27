@@ -7045,6 +7045,10 @@ export interface RuletypesPlannedMaintenanceDTO {
 	/**
 	 * @type string
 	 */
+	labelExpression?: string;
+	/**
+	 * @type string
+	 */
 	name: string;
 	schedule: RuletypesScheduleDTO;
 	status: RuletypesMaintenanceStatusDTO;
@@ -7069,6 +7073,10 @@ export interface RuletypesPostablePlannedMaintenanceDTO {
 	 * @type string
 	 */
 	description?: string;
+	/**
+	 * @type string
+	 */
+	labelExpression?: string;
 	/**
 	 * @type string
 	 */

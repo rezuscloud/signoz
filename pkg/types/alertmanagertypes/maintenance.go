@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/expr-lang/expr"
-	"github.com/prometheus/alertmanager/api/v2/models"
 	"github.com/prometheus/common/model"
 	"github.com/uptrace/bun"
 
@@ -218,10 +217,10 @@ func (m *PlannedMaintenance) isScheduleActive(now time.Time) bool {
 
 // evalLabelExpression compiles and runs the expression against the provided labels.
 // Returns false on any error (safety-first: don't suppress on a bad expression).
-func evalLabelExpression(expression string, lset models.LabelSet) bool {
+func evalLabelExpression(expression string, lset model.LabelSet) bool {
 	env := make(map[string]interface{}, len(lset))
 	for k, v := range lset {
-		env[k] = v
+		env[string(k)] = string(v)
 	}
 	program, err := expr.Compile(expression, expr.Env(env), expr.AllowUndefinedVariables())
 	if err != nil {

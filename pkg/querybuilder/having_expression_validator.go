@@ -1,13 +1,38 @@
 package querybuilder
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
-	"github.com/SigNoz/signoz/pkg/errors"
+	errors "github.com/SigNoz/signoz/pkg/errors/v2"
 	grammar "github.com/SigNoz/signoz/pkg/parser/havingexpression/grammar"
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/huandu/go-sqlbuilder"
+)
+
+// HAVING-expression validator codes. All three are caller-fault, fix-the-input
+// errors — the user wrote an expression we cannot turn into SQL — so retry
+// is pointless until the expression itself changes.
+var (
+	codeHavingStringLiteral = errors.Register("querybuilder.having.string_literal", errors.Meta{
+		Category:    errors.CategoryInvalidInput,
+		Fault:       errors.FaultCaller,
+		Retry:       errors.Retry{Policy: errors.RetryAfterFix},
+		Remediation: errors.RemediationFixInput,
+	})
+	codeHavingInvalidReference = errors.Register("querybuilder.having.invalid_reference", errors.Meta{
+		Category:    errors.CategoryInvalidInput,
+		Fault:       errors.FaultCaller,
+		Retry:       errors.Retry{Policy: errors.RetryAfterFix},
+		Remediation: errors.RemediationFixInput,
+	})
+	codeHavingSyntaxError = errors.Register("querybuilder.having.syntax_error", errors.Meta{
+		Category:    errors.CategoryInvalidInput,
+		Fault:       errors.FaultCaller,
+		Retry:       errors.Retry{Policy: errors.RetryAfterFix},
+		Remediation: errors.RemediationFixInput,
+	})
 )
 
 // havingExpressionRewriteVisitor walks the parse tree of a HavingExpression in a single
@@ -281,10 +306,10 @@ func (r *HavingExpressionRewriter) rewriteAndValidate(expression string) (string
 	// This is checked before invalid references so that "contains string literals" takes
 	// priority when a bare string literal is also an unresolvable operand.
 	if v.hasStringLiteral {
-		return "", errors.NewInvalidInputf(
-			errors.CodeInvalidInput,
+		return "", errors.New(codeHavingStringLiteral,
 			"`Having` expression contains string literals",
-		).WithAdditional("Aggregator results are numeric")
+			errors.WithDetail("Aggregator results are numeric"),
+		)
 	}
 
 	if len(v.invalid) > 0 {
@@ -294,7 +319,10 @@ func (r *HavingExpressionRewriter) rewriteAndValidate(expression string) (string
 			validKeys = append(validKeys, k)
 		}
 		sort.Strings(validKeys)
-		additional := []string{"Valid references are: [" + strings.Join(validKeys, ", ") + "]"}
+		opts := []errors.Option{
+			errors.WithAttr("invalid_refs", v.invalid),
+			errors.WithAttr("valid_refs", validKeys),
+		}
 		if len(v.invalid) == 1 {
 			inv := v.invalid[0]
 			// Only suggest for plain identifier typos, not for unresolved function
@@ -303,15 +331,13 @@ func (r *HavingExpressionRewriter) rewriteAndValidate(expression string) (string
 			// a simple string substitution produce a corrupt expression.
 			isFuncCall := strings.Contains(original, inv+"(")
 			if match, dist := closestMatch(inv, validKeys); !isFuncCall && !strings.Contains(match, "(") && dist <= 3 {
-				corrected := strings.ReplaceAll(original, inv, match)
-				additional = append(additional, "Suggestion: `"+corrected+"`")
+				opts = append(opts, errors.WithAttr("suggestions", []string{strings.ReplaceAll(original, inv, match)}))
 			}
 		}
-		return "", errors.NewInvalidInputf(
-			errors.CodeInvalidInput,
-			"Invalid references in `Having` expression: [%s]",
-			strings.Join(v.invalid, ", "),
-		).WithAdditional(additional...)
+		return "", errors.New(codeHavingInvalidReference,
+			fmt.Sprintf("Invalid references in `Having` expression: [%s]", strings.Join(v.invalid, ", ")),
+			opts...,
+		)
 	}
 
 	// Layer 3 – ANTLR syntax errors. We parse the original expression, so error messages
@@ -328,17 +354,20 @@ func (r *HavingExpressionRewriter) rewriteAndValidate(expression string) (string
 		if detail == "" {
 			detail = "check the expression syntax"
 		}
-		additional := []string{detail}
+		opts := []errors.Option{
+			errors.WithDetail(detail),
+			errors.WithAttr("syntax_errors", msgs),
+		}
 		// For single-error expressions, try to produce an actionable suggestion.
 		if len(allSyntaxErrors) == 1 {
 			if s := havingSuggestion(allSyntaxErrors[0], original); s != "" {
-				additional = append(additional, "Suggestion: `"+s+"`")
+				opts = append(opts, errors.WithAttr("suggestions", []string{s}))
 			}
 		}
-		return "", errors.NewInvalidInputf(
-			errors.CodeInvalidInput,
+		return "", errors.New(codeHavingSyntaxError,
 			"Syntax error in `Having` expression",
-		).WithAdditional(additional...)
+			opts...,
+		)
 	}
 
 	return result, nil

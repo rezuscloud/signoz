@@ -207,7 +207,7 @@ export function CollapseListContent({
 						selectedTags={alertOptions}
 					/>
 				) : (
-					'-'
+					<Tag className="all-alerts-tag">All alert rules</Tag>
 				),
 			)}
 		</Flex>

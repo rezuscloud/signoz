@@ -116,6 +116,22 @@ func (provider *provider) addRulerRoutes(router *mux.Router) error {
 		return err
 	}
 
+	if err := router.Handle("/api/v2/rules/{id}/mute", handler.New(provider.authzMiddleware.EditAccess(provider.rulerHandler.MuteRule), handler.OpenAPIDef{
+		ID:                  "MuteRule",
+		Tags:                []string{"rules"},
+		Summary:             "Mute alert rule",
+		Description:         "This endpoint mutes an alert rule until the provided endTime by creating a fixed-window planned maintenance scoped to that rule. Unmute by deleting the returned downtime schedule.",
+		Request:             new(alertmanagertypes.PostableMuteRule),
+		RequestContentType:  "application/json",
+		Response:            new(alertmanagertypes.PlannedMaintenance),
+		ResponseContentType: "application/json",
+		SuccessStatusCode:   http.StatusCreated,
+		ErrorStatusCodes:    []int{http.StatusBadRequest, http.StatusNotFound},
+		SecuritySchemes:     newSecuritySchemes(types.RoleEditor),
+	})).Methods(http.MethodPost).GetError(); err != nil {
+		return err
+	}
+
 	if err := router.Handle("/api/v1/downtime_schedules", handler.New(provider.authzMiddleware.ViewAccess(provider.rulerHandler.ListDowntimeSchedules), handler.OpenAPIDef{
 		ID:                  "ListDowntimeSchedules",
 		Tags:                []string{"downtimeschedules"},

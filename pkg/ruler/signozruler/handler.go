@@ -185,6 +185,53 @@ func (handler *handler) TestRule(rw http.ResponseWriter, req *http.Request) {
 	render.Success(rw, http.StatusOK, ruletypes.GettableTestRule{AlertCount: alertCount, Message: "notification sent"})
 }
 
+// MuteRule mutes an alert rule until the provided endTime by creating a
+// fixed-window planned maintenance scoped to that rule. The created
+// PlannedMaintenance is returned so the client can later unmute by deleting
+// it via DELETE /api/v1/downtime_schedules/{id}.
+func (handler *handler) MuteRule(rw http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(req.Context(), 30*time.Second)
+	defer cancel()
+
+	id, err := valuer.NewUUID(mux.Vars(req)["id"])
+	if err != nil {
+		render.Error(rw, errors.Newf(errors.TypeInvalidInput, errors.CodeInvalidInput, "id is not a valid uuid-v7"))
+		return
+	}
+
+	rule, err := handler.ruler.GetRule(ctx, id)
+	if err != nil {
+		render.Error(rw, err)
+		return
+	}
+
+	payload := new(ruletypes.PostableMuteRule)
+	if err := binding.JSON.BindBody(req.Body, payload); err != nil {
+		render.Error(rw, err)
+		return
+	}
+
+	now := time.Now()
+	if err := payload.Validate(now); err != nil {
+		render.Error(rw, err)
+		return
+	}
+
+	schedule := payload.ToPostablePlannedMaintenance(id.StringValue(), rule.AlertName, now)
+	if err := schedule.Validate(); err != nil {
+		render.Error(rw, err)
+		return
+	}
+
+	created, err := handler.ruler.MaintenanceStore().CreatePlannedMaintenance(ctx, schedule)
+	if err != nil {
+		render.Error(rw, err)
+		return
+	}
+
+	render.Success(rw, http.StatusCreated, created)
+}
+
 func (handler *handler) ListDowntimeSchedules(rw http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(req.Context(), 30*time.Second)
 	defer cancel()

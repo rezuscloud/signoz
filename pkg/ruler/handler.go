@@ -10,6 +10,7 @@ type Handler interface {
 	DeleteRuleByID(http.ResponseWriter, *http.Request)
 	PatchRuleByID(http.ResponseWriter, *http.Request)
 	TestRule(http.ResponseWriter, *http.Request)
+	MuteRule(http.ResponseWriter, *http.Request)
 
 	ListDowntimeSchedules(http.ResponseWriter, *http.Request)
 	GetDowntimeScheduleByID(http.ResponseWriter, *http.Request)

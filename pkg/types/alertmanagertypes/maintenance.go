@@ -15,6 +15,44 @@ import (
 )
 
 var ErrCodeInvalidPlannedMaintenancePayload = errors.MustNewCode("invalid_planned_maintenance_payload")
+var ErrCodeInvalidMutePayload = errors.MustNewCode("invalid_mute_payload")
+
+// PostableMuteRule is the input payload for muting an alert rule. A mute is a
+// shortcut for creating a fixed (non-recurring) planned maintenance scoped to a
+// single rule, covering [now, EndTime].
+type PostableMuteRule struct {
+	EndTime     time.Time `json:"endTime" required:"true"`
+	Description string    `json:"description"`
+}
+
+func (p *PostableMuteRule) Validate(now time.Time) error {
+	if p.EndTime.IsZero() {
+		return errors.Newf(errors.TypeInvalidInput, ErrCodeInvalidMutePayload, "missing endTime in the payload")
+	}
+	if !p.EndTime.After(now) {
+		return errors.Newf(errors.TypeInvalidInput, ErrCodeInvalidMutePayload, "endTime must be in the future")
+	}
+	return nil
+}
+
+// ToPostablePlannedMaintenance builds the underlying planned maintenance
+// payload for muting the given rule until p.EndTime.
+func (p *PostableMuteRule) ToPostablePlannedMaintenance(ruleID string, ruleName string, now time.Time) *PostablePlannedMaintenance {
+	name := "Mute: " + ruleName
+	if ruleName == "" {
+		name = "Mute for rule " + ruleID
+	}
+	return &PostablePlannedMaintenance{
+		Name:        name,
+		Description: p.Description,
+		Schedule: &Schedule{
+			Timezone:  "UTC",
+			StartTime: now.UTC(),
+			EndTime:   p.EndTime.UTC(),
+		},
+		AlertIds: []string{ruleID},
+	}
+}
 
 type MaintenanceStatus struct {
 	valuer.String

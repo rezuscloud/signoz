@@ -100,6 +100,7 @@ func NewDashboard(orgID valuer.UUID, createdBy string, data StorableDashboardDat
 		},
 		OrgID:  orgID,
 		Data:   data,
+		Locked: false,
 		Source: string(source),
 	}, nil
 }

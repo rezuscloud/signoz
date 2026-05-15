@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { Radio, RadioChangeEvent, Switch, Tag } from 'antd';
+import { Switch, Tag } from 'antd';
+import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui/toggle-group';
 import setLocalStorageApi from 'api/browser/localstorage/set';
 import logEvent from 'api/common/logEvent';
 import updateUserPreference from 'api/v1/user/preferences/name/update';
@@ -87,7 +88,7 @@ function MySettings(): JSX.Element {
 		return isDarkMode ? 'dark' : 'light';
 	});
 
-	const handleThemeChange = ({ target: { value } }: RadioChangeEvent): void => {
+	const handleThemeChange = (value: string): void => {
 		logEvent('Account Settings: Theme Changed', {
 			theme: value,
 		});
@@ -186,15 +187,18 @@ function MySettings(): JSX.Element {
 					<div className="user-preference-section-content-item theme-selector">
 						<div className="user-preference-section-content-item-title-action">
 							Select your theme
-							<Radio.Group
-								options={themeOptions}
+							<ToggleGroup
+								type="single"
 								onChange={handleThemeChange}
 								value={theme}
-								optionType="button"
-								buttonStyle="solid"
 								data-testid="theme-selector"
-								size="middle"
-							/>
+							>
+								{themeOptions.map((option) => (
+									<ToggleGroupItem key={option.value} value={option.value}>
+										{option.label}
+									</ToggleGroupItem>
+								))}
+							</ToggleGroup>
 						</div>
 
 						<div className="user-preference-section-content-item-description">

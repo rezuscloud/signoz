@@ -6895,15 +6895,6 @@ export interface TracedetailtypesEventDTO {
 	timeUnixNano?: number;
 }
 
-export type TracedetailtypesGettableWaterfallTraceDTOServiceNameToTotalDurationMapAnyOf =
-	{ [key: string]: number };
-
-/**
- * @nullable
- */
-export type TracedetailtypesGettableWaterfallTraceDTOServiceNameToTotalDurationMap =
-	TracedetailtypesGettableWaterfallTraceDTOServiceNameToTotalDurationMapAnyOf | null;
-
 export enum TracedetailtypesSpanAggregationTypeDTO {
 	span_count = 'span_count',
 	execution_time_percentage = 'execution_time_percentage',
@@ -7094,10 +7085,6 @@ export interface TracedetailtypesGettableWaterfallTraceDTO {
 	 * @type string
 	 */
 	rootServiceName?: string;
-	/**
-	 * @type object,null
-	 */
-	serviceNameToTotalDurationMap?: TracedetailtypesGettableWaterfallTraceDTOServiceNameToTotalDurationMap;
 	/**
 	 * @type array,null
 	 */

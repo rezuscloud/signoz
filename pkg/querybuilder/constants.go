@@ -1,6 +1,7 @@
 package querybuilder
 
 const (
+	EmptyConditionLiteral = ""
 	TrueConditionLiteral  = "true"
 	SkipConditionLiteral  = "__skip__"
 	ErrorConditionLiteral = "__skip_because_of_error__"

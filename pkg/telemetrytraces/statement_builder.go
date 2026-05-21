@@ -356,10 +356,9 @@ func (b *traceQueryStatementBuilder) buildListQuery(
 		Query: finalSQL,
 		Args:  finalArgs,
 	}
-	if preparedWhereClause != nil {
-		stmt.Warnings = preparedWhereClause.Warnings
-		stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
-	}
+
+	stmt.Warnings = preparedWhereClause.Warnings
+	stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
 
 	return stmt, nil
 }
@@ -474,10 +473,9 @@ func (b *traceQueryStatementBuilder) buildTraceQuery(
 		Query: finalSQL,
 		Args:  finalArgs,
 	}
-	if preparedWhereClause != nil {
-		stmt.Warnings = preparedWhereClause.Warnings
-		stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
-	}
+
+	stmt.Warnings = preparedWhereClause.Warnings
+	stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
 
 	return stmt, nil
 }
@@ -625,10 +623,9 @@ func (b *traceQueryStatementBuilder) buildTimeSeriesQuery(
 		Query: finalSQL,
 		Args:  finalArgs,
 	}
-	if preparedWhereClause != nil {
-		stmt.Warnings = preparedWhereClause.Warnings
-		stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
-	}
+
+	stmt.Warnings = preparedWhereClause.Warnings
+	stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
 
 	return stmt, nil
 }
@@ -743,10 +740,8 @@ func (b *traceQueryStatementBuilder) buildScalarQuery(
 		Query: finalSQL,
 		Args:  finalArgs,
 	}
-	if preparedWhereClause != nil {
-		stmt.Warnings = preparedWhereClause.Warnings
-		stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
-	}
+	stmt.Warnings = preparedWhereClause.Warnings
+	stmt.WarningsDocURL = preparedWhereClause.WarningsDocURL
 
 	return stmt, nil
 }
@@ -759,9 +754,9 @@ func (b *traceQueryStatementBuilder) addFilterCondition(
 	query qbtypes.QueryBuilderQuery[qbtypes.TraceAggregation],
 	keys map[string][]*telemetrytypes.TelemetryFieldKey,
 	variables map[string]qbtypes.VariableItem,
-) (*querybuilder.PreparedWhereClause, error) {
+) (querybuilder.PreparedWhereClause, error) {
 
-	var preparedWhereClause *querybuilder.PreparedWhereClause
+	var preparedWhereClause querybuilder.PreparedWhereClause
 	var err error
 
 	if query.Filter != nil && query.Filter.Expression != "" {
@@ -779,11 +774,11 @@ func (b *traceQueryStatementBuilder) addFilterCondition(
 		})
 
 		if err != nil {
-			return nil, err
+			return preparedWhereClause, err
 		}
 	}
 
-	if preparedWhereClause != nil {
+	if !preparedWhereClause.IsEmpty() {
 		sb.AddWhereClause(preparedWhereClause.WhereClause)
 	}
 

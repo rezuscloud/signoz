@@ -1,0 +1,26 @@
+apiVersion: v2
+appVersion: v0.118.0-community
+dependencies:
+- condition: clickhouse.enabled
+  name: clickhouse
+  repository: https://charts.signoz.io
+  version: 24.1.18
+description: SigNoz Community Edition — SigNoz fork with all features enabled natively
+home: https://github.com/rezuscloud/signoz
+icon: https://signoz.io/img/SigNozLogo-orange.svg
+keywords:
+- signoz
+- opentelemetry
+- apm
+- monitoring
+- distributed tracing
+- distributed logging
+- community
+maintainers:
+- name: rezuscloud
+  url: https://github.com/rezuscloud
+name: signoz-community
+sources:
+- https://github.com/rezuscloud/signoz
+type: application
+version: 0.1.0

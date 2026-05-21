@@ -1,7 +1,6 @@
 package prometheus
 
 import (
-	"github.com/SigNoz/signoz/pkg/errors"
 	"github.com/prometheus/prometheus/model/labels"
 	"github.com/prometheus/prometheus/promql"
 )
@@ -32,8 +31,10 @@ func RemoveExtraLabels(res *promql.Result, labelsToRemove ...string) error {
 		}
 	case promql.Scalar:
 		return nil
+	case promql.String:
+		return nil
 	default:
-		return errors.NewInternalf(errors.CodeInternal, "rule result is not a vector or scalar or matrix")
+		return nil
 	}
 	return nil
 }

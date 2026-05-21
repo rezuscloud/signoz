@@ -55,6 +55,20 @@ func TestRemoveExtraLabels(t *testing.T) {
 			},
 		},
 		{
+			name: "string – no error",
+			res: &promql.Result{
+				Value: promql.String{V: "up", T: 1},
+			},
+			remove:  []string{"irrelevant"},
+			wantErr: false,
+			verify: func(t *testing.T, result *promql.Result, removed []string) {
+				s := result.Value.(promql.String)
+				if s.V != "up" || s.T != 1 {
+					t.Fatalf("string unexpectedly modified: got %+v", s)
+				}
+			},
+		},
+		{
 			name: "matrix – label removed",
 			res: &promql.Result{
 				Value: promql.Matrix{

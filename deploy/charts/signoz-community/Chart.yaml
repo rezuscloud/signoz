@@ -19,7 +19,7 @@ keywords:
 maintainers:
 - name: rezuscloud
   url: https://github.com/rezuscloud
-name: signoz-community
+name: signoz
 sources:
 - https://github.com/rezuscloud/signoz
 type: application

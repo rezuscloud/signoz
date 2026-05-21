@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { Switch, Tag } from 'antd';
-import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui/toggle-group';
+import { ToggleGroupSimple } from '@signozhq/ui/toggle-group';
 import setLocalStorageApi from 'api/browser/localstorage/set';
 import logEvent from 'api/common/logEvent';
 import updateUserPreference from 'api/v1/user/preferences/name/update';
@@ -187,18 +187,13 @@ function MySettings(): JSX.Element {
 					<div className="user-preference-section-content-item theme-selector">
 						<div className="user-preference-section-content-item-title-action">
 							Select your theme
-							<ToggleGroup
+							<ToggleGroupSimple
 								type="single"
 								onChange={handleThemeChange}
 								value={theme}
 								data-testid="theme-selector"
-							>
-								{themeOptions.map((option) => (
-									<ToggleGroupItem key={option.value} value={option.value}>
-										{option.label}
-									</ToggleGroupItem>
-								))}
-							</ToggleGroup>
+								items={themeOptions}
+							/>
 						</div>
 
 						<div className="user-preference-section-content-item-description">

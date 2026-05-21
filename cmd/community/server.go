@@ -23,7 +23,7 @@ import (
 	"github.com/SigNoz/signoz/pkg/gateway/noopgateway"
 	"github.com/SigNoz/signoz/pkg/global"
 	"github.com/SigNoz/signoz/pkg/licensing"
-	"github.com/SigNoz/signoz/pkg/licensing/nooplicensing"
+	"github.com/SigNoz/signoz/pkg/licensing/communitylicensing"
 	"github.com/SigNoz/signoz/pkg/meterreporter"
 	"github.com/SigNoz/signoz/pkg/modules/cloudintegration"
 	"github.com/SigNoz/signoz/pkg/modules/cloudintegration/implcloudintegration"
@@ -81,7 +81,7 @@ func runServer(ctx context.Context, config signoz.Config, logger *slog.Logger) e
 		noopzeus.NewProviderFactory(),
 		licensing.Config{},
 		func(_ sqlstore.SQLStore, _ zeus.Zeus, _ organization.Getter, _ analytics.Analytics) factory.ProviderFactory[licensing.Licensing, licensing.Config] {
-			return nooplicensing.NewFactory()
+			return communitylicensing.NewFactory()
 		},
 		signoz.NewEmailingProviderFactories(),
 		signoz.NewCacheProviderFactories(),

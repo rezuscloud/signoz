@@ -224,6 +224,14 @@ func (q *querier) runPromQueries(ctx context.Context, orgID valuer.UUID, params 
 				query := metricsV3.BuildPromQuery(promQuery, params.Step, miss.Start, miss.End)
 				series, err := q.execPromQuery(ctx, query)
 				if err != nil {
+					if ctx.Err() != nil {
+						missedSeries = append(missedSeries, querycache.CachedSeriesData{
+							Data:  nil,
+							Start: miss.Start,
+							End:   miss.End,
+						})
+						continue
+					}
 					channelResults <- channelResult{Err: err, Name: queryName, Query: query.Query, Series: nil}
 					return
 				}

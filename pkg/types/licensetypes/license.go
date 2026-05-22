@@ -194,8 +194,6 @@ func NewLicense(data []byte, organizationID valuer.UUID) (*License, error) {
 	}
 
 	switch planName {
-	case PlanNameEnterprise:
-		features = append(features, EnterprisePlan...)
 	case PlanNameBasic:
 		features = append(features, BasicPlan...)
 	default:
@@ -287,8 +285,6 @@ func NewLicenseFromStorableLicense(storableLicense *StorableLicense) (*License, 
 	}
 
 	switch planName {
-	case PlanNameEnterprise:
-		features = append(features, EnterprisePlan...)
 	case PlanNameBasic:
 		features = append(features, BasicPlan...)
 	default:

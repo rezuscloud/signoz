@@ -19,8 +19,7 @@ var (
 	LicenseStatusInvalid = valuer.NewString("invalid")
 
 	// Plan.
-	PlanNameEnterprise = valuer.NewString("enterprise")
-	PlanNameBasic      = valuer.NewString("basic")
+	PlanNameBasic = valuer.NewString("basic")
 )
 
 type Feature struct {
@@ -56,58 +55,6 @@ var BasicPlan = []*Feature{
 	{
 		Name:       AnomalyDetection,
 		Active:     false,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       DotMetricsEnabled,
-		Active:     false,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-}
-
-var EnterprisePlan = []*Feature{
-	{
-		Name:       SSO,
-		Active:     true,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       Onboarding,
-		Active:     true,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       ChatSupport,
-		Active:     true,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       Gateway,
-		Active:     true,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       PremiumSupport,
-		Active:     true,
-		Usage:      0,
-		UsageLimit: -1,
-		Route:      "",
-	},
-	{
-		Name:       AnomalyDetection,
-		Active:     true,
 		Usage:      0,
 		UsageLimit: -1,
 		Route:      "",

@@ -69,37 +69,11 @@ func communityLicense(organizationID valuer.UUID) *licensetypes.License {
 }
 
 func (api *communityLicensingAPI) Activate(rw http.ResponseWriter, r *http.Request) {
-	now := time.Now().UTC().Format(time.RFC3339)
-	render.Success(rw, http.StatusOK, communityLicenseResponse{
-		Key:    "community",
-		Status: "VALID",
-		State:  "ACTIVATED",
-		EventQueue: communityEventQueueResponse{
-			Event:       "",
-			Status:      "",
-			ScheduledAt: "",
-			CreatedAt:   now,
-			UpdatedAt:   now,
-		},
-		Platform:  "SELF_HOSTED",
-		CreatedAt: now,
-		Plan: communityPlanResponse{
-			CreatedAt:   now,
-			Description: "SigNoz Community Edition",
-			IsActive:    true,
-			Name:        "basic",
-			UpdatedAt:   now,
-		},
-		PlanID:    "community",
-		FreeUntil: "",
-		UpdatedAt: now,
-		ValidFrom: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
-		ValidUntil: -1,
-	})
+	render.Error(rw, errors.New(errors.TypeUnsupported, licensing.ErrCodeUnsupported, "community edition does not require a license"))
 }
 
 func (api *communityLicensingAPI) GetActive(rw http.ResponseWriter, r *http.Request) {
-	api.Activate(rw, r)
+	render.Error(rw, errors.New(errors.TypeUnsupported, licensing.ErrCodeUnsupported, "community edition does not require a license"))
 }
 
 func (api *communityLicensingAPI) Refresh(rw http.ResponseWriter, r *http.Request) {

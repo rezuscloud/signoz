@@ -168,28 +168,116 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 	return provider.Grant(ctx, orgID, []string{authtypes.SigNozAdminRoleName}, authtypes.MustNewSubject(coretypes.NewResourceUser(), userID.String(), orgID, nil))
 }
 
-func (setter *provider) Create(_ context.Context, _ valuer.UUID, _ *authtypes.Role) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.Role) error {
+	return provider.store.Create(ctx, role)
 }
 
-func (provider *provider) GetOrCreate(_ context.Context, _ valuer.UUID, _ *authtypes.Role) (*authtypes.Role, error) {
-	return nil, errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) (*authtypes.Role, error) {
+	existing, err := provider.store.GetByOrgIDAndName(ctx, orgID, role.Name)
+	if err != nil && !errors.Ast(err, errors.TypeNotFound) {
+		return nil, err
+	}
+
+	if existing != nil {
+		return existing, nil
+	}
+
+	err = provider.store.Create(ctx, role)
+	if err != nil {
+		return nil, err
+	}
+
+	return role, nil
 }
 
 func (provider *provider) GetObjects(ctx context.Context, orgID valuer.UUID, id valuer.UUID, relation authtypes.Relation) ([]*coretypes.Object, error) {
-	return nil, errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+	role, err := provider.store.Get(ctx, orgID, id)
+	if err != nil {
+		return nil, err
+	}
+
+	roleSubject := authtypes.MustNewSubject(
+		coretypes.NewResourceRole(),
+		role.Name,
+		orgID,
+		&coretypes.VerbAssignee,
+	)
+
+	tuples, err := provider.ReadTuples(ctx, &openfgav1.ReadRequestTupleKey{
+		User:     roleSubject,
+		Relation: relation.StringValue(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	objects := make([]*coretypes.Object, 0, len(tuples))
+	for _, tuple := range tuples {
+		objects = append(objects, coretypes.MustNewObjectFromString(tuple.Object))
+	}
+
+	return objects, nil
 }
 
-func (provider *provider) Patch(_ context.Context, _ valuer.UUID, _ *authtypes.Role) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) Patch(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) error {
+	return provider.store.Update(ctx, orgID, role)
 }
 
-func (provider *provider) PatchObjects(_ context.Context, _ valuer.UUID, _ string, _ authtypes.Relation, _, _ []*coretypes.Object) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) PatchObjects(ctx context.Context, orgID valuer.UUID, name string, relation authtypes.Relation, additions []*coretypes.Object, deletions []*coretypes.Object) error {
+	additionTuples, err := authtypes.GetAdditionTuples(name, orgID, relation, additions)
+	if err != nil {
+		return err
+	}
+
+	deletionTuples, err := authtypes.GetDeletionTuples(name, orgID, relation, deletions)
+	if err != nil {
+		return err
+	}
+
+	return provider.Write(ctx, additionTuples, deletionTuples)
 }
 
-func (provider *provider) Delete(_ context.Context, _ valuer.UUID, _ valuer.UUID) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) Delete(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error {
+	role, err := provider.store.Get(ctx, orgID, id)
+	if err != nil {
+		return err
+	}
+
+	roleSubject := authtypes.MustNewSubject(
+		coretypes.NewResourceRole(),
+		role.Name,
+		orgID,
+		&coretypes.VerbAssignee,
+	)
+	roleObject := coretypes.NewResourceRole().Object(orgID, role.Name)
+
+	roleTuples, err := provider.ReadTuples(ctx, &openfgav1.ReadRequestTupleKey{
+		User: roleSubject,
+	})
+	if err != nil {
+		return err
+	}
+
+	assigneeTuples, err := provider.ReadTuples(ctx, &openfgav1.ReadRequestTupleKey{
+		Object:   roleObject,
+		Relation: coretypes.VerbAssignee.StringValue(),
+	})
+	if err != nil {
+		return err
+	}
+
+	allDeletions := make([]*openfgav1.TupleKey, 0, len(roleTuples)+len(assigneeTuples))
+	allDeletions = append(allDeletions, roleTuples...)
+	allDeletions = append(allDeletions, assigneeTuples...)
+
+	if len(allDeletions) > 0 {
+		err = provider.Write(ctx, nil, allDeletions)
+		if err != nil {
+			return err
+		}
+	}
+
+	return provider.store.Delete(ctx, orgID, id)
 }
 
 func (provider *provider) CheckTransactions(ctx context.Context, subject string, orgID valuer.UUID, transactions []*authtypes.Transaction) ([]*authtypes.TransactionWithAuthorization, error) {

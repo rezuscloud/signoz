@@ -29,7 +29,7 @@ type Resource interface {
 
 type ResourceRef struct {
 	Type Type `json:"type" required:"true"`
-	Kind Kind `json:"name" required:"true"`
+	Kind Kind `json:"kind" required:"true"`
 }
 
 func NewResourceRef(resource Resource) *ResourceRef {

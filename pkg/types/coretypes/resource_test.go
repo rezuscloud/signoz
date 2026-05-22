@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestResourceRefSerializesNameField(t *testing.T) {
+func TestResourceRefSerializesKindField(t *testing.T) {
 	ref := ResourceRef{
 		Type: MustNewType("role"),
 		Kind: MustNewKind("role"),
@@ -21,13 +21,13 @@ func TestResourceRefSerializesNameField(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, "role", parsed["type"])
-	require.Equal(t, "role", parsed["name"])
-	_, hasKind := parsed["kind"]
-	require.False(t, hasKind, "ResourceRef should serialize as 'name', not 'kind'")
+	require.Equal(t, "role", parsed["kind"])
+	_, hasName := parsed["name"]
+	require.False(t, hasName, "ResourceRef should serialize as 'kind', not 'name'")
 }
 
-func TestResourceRefDeserializesNameField(t *testing.T) {
-	input := `{"type":"role","name":"role"}`
+func TestResourceRefDeserializesKindField(t *testing.T) {
+	input := `{"type":"role","kind":"role"}`
 
 	var ref ResourceRef
 	err := json.Unmarshal([]byte(input), &ref)
@@ -54,8 +54,8 @@ func TestResourceRefRoundTrip(t *testing.T) {
 	require.Equal(t, original.Kind, restored.Kind)
 }
 
-func TestObjectDeserializesNameFieldInResource(t *testing.T) {
-	input := `{"resource":{"type":"role","name":"role"},"selector":"signoz-admin"}`
+func TestObjectDeserializesKindFieldInResource(t *testing.T) {
+	input := `{"resource":{"type":"role","kind":"role"},"selector":"signoz-admin"}`
 
 	var obj Object
 	err := json.Unmarshal([]byte(input), &obj)
@@ -81,7 +81,7 @@ func TestObjectRoundTripWithResource(t *testing.T) {
 
 	resource := raw["resource"].(map[string]any)
 	require.Equal(t, "role", resource["type"])
-	require.Equal(t, "role", resource["name"])
-	_, hasKind := resource["kind"]
-	require.False(t, hasKind)
+	require.Equal(t, "role", resource["kind"])
+	_, hasName := resource["name"]
+	require.False(t, hasName)
 }

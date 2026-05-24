@@ -4574,7 +4574,7 @@ func (r *ClickHouseReader) GetListResultV3(ctx context.Context, query string) ([
 
 // GetHostMetricsExistenceAndEarliestTime returns (count, minFirstReportedUnixMilli, error) for the given host metric names
 // from distributed_metadata. When count is 0, minFirstReportedUnixMilli is 0.
-func (r *ClickHouseReader) GetMetricsExistenceAndEarliestTime(ctx context.Context, metricNames []string) (uint64, uint64, error) {
+func (r *ClickHouseReader) GetMetricsExistenceAndEarliestTime(ctx context.Context, metricNames []string) (uint64, int64, error) {
 	ctx = ctxtypes.NewContextWithCommentVals(ctx, map[string]string{
 		instrumentationtypes.TelemetrySignal:  telemetrytypes.SignalMetrics.StringValue(),
 		instrumentationtypes.CodeNamespace:    "clickhouse-reader",
@@ -4590,7 +4590,8 @@ func (r *ClickHouseReader) GetMetricsExistenceAndEarliestTime(ctx context.Contex
 		WHERE metric_name IN @metric_names`,
 		constants.SIGNOZ_METRIC_DBNAME, constants.SIGNOZ_METADATA_TABLENAME)
 
-	var count, minFirstReported uint64
+	var count uint64
+	var minFirstReported int64
 	err := r.db.QueryRow(ctx, query, clickhouse.Named("metric_names", metricNames)).Scan(&count, &minFirstReported)
 	if err != nil {
 		r.logger.Error("error getting host metrics existence and earliest time", errorsV2.Attr(err))

@@ -402,13 +402,14 @@ func (m *module) getMetricsExistenceAndEarliestTime(ctx context.Context, metricN
 
 	type metricInfo struct {
 		count            uint64
-		minFirstReported uint64
+		minFirstReported int64
 	}
 	found := make(map[string]metricInfo, len(metricNames))
 
 	for rows.Next() {
 		var name string
-		var cnt, minFR uint64
+		var cnt uint64
+		var minFR int64
 		if err := rows.Scan(&name, &cnt, &minFR); err != nil {
 			return nil, 0, err
 		}
@@ -419,7 +420,7 @@ func (m *module) getMetricsExistenceAndEarliestTime(ctx context.Context, metricN
 	}
 
 	var missingMetrics []string
-	var globalMinFirstReported uint64
+	var globalMinFirstReported int64
 	for _, name := range metricNames {
 		info, ok := found[name]
 		if !ok || info.count == 0 {
@@ -431,7 +432,7 @@ func (m *module) getMetricsExistenceAndEarliestTime(ctx context.Context, metricN
 		}
 	}
 
-	return missingMetrics, globalMinFirstReported, nil
+	return missingMetrics, uint64(globalMinFirstReported), nil
 }
 
 // getMetadata fetches the latest values of additionalCols for each unique combination of groupBy keys,

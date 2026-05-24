@@ -321,7 +321,7 @@ func (h *HostsRepo) getTopHostGroups(ctx context.Context, orgID valuer.UUID, req
 
 // GetHostMetricsExistenceAndEarliestTime returns (count, minFirstReportedUnixMilli, error) for host metrics
 // in distributed_metadata. Uses metricNamesForHosts plus system.filesystem.usage.
-func (h *HostsRepo) GetHostMetricsExistenceAndEarliestTime(ctx context.Context, req model.HostListRequest) (uint64, uint64, error) {
+func (h *HostsRepo) GetHostMetricsExistenceAndEarliestTime(ctx context.Context, req model.HostListRequest) (uint64, int64, error) {
 	names := []string{}
 	for _, metricName := range metricNamesForHosts {
 		names = append(names, metricName)

@@ -482,12 +482,14 @@ func (m *module) getEarliestMetricTime(ctx context.Context, metricNames []string
 
 	query, args := sb.BuildWithFlavor(sqlbuilder.ClickHouse)
 
-	var minFirstReported uint64
+	// first_reported_unix_milli is Int64 in ClickHouse; scan into int64 (not uint64)
+	// to avoid a driver type-mismatch error, then cast to preserve the signature.
+	var minFirstReported int64
 	if err := m.telemetryStore.ClickhouseDB().QueryRow(ctx, query, args...).Scan(&minFirstReported); err != nil {
 		return 0, err
 	}
 
-	return minFirstReported, nil
+	return uint64(minFirstReported), nil
 }
 
 // getMetricsExistence returns, for each requested metric name, whether it has ever

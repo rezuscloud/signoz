@@ -2423,7 +2423,7 @@ func (r *ClickHouseReader) setColdStorage(ctx context.Context, tableName string,
 	// Set the storage policy for the required table. If it is already set, then setting it again
 	// will not a problem.
 	if len(coldStorageVolume) > 0 {
-		policyReq := fmt.Sprintf("ALTER TABLE %s ON CLUSTER %s MODIFY SETTING storage_policy='tiered'", tableName, r.cluster)
+		policyReq := fmt.Sprintf("ALTER TABLE %s ON CLUSTER %s MODIFY SETTING storage_policy='s3_cached'", tableName, r.cluster)
 
 		r.logger.Info("Executing Storage policy request: ", "request", policyReq)
 		if err := r.db.Exec(ctx, policyReq); err != nil {

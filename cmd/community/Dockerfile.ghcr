@@ -1,0 +1,16 @@
+FROM alpine:3.20
+LABEL maintainer="signoz"
+WORKDIR /root
+
+RUN apk update && \
+    apk add ca-certificates && \
+    rm -rf /var/cache/apk/*
+
+# goreleaser places the binary at ./bin/signoz relative to the build context
+COPY bin/signoz /root/signoz-community
+COPY frontend/build/ /etc/signoz/web/
+COPY templates/email /root/templates/email
+
+RUN chmod 755 /root /root/signoz-community
+
+ENTRYPOINT ["./signoz-community", "server"]

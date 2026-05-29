@@ -57,3 +57,40 @@ release:
   name_template: "v{{ .Version }}"
   draft: false
   prerelease: auto
+
+dockers:
+  - id: signoz-community-amd64
+    ids:
+      - signoz
+    use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: ./cmd/community/Dockerfile.ghcr
+    build_flag_templates:
+      - --platform=linux/amd64
+    extra_files:
+      - frontend/build
+      - templates/email
+    image_templates:
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
+  - id: signoz-community-arm64
+    ids:
+      - signoz
+    use: buildx
+    goos: linux
+    goarch: arm64
+    dockerfile: ./cmd/community/Dockerfile.ghcr
+    build_flag_templates:
+      - --platform=linux/arm64
+    extra_files:
+      - frontend/build
+      - templates/email
+    image_templates:
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"
+
+docker_manifests:
+  - id: signoz-community
+    name_template: "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community"
+    image_templates:
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"

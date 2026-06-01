@@ -31,7 +31,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
       - name: setup-go
         uses: actions/setup-go@v5
         with:
@@ -57,4 +57,4 @@ jobs:
           version: "~> v2"
           args: release --config ${{ env.CONFIG_PATH }} --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}

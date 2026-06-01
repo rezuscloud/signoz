@@ -750,7 +750,7 @@ signoz:
     repository: rezuscloud/signoz
     # signoz.image.tag - The container image tag.
     # @default -- "v0.118.0-community"
-    tag: v0.126.1-rezus.1-community
+    tag: v0.126.1-rezus.2-community
     # signoz.image.pullPolicy - The image pull policy.
     # @default -- "IfNotPresent"
     pullPolicy: IfNotPresent

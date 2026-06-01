@@ -9,7 +9,7 @@ RUN apk update && \
 # goreleaser places the binary at ./bin/signoz relative to the build context
 COPY bin/signoz /root/signoz-community
 COPY frontend/build/ /etc/signoz/web/
-COPY templates/email /root/templates/email
+COPY templates /root/templates
 
 RUN chmod 755 /root /root/signoz-community
 

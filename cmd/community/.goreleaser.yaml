@@ -12,6 +12,8 @@ builds:
   - id: signoz
     binary: bin/signoz
     main: ./cmd/community
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
       - darwin

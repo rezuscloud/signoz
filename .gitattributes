@@ -1,1 +1,5 @@
-*.css linguist-detectable=false
+# Permanent fork divergences — always keep our version on merge
+# ee/ is stripped for community edition (upstream has 15+ subdirs)
+# cmd/enterprise/ is removed (community only uses cmd/community/)
+ee/** merge=ours
+cmd/enterprise/** merge=ours

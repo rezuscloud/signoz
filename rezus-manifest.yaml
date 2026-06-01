@@ -1,0 +1,35 @@
+# Fork Divergence Manifest
+# Single source of truth for all differences between our fork and upstream.
+# The rezus-sync.yaml workflow reads this file to automate upstream merges.
+#
+# Three categories of divergences:
+#   deletions  → always removed after merge (git rm -rf)
+#   patches    → verified after merge (grep signature check)
+#   additive   → new files, never conflict, carried by merge
+
+deletions:
+  - ee/
+  - cmd/enterprise/
+
+patches:
+  - file: pkg/prometheus/label.go
+    description: Handle String and unknown PromQL types in RemoveExtraLabels
+    signature: "case promql.String:"
+    upstream_status: Not fixed as of v0.126.1
+
+  - file: pkg/query-service/app/querier/querier.go
+    description: Cache empty series on context cancellation
+    signature: 'if ctx.Err() != nil'
+    upstream_status: Not fixed as of v0.126.1
+
+  - file: pkg/query-service/app/metrics/v4/helpers/sub_query.go
+    description: Permissive temporality filter fallback
+    signature: "temporality IN ('Cumulative', 'Unspecified', 'Delta')"
+    occurrences: 2
+    upstream_status: Not fixed as of v0.126.1
+
+additive:
+  - pkg/licensing/communitylicensing/
+  - deploy/charts/signoz-community/
+  - .github/workflows/gor-signoz-community.yaml
+  - .gitattributes

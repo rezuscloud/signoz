@@ -1,19 +1,10 @@
 #!/bin/bash
-# Generate rezus-manifest.yaml from the diff between rezus/main and upstream/main
-# Usage: cd <fork-repo> && ./scripts/generate-manifest.sh > rezus-manifest.yaml
-#
-# This script captures ALL divergences from upstream by comparing the two branches.
-# Run it after every upstream merge to regenerate the manifest.
-# The sync workflow reads rezus-manifest.yaml to:
-#   1. Delete permanent divergences (deletions)
-#   2. Verify code patches survived the merge (patches)
-#   3. Know what new files we carry (additive)
-set -euo pipefail
-
+set -uo pipefail
 BRANCH="${1:-rezus/main}"
 UPSTREAM="${2:-upstream/main}"
+WORKDIR=$(mktemp -d)
+trap 'rm -rf "$WORKDIR"' EXIT
 
-# === HEADER ===
 cat << HEADER
 # Fork Divergence Manifest
 # Generated: $(date -u +%Y-%m-%d)
@@ -23,7 +14,7 @@ cat << HEADER
 
 HEADER
 
-# === DELETIONS: top-level directories in upstream that don't exist in ours ===
+# Deletions
 echo "deletions:"
 for dir in $(git ls-tree -d --name-only "$UPSTREAM" | sort); do
   if ! git ls-tree -d --name-only "$BRANCH" 2>/dev/null | grep -qx "$dir"; then
@@ -32,7 +23,7 @@ for dir in $(git ls-tree -d --name-only "$UPSTREAM" | sort); do
 done
 echo ""
 
-# === PATCHES: files existing in both branches with different content ===
+# Patches — two-pass: first collect data to temp files, then output
 echo "patches:"
 git diff --name-only "$BRANCH" "$UPSTREAM" -- \
   '*.go' '*.yaml' '*.yml' '*.xml' '*.ts' '*.tsx' '*.json' \
@@ -40,28 +31,30 @@ git diff --name-only "$BRANCH" "$UPSTREAM" -- \
   ':(exclude)*.lock' ':(exclude)*.tgz' ':(exclude)go.sum' \
   ':(exclude)deploy/charts/signoz-community/charts/' \
   ':(exclude)deploy/charts/signoz-community/tests/' \
-  > /tmp/rezus-patch-files.txt
+  > "$WORKDIR/files.txt"
 
+i=0
 while IFS= read -r file; do
-  git show "${BRANCH}:${file}" > /dev/null 2>&1 || continue
-  git show "${UPSTREAM}:${file}" > /dev/null 2>&1 || continue
+  git show "${BRANCH}:${file}" >/dev/null 2>&1 || continue
+  git show "${UPSTREAM}:${file}" >/dev/null 2>&1 || continue
   git diff --quiet "$BRANCH" "$UPSTREAM" -- "$file" 2>/dev/null && continue
 
-  # Extract first meaningful line unique to our version
-  signature=$(diff <(git show "${UPSTREAM}:${file}" 2>/dev/null) <(git show "${BRANCH}:${file}" 2>/dev/null) | \
-    grep '^>' | sed 's/^> //' | sed 's/^[[:space:]]*//' | grep -vE '^$|^//|^#' | head -1)
+  # Save diff to a temp file to avoid stdin issues
+  diff <(git show "${UPSTREAM}:${file}" 2>/dev/null) <(git show "${BRANCH}:${file}" 2>/dev/null) > "$WORKDIR/diff.txt" 2>/dev/null || true
+
+  signature=$(grep '^>' "$WORKDIR/diff.txt" | sed 's/^> //' | sed 's/^[[:space:]]*//' | grep -vE '^$|^//|^#' | sed -n '1p')
   [ -z "$signature" ] && continue
 
-  # Count how many times this exact string appears in our version
   occurrences=$(git show "${BRANCH}:${file}" | grep -cF "$signature" 2>/dev/null || echo 0)
 
   echo "  - file: $file"
   echo "    signature: '$signature'"
   echo "    occurrences: $occurrences"
   echo ""
-done < /tmp/rezus-patch-files.txt
+  i=$((i+1))
+done < "$WORKDIR/files.txt"
 
-# === ADDITIVE: files in ours not in upstream ===
+# Additive
 echo "additive:"
 comm -23 \
   <(git ls-tree -r --name-only "$BRANCH" | sort) \

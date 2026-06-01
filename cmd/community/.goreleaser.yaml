@@ -70,7 +70,7 @@ dockers:
       - --platform=linux/amd64
     extra_files:
       - frontend/build
-      - templates/email
+      - templates
     image_templates:
       - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
   - id: signoz-community-arm64
@@ -84,7 +84,7 @@ dockers:
       - --platform=linux/arm64
     extra_files:
       - frontend/build
-      - templates/email
+      - templates
     image_templates:
       - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"
 

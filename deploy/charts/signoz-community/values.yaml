@@ -739,6 +739,9 @@ signoz:
   # @section -- SigNoz
   replicaCount: 1
   # signoz.image -- Image configuration for SigNoz.
+    # signoz.image.fullImage - Override the full image string (e.g. ghcr.io/rezuscloud/signoz:v1-community).
+    # When set, takes precedence over registry/repository/tag.
+    # fullImage: ""
   # @section -- SigNoz
   image:
     # signoz.image.registry - The container image registry.

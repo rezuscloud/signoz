@@ -75,6 +75,9 @@ Create the name of the service account to use
 Return the proper signoz image name
 */}}
 {{- define "signoz.image" -}}
+{{- if .Values.signoz.image.fullImage -}}
+{{- .Values.signoz.image.fullImage -}}
+{{- else -}}
 {{- $registryName := default .Values.signoz.image.registry .Values.global.imageRegistry -}}
 {{- $repositoryName := .Values.signoz.image.repository -}}
 {{- $tag := default .Chart.AppVersion .Values.signoz.image.tag | toString -}}
@@ -82,6 +85,8 @@ Return the proper signoz image name
     {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- else -}}
     {{- printf "%s:%s" $repositoryName $tag -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 

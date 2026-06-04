@@ -88,7 +88,6 @@ Return the proper signoz image name
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- end -}}
 
 {{/*
 Set signoz port

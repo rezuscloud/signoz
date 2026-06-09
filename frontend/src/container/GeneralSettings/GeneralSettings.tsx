@@ -375,11 +375,22 @@ function GeneralSettings({
 						ttlConditions: [],
 					});
 				} else {
+					// Only send coldStorage when there's an actual S3 cold
+					// retention value. The backend rejects negative toCold
+					// durations, and the S3 disk for data storage (s3_only
+					// policy) is not a cold storage tier.
+					const hasS3ColdRetention =
+						s3Enabled &&
+						apiCallS3Retention &&
+						apiCallS3Retention > 0;
+
 					await setRetentionApi({
 						type,
 						totalDuration: `${apiCallTotalRetention || -1}h`,
-						coldStorage: s3Enabled ? 's3' : null,
-						toColdDuration: `${apiCallS3Retention || -1}h`,
+						coldStorage: hasS3ColdRetention ? 's3' : null,
+						toColdDuration: hasS3ColdRetention
+							? `${apiCallS3Retention}h`
+						: undefined,
 					});
 				}
 			} catch (error) {

@@ -461,11 +461,6 @@ func (m *module) getMetricsExistence(ctx context.Context, metricNames []string) 
 	}
 	defer rows.Close()
 
-<<<<<<< HEAD
-	type metricInfo struct {
-		count            uint64
-		minFirstReported int64
-=======
 	for rows.Next() {
 		var name string
 		var cnt uint64
@@ -475,7 +470,6 @@ func (m *module) getMetricsExistence(ctx context.Context, metricNames []string) 
 		if cnt > 0 {
 			present[name] = true
 		}
->>>>>>> upstream/main
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -518,41 +512,18 @@ func (m *module) getAttributesExistence(ctx context.Context, metricNames, attrNa
 	for rows.Next() {
 		var name string
 		var cnt uint64
-<<<<<<< HEAD
-		var minFR int64
-		if err := rows.Scan(&name, &cnt, &minFR); err != nil {
-			return nil, 0, err
-=======
 		if err := rows.Scan(&name, &cnt); err != nil {
 			return nil, err
 		}
 		if name != "" && cnt > 0 {
 			present[name] = true
->>>>>>> upstream/main
 		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-<<<<<<< HEAD
-	var missingMetrics []string
-	var globalMinFirstReported int64
-	for _, name := range metricNames {
-		info, ok := found[name]
-		if !ok || info.count == 0 {
-			missingMetrics = append(missingMetrics, name)
-			continue
-		}
-		if globalMinFirstReported == 0 || info.minFirstReported < globalMinFirstReported {
-			globalMinFirstReported = info.minFirstReported
-		}
-	}
-
-	return missingMetrics, uint64(globalMinFirstReported), nil
-=======
 	return present, nil
->>>>>>> upstream/main
 }
 
 // getMetadata fetches the latest values of additionalCols for each unique combination of groupBy keys,

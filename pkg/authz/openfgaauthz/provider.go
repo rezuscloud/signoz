@@ -181,13 +181,11 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 	return provider.Grant(ctx, orgID, []string{authtypes.SigNozAdminRoleName}, authtypes.MustNewSubject(coretypes.NewResourceUser(), userID.String(), orgID, nil))
 }
 
-<<<<<<< HEAD
-func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.Role) error {
-	return provider.store.Create(ctx, role)
-=======
-func (setter *provider) Create(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
->>>>>>> upstream/main
+// Create persists the role via the community SQL store. The interface accepts
+// *RoleWithTransactionGroups (an EE shape); the community build performs role
+// CRUD only and ignores transaction-group reconciliation (EE-only).
+func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
+	return provider.store.Create(ctx, role.Role)
 }
 
 func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) (*authtypes.Role, error) {
@@ -237,17 +235,14 @@ func (provider *provider) GetObjects(ctx context.Context, orgID valuer.UUID, id 
 	return objects, nil
 }
 
-<<<<<<< HEAD
-func (provider *provider) Patch(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) error {
-	return provider.store.Update(ctx, orgID, role)
-=======
-func (provider *provider) Update(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+// Update reconciles role metadata via the community SQL store (transaction-group
+// reconciliation is EE-only and intentionally not implemented here).
+func (provider *provider) Update(ctx context.Context, orgID valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
+	return provider.store.Update(ctx, orgID, role.Role)
 }
 
-func (provider *provider) Patch(_ context.Context, _ valuer.UUID, _ *authtypes.Role) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
->>>>>>> upstream/main
+func (provider *provider) Patch(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) error {
+	return provider.store.Update(ctx, orgID, role)
 }
 
 func (provider *provider) PatchObjects(ctx context.Context, orgID valuer.UUID, name string, relation authtypes.Relation, additions []*coretypes.Object, deletions []*coretypes.Object) error {

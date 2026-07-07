@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Generic centred body — used by the loading indicator.
 .body {
 	flex: 1;
@@ -13,6 +14,9 @@
 // Container for the rendered chart — fills the panel below the header and lets
 // the chart shrink (min-* 0) so it resizes with the grid cell.
 .chartContainer {
+=======
+.panelContainer {
+>>>>>>> upstream/main
 	flex: 1;
 	display: flex;
 	min-height: 0;

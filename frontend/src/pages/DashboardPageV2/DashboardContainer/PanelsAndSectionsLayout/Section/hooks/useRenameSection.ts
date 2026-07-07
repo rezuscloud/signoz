@@ -1,9 +1,16 @@
 import { useCallback, useState } from 'react';
 
+<<<<<<< HEAD
 import { patchDashboardV2 } from 'api/generated/services/dashboard';
 import { useErrorModal } from 'providers/ErrorModalProvider';
 import APIError from 'types/api/error';
 
+=======
+import { useErrorModal } from 'providers/ErrorModalProvider';
+import APIError from 'types/api/error';
+
+import { useOptimisticPatch } from '../../../hooks/useOptimisticPatch';
+>>>>>>> upstream/main
 import { renameSectionOp } from '../../../patchOps';
 import { useDashboardStore } from '../../../store/useDashboardStore';
 
@@ -19,7 +26,11 @@ interface Result {
 /** Renames a section's title via `replace /spec/layouts/<i>/spec/display/title`. */
 export function useRenameSection({ layoutIndex }: Params): Result {
 	const dashboardId = useDashboardStore((s) => s.dashboardId);
+<<<<<<< HEAD
 	const refetch = useDashboardStore((s) => s.refetch);
+=======
+	const { patchAsync } = useOptimisticPatch();
+>>>>>>> upstream/main
 	const [isSaving, setIsSaving] = useState(false);
 	const { showErrorModal } = useErrorModal();
 
@@ -31,10 +42,14 @@ export function useRenameSection({ layoutIndex }: Params): Result {
 			}
 			try {
 				setIsSaving(true);
+<<<<<<< HEAD
 				await patchDashboardV2({ id: dashboardId }, [
 					renameSectionOp(layoutIndex, trimmed),
 				]);
 				refetch();
+=======
+				await patchAsync([renameSectionOp(layoutIndex, trimmed)]);
+>>>>>>> upstream/main
 				return true;
 			} catch (error) {
 				showErrorModal(error as APIError);
@@ -43,7 +58,11 @@ export function useRenameSection({ layoutIndex }: Params): Result {
 				setIsSaving(false);
 			}
 		},
+<<<<<<< HEAD
 		[dashboardId, layoutIndex, refetch, showErrorModal],
+=======
+		[dashboardId, layoutIndex, patchAsync, showErrorModal],
+>>>>>>> upstream/main
 	);
 
 	return { rename, isSaving };

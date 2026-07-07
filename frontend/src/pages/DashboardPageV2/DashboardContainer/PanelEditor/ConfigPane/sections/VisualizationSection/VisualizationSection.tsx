@@ -1,26 +1,74 @@
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
 import { DashboardtypesTimePreferenceDTO } from 'api/generated/services/sigNoz.schemas';
 import type { SectionEditorProps } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
 
 import ConfigSelect from '../../controls/ConfigSelect/ConfigSelect';
 import ConfigSwitch from '../../controls/ConfigSwitch/ConfigSwitch';
+=======
+import type {
+	SectionEditorProps,
+	SectionKind,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+import { EQueryType } from 'types/common/dashboard';
+
+import ConfigSelect from '../../controls/ConfigSelect/ConfigSelect';
+import ConfigSwitch from '../../controls/ConfigSwitch/ConfigSwitch';
+import PanelTypeSwitcher from '../../PanelTypeSwitcher/PanelTypeSwitcher';
+import type { SectionEditorContext } from '../../sectionContext';
+>>>>>>> upstream/main
 import { TIME_PREFERENCE_OPTIONS } from './timePreferenceOptions';
 
 import styles from './VisualizationSection.module.scss';
 
+<<<<<<< HEAD
 /**
  * Edits the `visualization` slice: the per-panel time preference (all kinds), bar
  * stacking (`stackedBarChart`, Bar only), and gap filling (`fillSpans`, TimeSeries
  * only). Each control is gated by its `controls` flag, so a kind only renders — and only
  * writes — the visualization fields its spec actually supports.
+=======
+type VisualizationSectionProps = SectionEditorProps<SectionKind.Visualization> &
+	Pick<
+		SectionEditorContext,
+		'panelKind' | 'onChangePanelKind' | 'signal' | 'queryType'
+	>;
+
+/**
+ * Edits the `visualization` slice: the panel-type switcher (`switchPanelKind`, every
+ * kind), the per-panel time preference, bar stacking (`stackedBarChart`, Bar only), and
+ * gap filling (`fillSpans`, TimeSeries only). Each control is gated by its `controls`
+ * flag, so a kind only renders — and only writes — the fields its spec supports.
+>>>>>>> upstream/main
  */
 function VisualizationSection({
 	value,
 	controls,
 	onChange,
+<<<<<<< HEAD
 }: SectionEditorProps<'visualization'>): JSX.Element {
 	return (
 		<>
+=======
+	panelKind,
+	onChangePanelKind,
+	queryType,
+	signal,
+}: VisualizationSectionProps): JSX.Element {
+	return (
+		<>
+			{controls.switchPanelKind && panelKind && onChangePanelKind && (
+				<PanelTypeSwitcher
+					panelKind={panelKind}
+					// queryType is optional on the kind-erased section context, but always
+					// supplied in practice; default to Query Builder at this boundary.
+					queryType={queryType ?? EQueryType.QUERY_BUILDER}
+					signal={signal}
+					onChange={onChangePanelKind}
+				/>
+			)}
+
+>>>>>>> upstream/main
 			{controls.timePreference && (
 				<div className={styles.field}>
 					<Typography.Text>Panel time preference</Typography.Text>
@@ -32,7 +80,11 @@ function VisualizationSection({
 						onChange={(next): void =>
 							onChange({
 								...value,
+<<<<<<< HEAD
 								timePreference: next as DashboardtypesTimePreferenceDTO,
+=======
+								timePreference: next,
+>>>>>>> upstream/main
 							})
 						}
 					/>

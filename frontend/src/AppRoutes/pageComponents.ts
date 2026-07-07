@@ -57,10 +57,10 @@ export const TraceFilter = Loadable(
 	() => import(/* webpackChunkName: "Trace Filter Page" */ 'pages/Trace'),
 );
 
-export const TraceDetail = Loadable(
+export const TraceDetailOldRedirect = Loadable(
 	() =>
 		import(
-			/* webpackChunkName: "TraceDetail Page" */ 'pages/TraceDetailV2/index'
+			/* webpackChunkName: "TraceDetailOldRedirect" */ 'pages/TraceDetailOldRedirect/index'
 		),
 );
 
@@ -327,5 +327,12 @@ export const AIAssistantPage = Loadable(
 	() =>
 		import(
 			/* webpackChunkName: "AI Assistant Page" */ 'pages/AIAssistantPage/AIAssistantPage'
+		),
+);
+
+export const LLMObservabilityPage = Loadable(
+	() =>
+		import(
+			/* webpackChunkName: "LLM Observability Page" */ 'pages/LLMObservability'
 		),
 );

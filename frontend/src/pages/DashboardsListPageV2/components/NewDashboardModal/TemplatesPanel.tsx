@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
+<<<<<<< HEAD
 import { Button } from '@signozhq/ui/button';
 import { Typography } from '@signozhq/ui/typography';
 import { toast } from '@signozhq/ui/sonner';
@@ -36,25 +37,74 @@ function TemplatesPanel(): JSX.Element {
 
 	const handleUse = async (): Promise<void> => {
 		if (!selected) {
+=======
+import { toast } from '@signozhq/ui/sonner';
+import { AxiosError } from 'axios';
+import logEvent from 'api/common/logEvent';
+import { createDashboardV2 } from 'api/generated/services/dashboard';
+import ROUTES from 'constants/routes';
+import DashboardTemplatesContent from 'container/ListOfDashboard/DashboardTemplates/DashboardTemplatesContent';
+import { useSafeNavigate } from 'hooks/useSafeNavigate';
+import { useErrorModal } from 'providers/ErrorModalProvider';
+import APIError from 'types/api/error';
+
+import styles from './NewDashboardModal.module.scss';
+
+interface Props {
+	onClose: () => void;
+}
+
+// Until the templates BE API lands, the V2 "From a template" tab embeds the V1
+// template gallery inline (no modal-in-modal). The V1 templates are placeholders,
+// so the action creates a blank dashboard.
+function TemplatesPanel({ onClose }: Props): JSX.Element {
+	const { safeNavigate } = useSafeNavigate();
+	const { showErrorModal } = useErrorModal();
+	const [creating, setCreating] = useState(false);
+
+	const handleCreate = async (): Promise<void> => {
+		if (creating) {
+>>>>>>> upstream/main
 			return;
 		}
 		try {
 			setCreating(true);
+<<<<<<< HEAD
 			logEvent('Dashboard List: Use template clicked', { template: selected.id });
 			const parsed = JSON.parse(selected.json) as Record<string, unknown>;
 			const created = await createDashboardV2(normalizeToPostable(parsed));
+=======
+			logEvent('Dashboard List: Use template clicked', {});
+			const created = await createDashboardV2({
+				schemaVersion: 'v6',
+				generateName: true,
+				tags: null,
+				spec: {
+					display: { name: 'Sample Dashboard' },
+					layouts: [],
+					panels: {},
+					variables: [],
+				},
+			});
+			onClose();
+>>>>>>> upstream/main
 			safeNavigate(
 				generatePath(ROUTES.DASHBOARD, { dashboardId: created.data.id }),
 			);
 		} catch (e) {
 			showErrorModal(e as APIError);
+<<<<<<< HEAD
 			toast.error(
 				(e as AxiosError).toString() || 'Failed to create from template',
 			);
+=======
+			toast.error((e as AxiosError).toString() || 'Failed to create dashboard');
+>>>>>>> upstream/main
 			setCreating(false);
 		}
 	};
 
+<<<<<<< HEAD
 	if (isLoading) {
 		return (
 			<div className={styles.panel}>
@@ -131,6 +181,16 @@ function TemplatesPanel(): JSX.Element {
 
 			<div className={styles.requestRow}>
 				<RequestDashboardBtn />
+=======
+	return (
+		<div className={styles.panel}>
+			<div className="new-dashboard-templates-modal">
+				<DashboardTemplatesContent
+					onCreateNewDashboard={(): void => {
+						void handleCreate();
+					}}
+				/>
+>>>>>>> upstream/main
 			</div>
 		</div>
 	);

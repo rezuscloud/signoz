@@ -42,6 +42,13 @@ function VolumeControlConfigDrawer({
 
 	const footer = (
 		<div className={styles.footer}>
+<<<<<<< HEAD
+=======
+			<Typography.Text size="small" color="muted">
+				Changes take effect about 5 minutes after saving.
+			</Typography.Text>
+			<div className={styles.footerSpacer} />
+>>>>>>> upstream/main
 			<Button
 				variant="outlined"
 				color="secondary"
@@ -50,7 +57,10 @@ function VolumeControlConfigDrawer({
 			>
 				Cancel
 			</Button>
+<<<<<<< HEAD
 			<div className={styles.footerSpacer} />
+=======
+>>>>>>> upstream/main
 			{hasExistingRule && (
 				<Button
 					variant="ghost"

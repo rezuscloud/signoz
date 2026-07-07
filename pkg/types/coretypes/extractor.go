@@ -32,6 +32,7 @@ type ResourceIDsExtractor struct {
 	Fn    func(ExtractorContext) ([]string, error)
 }
 
+<<<<<<< HEAD
 func (extractor ResourceIDExtractor) IsPhase(phase ExtractPhase) bool {
 	return extractor.Fn != nil && extractor.Phase == phase
 }
@@ -43,6 +44,14 @@ func (extractor ResourceIDExtractor) RunFor(phase ExtractPhase, ec ExtractorCont
 
 	id, _ := extractor.Fn(ec)
 	return id, true
+=======
+func NewResourceIDExtractor(phase ExtractPhase, fn func(ExtractorContext) (string, error)) ResourceIDExtractor {
+	return ResourceIDExtractor{Phase: phase, Fn: fn}
+}
+
+func (extractor ResourceIDExtractor) IsPhase(phase ExtractPhase) bool {
+	return extractor.Fn != nil && extractor.Phase == phase
+>>>>>>> upstream/main
 }
 
 func (extractor ResourceIDsExtractor) IsPhase(phase ExtractPhase) bool {

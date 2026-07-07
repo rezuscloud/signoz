@@ -17,11 +17,34 @@
 	gap: 5px;
 }
 
+<<<<<<< HEAD
+=======
+.meterLabelRow {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+>>>>>>> upstream/main
 .meterLabel {
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 }
 
+<<<<<<< HEAD
 .meterValue {
+=======
+.meterInfo {
+	flex-shrink: 0;
+	color: var(--bg-vanilla-400, #c0c1c3);
+	line-height: 1;
+	cursor: help;
+}
+
+.meterValue {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+>>>>>>> upstream/main
 	font-family: 'Geist Mono', monospace;
 }

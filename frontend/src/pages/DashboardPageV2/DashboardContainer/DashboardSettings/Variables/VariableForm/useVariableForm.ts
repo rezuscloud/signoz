@@ -46,8 +46,17 @@ export interface UseVariableForm {
 	handleSave: () => void;
 }
 
+<<<<<<< HEAD
 const readDefaultValue = (model: VariableFormModel): string =>
 	((model.defaultValue as { value?: string })?.value ?? '') as string;
+=======
+// `defaultValue` is a string | string[] on the wire; the editor uses a single
+// string, so take the first when it's an array.
+const readDefaultValue = (model: VariableFormModel): string => {
+	const dv = model.defaultValue;
+	return Array.isArray(dv) ? (dv[0] ?? '') : (dv ?? '');
+};
+>>>>>>> upstream/main
 
 /** Form state, derivations and handlers for the variable editor. */
 export function useVariableForm({
@@ -150,7 +159,11 @@ export function useVariableForm({
 		const next: VariableFormModel = {
 			...model,
 			name: trimmedName,
+<<<<<<< HEAD
 			defaultValue: defaultValue ? { value: defaultValue } : undefined,
+=======
+			defaultValue: defaultValue || undefined,
+>>>>>>> upstream/main
 		};
 
 		const cycle = detectVariableCycle([...siblings, next]);

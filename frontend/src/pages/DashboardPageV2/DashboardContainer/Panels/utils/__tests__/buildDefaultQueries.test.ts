@@ -13,6 +13,17 @@ describe('buildDefaultQueries', () => {
 		expect(serialized.toLowerCase()).toContain('logs');
 	});
 
+<<<<<<< HEAD
+=======
+	it('seeds a List panel without a limit so it pages server-side by default', () => {
+		const queries = buildDefaultQueries('signoz/ListPanel');
+
+		// A limit would make usePanelQuery treat the panel as a static, unpaged list.
+		const spec = queries[0].spec.plugin.spec as { limit?: number };
+		expect(spec.limit).toBeUndefined();
+	});
+
+>>>>>>> upstream/main
 	it('seeds no query for non-List kinds (they seed from the builder)', () => {
 		expect(buildDefaultQueries('signoz/TimeSeriesPanel')).toStrictEqual([]);
 		expect(buildDefaultQueries('signoz/NumberPanel')).toStrictEqual([]);

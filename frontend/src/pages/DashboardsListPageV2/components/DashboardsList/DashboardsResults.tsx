@@ -3,8 +3,13 @@ import {
 	DashboardtypesListSortDTO,
 } from 'api/generated/services/sigNoz.schemas';
 
+<<<<<<< HEAD
 import type { DashboardListItem } from '../../utils';
 import { noResultsCopy } from '../../views';
+=======
+import type { DashboardListItem } from '../../utils/helpers';
+import { noResultsCopy } from '../../utils/views';
+>>>>>>> upstream/main
 import ListHeader from '../ListHeader/ListHeader';
 import ErrorState from '../states/ErrorState/ErrorState';
 import LoadingState from '../states/LoadingState/LoadingState';

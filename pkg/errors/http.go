@@ -7,12 +7,21 @@ import (
 )
 
 type JSON struct {
+<<<<<<< HEAD
 	Type        string                    `json:"type" required:"true"`
 	Code        string                    `json:"code" required:"true"`
 	Message     string                    `json:"message" required:"true"`
 	Url         string                    `json:"url" required:"true" nullable:"true"`
 	Errors      []responseerroradditional `json:"errors" required:"true" nullable:"false"`
 	Retry       *responseretryjson        `json:"retry" required:"true" nullable:"true"`
+=======
+	Type        string                    `json:"type" required:"true" nullable:"false"`
+	Code        string                    `json:"code" required:"true" nullable:"false"`
+	Message     string                    `json:"message" required:"true" nullable:"false"`
+	Url         string                    `json:"url,omitempty" required:"false"`
+	Errors      []responseerroradditional `json:"errors" required:"true" nullable:"false"`
+	Retry       *responseretryjson        `json:"retry,omitempty" required:"false"`
+>>>>>>> upstream/main
 	Suggestions []string                  `json:"suggestions" required:"true" nullable:"false"`
 }
 
@@ -21,7 +30,11 @@ type responseretryjson struct {
 }
 
 type responseerroradditional struct {
+<<<<<<< HEAD
 	Message     string   `json:"message" required:"true"`
+=======
+	Message     string   `json:"message" required:"true" nullable:"false"`
+>>>>>>> upstream/main
 	Suggestions []string `json:"suggestions" required:"true" nullable:"false"`
 }
 

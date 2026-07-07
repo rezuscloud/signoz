@@ -12,6 +12,10 @@ type resolvedResourceWithTarget struct {
 	targetExtractor ResourceIDsExtractor
 	targetIDs       []string
 	parentChild     bool
+<<<<<<< HEAD
+=======
+	err             error
+>>>>>>> upstream/main
 }
 
 func NewResolvedResourceWithTarget(
@@ -44,17 +48,46 @@ func NewResolvedResourceWithTarget(
 
 func (resolved *resolvedResourceWithTarget) fill(phase ExtractPhase, ec ExtractorContext) {
 	if resolved.sourceExtractor.IsPhase(phase) {
+<<<<<<< HEAD
 		if ids, _ := resolved.sourceExtractor.Fn(ec); len(ids) > 0 {
 			resolved.sourceIDs = ids
 		}
 	}
 	if resolved.targetExtractor.IsPhase(phase) {
 		if ids, _ := resolved.targetExtractor.Fn(ec); len(ids) > 0 {
+=======
+		ids, err := resolved.sourceExtractor.Fn(ec)
+		if err != nil && phase == PhaseRequest {
+			resolved.err = err
+			return
+		}
+
+		if len(ids) > 0 {
+			resolved.sourceIDs = ids
+		}
+	}
+
+	if resolved.targetExtractor.IsPhase(phase) {
+		ids, err := resolved.targetExtractor.Fn(ec)
+		if err != nil && phase == PhaseRequest {
+			resolved.err = err
+			return
+		}
+
+		if len(ids) > 0 {
+>>>>>>> upstream/main
 			resolved.targetIDs = ids
 		}
 	}
 }
 
+<<<<<<< HEAD
+=======
+func (resolved *resolvedResourceWithTarget) Err() error {
+	return resolved.err
+}
+
+>>>>>>> upstream/main
 func (resolved *resolvedResourceWithTarget) Verb() Verb {
 	return resolved.verb
 }

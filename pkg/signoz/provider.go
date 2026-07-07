@@ -217,6 +217,10 @@ func NewSQLMigrationProviderFactories(
 		sqlmigration.NewAddDashboardViewFactory(sqlstore, sqlschema),
 		sqlmigration.NewMigrateSSORoleMappingNamesFactory(sqlstore),
 		sqlmigration.NewAddMetricReductionRulesFactory(sqlstore, sqlschema),
+<<<<<<< HEAD
+=======
+		sqlmigration.NewRemoveOrganizationTuplesFactory(sqlstore),
+>>>>>>> upstream/main
 	)
 }
 
@@ -306,6 +310,7 @@ func NewAPIServerProviderFactories(orgGetter organization.Getter, authz authz.Au
 			handlers.ZeusHandler,
 			handlers.QuerierHandler,
 			handlers.ServiceAccountHandler,
+			modules.ServiceAccountGetter,
 			handlers.RegistryHandler,
 			handlers.CloudIntegrationHandler,
 			handlers.RuleStateHistory,

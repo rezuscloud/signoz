@@ -1,5 +1,9 @@
 import { useMemo, useRef } from 'react';
+<<<<<<< HEAD
 import { Select, Table } from 'antd';
+=======
+import { Select, Skeleton, Table } from 'antd';
+>>>>>>> upstream/main
 import cx from 'classnames';
 import { Button } from '@signozhq/ui/button';
 import { ChevronLeft, ChevronRight } from '@signozhq/icons';
@@ -33,9 +37,17 @@ function ListPanelRenderer({
 	panelId,
 	panel,
 	data,
+<<<<<<< HEAD
 	refetch,
 	searchTerm = '',
 	pagination,
+=======
+	isFetching,
+	refetch,
+	searchTerm = '',
+	pagination,
+	isPreviousData = false,
+>>>>>>> upstream/main
 }: PanelRendererProps<'signoz/ListPanel'>): JSX.Element {
 	// Pin the header while the body scrolls (shared with the Table kind).
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +64,11 @@ function ListPanelRenderer({
 	// and row-click behavior. Cast is safe — the query carries the same string values.
 	const signal = useMemo(
 		() =>
+<<<<<<< HEAD
 			(getBuilderQueries(panel.spec.queries || [])[0]
+=======
+			(getBuilderQueries(panel.spec.queries)[0]
+>>>>>>> upstream/main
 				?.signal as TelemetrytypesSignalDTO) || TelemetrytypesSignalDTO.logs,
 		[panel.spec.queries],
 	);
@@ -115,6 +131,28 @@ function ListPanelRenderer({
 	// Show the footer whenever the panel pages server-side, so the page-size picker stays reachable (V1 parity).
 	const showPager = !!pagination;
 
+<<<<<<< HEAD
+=======
+	// While the next page loads, swap the stale rows (held by keepPreviousData) for skeleton bars,
+	// keeping the header + pager. Row count mirrors the page being left.
+	const skeletonRowCount = dataSource.length || pagination?.pageSize || 10;
+	const skeletonColumns = useMemo(
+		() =>
+			resizableColumns.map((col) => ({
+				...col,
+				render: (): JSX.Element => <Skeleton.Input active block size="small" />,
+			})),
+		[resizableColumns],
+	);
+	const skeletonRows = useMemo(
+		() =>
+			Array.from({ length: skeletonRowCount }, (_, index) => ({
+				key: `skeleton-${index}`,
+			})) as unknown as typeof filteredDataSource,
+		[skeletonRowCount],
+	);
+
+>>>>>>> upstream/main
 	return (
 		<div
 			ref={containerRef}
@@ -122,7 +160,11 @@ function ListPanelRenderer({
 			className={PanelStyles.panelContainer}
 		>
 			{!table || dataSource.length === 0 ? (
+<<<<<<< HEAD
 				<NoData onRetry={refetch} />
+=======
+				<NoData isFetching={isFetching} onRetry={refetch} />
+>>>>>>> upstream/main
 			) : (
 				<>
 					<div
@@ -134,6 +176,7 @@ function ListPanelRenderer({
 						<Table
 							size="small"
 							tableLayout="fixed"
+<<<<<<< HEAD
 							columns={resizableColumns}
 							components={components}
 							dataSource={filteredDataSource}
@@ -141,6 +184,15 @@ function ListPanelRenderer({
 							// Vertical scroll only; `x: 'max-content'` forced a content-width min that pushed columns off-screen.
 							scroll={{ y: scrollY }}
 							onRow={onRow}
+=======
+							columns={isPreviousData ? skeletonColumns : resizableColumns}
+							components={components}
+							dataSource={isPreviousData ? skeletonRows : filteredDataSource}
+							pagination={false}
+							// Vertical scroll only; `x: 'max-content'` forced a content-width min that pushed columns off-screen.
+							scroll={{ y: scrollY }}
+							onRow={isPreviousData ? undefined : onRow}
+>>>>>>> upstream/main
 						/>
 					</div>
 					{showPager && pagination && (

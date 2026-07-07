@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { useCallback, useState } from 'react';
 import { ChevronDown, ChevronRight } from '@signozhq/icons';
 import type { AuthZResource, AuthZVerb } from 'hooks/useAuthZ/types';
+=======
+import { useCallback, useMemo, useState } from 'react';
+import { ChevronDown, ChevronRight } from '@signozhq/icons';
+import type { AuthZResource, AuthZVerb } from 'lib/authz/hooks/useAuthZ/types';
+>>>>>>> upstream/main
 
 import { Typography } from '@signozhq/ui/typography';
 
@@ -10,6 +16,10 @@ import ActionToggle from './ActionToggle';
 
 import styles from './ResourceCard.module.scss';
 import { PermissionScope, ResourcePermissions } from '../../types';
+<<<<<<< HEAD
+=======
+import cx from 'classnames';
+>>>>>>> upstream/main
 
 interface ResourceCardProps {
 	resource: ResourcePermissions;
@@ -74,10 +84,29 @@ function ResourceCard({
 
 	const [grantedCount, totalCount] = useRoleGrantedCount(resource);
 
+<<<<<<< HEAD
 	return (
 		<div
 			className={styles.resourceCard}
 			data-testid={`resource-card-${resource.resourceId}`}
+=======
+	const hasErrorOnResource = useMemo(
+		() =>
+			Array.from(validationErrors ?? []).some((r) =>
+				r.startsWith(resource.resourceId),
+			),
+		[validationErrors, resource.resourceId],
+	);
+
+	return (
+		<div
+			className={cx(
+				styles.resourceCard,
+				hasErrorOnResource && !isExpanded && styles.resourceCardError,
+			)}
+			data-testid={`resource-card-${resource.resourceId}`}
+			data-state={hasErrorOnResource && !isExpanded ? 'error' : undefined}
+>>>>>>> upstream/main
 		>
 			<button
 				type="button"

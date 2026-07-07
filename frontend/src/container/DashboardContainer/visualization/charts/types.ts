@@ -1,3 +1,4 @@
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { Timezone } from 'components/CustomTimePicker/timezoneUtils';
 import { PrecisionOption } from 'components/Graph/types';
 import {
@@ -79,6 +80,13 @@ export interface PieSlice {
 	label: string;
 	value: number;
 	color: string;
+<<<<<<< HEAD
+=======
+	/** Source query of the slice's value column — the drill-down target (present for V2 panels). */
+	queryName?: string;
+	/** Group-by key→value of the slice's source row, used to build drill-down filters. */
+	labels?: Record<string, string>;
+>>>>>>> upstream/main
 }
 
 /**
@@ -99,7 +107,12 @@ export interface PieChartProps {
 	 * (shared GRAPH_VISIBILITY_STATES, keyed by label). Omit to disable persistence.
 	 */
 	id?: string;
+<<<<<<< HEAD
 	/** Fired when a slice (or its legend entry) is clicked. */
 	onSliceClick?: (slice: PieSlice) => void;
+=======
+	/** Fired when a slice's arc is clicked; carries the DOM event for popover positioning. */
+	onSliceClick?: (slice: PieSlice, event: ReactMouseEvent) => void;
+>>>>>>> upstream/main
 	'data-testid'?: string;
 }

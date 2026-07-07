@@ -2,18 +2,33 @@ import { Typography } from '@signozhq/ui/typography';
 import { DashboardtypesPrecisionOptionDTO } from 'api/generated/services/sigNoz.schemas';
 import YAxisUnitSelector from 'components/YAxisUnitSelector';
 import { YAxisSource } from 'components/YAxisUnitSelector/types';
+<<<<<<< HEAD
 import type { SectionEditorProps } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
 
 import type { TableColumnOption } from '../../../hooks/useTableColumns';
 import ConfigSelect from '../../controls/ConfigSelect/ConfigSelect';
+=======
+import type {
+	SectionEditorProps,
+	SectionKind,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+
+import ConfigSelect from '../../controls/ConfigSelect/ConfigSelect';
+import type { SectionEditorContext } from '../../sectionContext';
+>>>>>>> upstream/main
 import ColumnUnits from './ColumnUnits';
 
 import styles from './FormattingSection.module.scss';
 
+<<<<<<< HEAD
 type FormattingSectionProps = SectionEditorProps<'formatting'> & {
 	/** Table panel's resolved value columns; required for the column-units editor. */
 	tableColumns?: TableColumnOption[];
 };
+=======
+type FormattingSectionProps = SectionEditorProps<SectionKind.Formatting> &
+	Pick<SectionEditorContext, 'tableColumns' | 'metricUnit'>;
+>>>>>>> upstream/main
 
 // `full` means "show the raw value, no rounding"; the digits round to that many places.
 const DECIMAL_OPTIONS: {
@@ -38,6 +53,10 @@ function FormattingSection({
 	controls,
 	onChange,
 	tableColumns = [],
+<<<<<<< HEAD
+=======
+	metricUnit,
+>>>>>>> upstream/main
 }: FormattingSectionProps): JSX.Element {
 	return (
 		<>
@@ -49,6 +68,10 @@ function FormattingSection({
 						data-testid="panel-editor-v2-unit"
 						source={YAxisSource.DASHBOARDS}
 						value={value?.unit}
+<<<<<<< HEAD
+=======
+						initialValue={metricUnit}
+>>>>>>> upstream/main
 						onChange={(unit): void => onChange({ ...value, unit })}
 					/>
 				</div>
@@ -65,7 +88,11 @@ function FormattingSection({
 						onChange={(next): void =>
 							onChange({
 								...value,
+<<<<<<< HEAD
 								decimalPrecision: next as DashboardtypesPrecisionOptionDTO,
+=======
+								decimalPrecision: next,
+>>>>>>> upstream/main
 							})
 						}
 					/>

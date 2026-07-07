@@ -1,5 +1,9 @@
 import type { Monaco } from '@monaco-editor/react';
+<<<<<<< HEAD
 import permissionsType from 'hooks/useAuthZ/permissions.type';
+=======
+import permissionsType from 'lib/authz/hooks/useAuthZ/permissions.type';
+>>>>>>> upstream/main
 import transactionGroupSchema from 'schemas/generated/transactionGroups.schema.json';
 
 export const TRANSACTION_GROUP_SCHEMA = transactionGroupSchema;

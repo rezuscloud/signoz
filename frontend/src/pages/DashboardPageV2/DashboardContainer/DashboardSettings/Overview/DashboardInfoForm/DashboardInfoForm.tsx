@@ -9,9 +9,16 @@ import {
 import { Typography } from '@signozhq/ui/typography';
 // eslint-disable-next-line signoz/no-antd-components -- multiline TextArea has no @signozhq/ui equivalent yet
 import { Input as AntdInput } from 'antd';
+<<<<<<< HEAD
 import AddTags from 'container/DashboardContainer/DashboardSettings/General/AddBadges';
 
 import { Base64Icons } from '../utils';
+=======
+import TagKeyValueInput from 'components/TagKeyValueInput/TagKeyValueInput';
+
+import { Base64Icons } from '../utils';
+import { DASHBOARD_NAME_MAX_LENGTH } from '../../../constants';
+>>>>>>> upstream/main
 import settingsStyles from '../../DashboardSettings.module.scss';
 import styles from './DashboardInfoForm.module.scss';
 
@@ -71,6 +78,10 @@ function DashboardInfoForm({
 							testId="dashboard-name"
 							className={styles.dashboardNameInput}
 							value={title}
+<<<<<<< HEAD
+=======
+							maxLength={DASHBOARD_NAME_MAX_LENGTH}
+>>>>>>> upstream/main
 							onChange={(e): void => onTitleChange(e.target.value)}
 						/>
 					</section>
@@ -89,9 +100,13 @@ function DashboardInfoForm({
 
 				<div className={styles.infoItemContainer}>
 					<Typography className={styles.infoTitle}>Tags</Typography>
+<<<<<<< HEAD
 					<div className={styles.tagsField}>
 						<AddTags tags={tags} setTags={onTagsChange} />
 					</div>
+=======
+					<TagKeyValueInput tags={tags} onTagsChange={onTagsChange} />
+>>>>>>> upstream/main
 				</div>
 			</div>
 		</div>

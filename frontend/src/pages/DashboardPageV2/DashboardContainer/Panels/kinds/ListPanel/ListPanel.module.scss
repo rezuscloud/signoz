@@ -21,6 +21,14 @@
 
 // Logs: drop the row separators for a denser log view (V1 logs table parity).
 .logRows {
+<<<<<<< HEAD
+=======
+	// Every row opens the log detail drawer, so flag it as clickable.
+	:global(.ant-table-tbody) > tr {
+		cursor: pointer;
+	}
+
+>>>>>>> upstream/main
 	:global(.ant-table-tbody) > tr > td {
 		border-bottom: none;
 	}

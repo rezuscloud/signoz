@@ -11,6 +11,11 @@ export interface UseGetQueryRangeV5Args {
 	requestPayload: Querybuildertypesv5QueryRangeRequestDTO;
 	queryKey: unknown[];
 	enabled: boolean;
+<<<<<<< HEAD
+=======
+	/** Retain prior data across a key change (list paging) so the table + pager stay mounted. */
+	keepPreviousData?: boolean;
+>>>>>>> upstream/main
 }
 
 /**
@@ -40,11 +45,19 @@ export function useGetQueryRangeV5({
 	requestPayload,
 	queryKey,
 	enabled,
+<<<<<<< HEAD
+=======
+	keepPreviousData,
+>>>>>>> upstream/main
 }: UseGetQueryRangeV5Args): UseQueryResult<QueryRangeV5200, Error> {
 	return useQuery<QueryRangeV5200, Error>({
 		queryKey,
 		queryFn: ({ signal }) => queryRangeV5(requestPayload, signal),
 		enabled,
 		retry: retryUnlessClientError,
+<<<<<<< HEAD
+=======
+		keepPreviousData,
+>>>>>>> upstream/main
 	});
 }

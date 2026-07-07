@@ -12,6 +12,10 @@ import noRawAbsolutePath from './rules/no-raw-absolute-path.mjs';
 import noAntdComponents from './rules/no-antd-components.mjs';
 import noSignozhqUiBarrel from './rules/no-signozhq-ui-barrel.mjs';
 import noCssModuleBracketAccess from './rules/no-css-module-bracket-access.mjs';
+<<<<<<< HEAD
+=======
+import noDashboardFetchOutsideRoot from './rules/no-dashboard-fetch-outside-root.mjs';
+>>>>>>> upstream/main
 
 export default {
 	meta: {
@@ -25,5 +29,9 @@ export default {
 		'no-antd-components': noAntdComponents,
 		'no-signozhq-ui-barrel': noSignozhqUiBarrel,
 		'no-css-module-bracket-access': noCssModuleBracketAccess,
+<<<<<<< HEAD
+=======
+		'no-dashboard-fetch-outside-root': noDashboardFetchOutsideRoot,
+>>>>>>> upstream/main
 	},
 };

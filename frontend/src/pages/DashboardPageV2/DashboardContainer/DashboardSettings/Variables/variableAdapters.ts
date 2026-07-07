@@ -1,5 +1,9 @@
 import {
+<<<<<<< HEAD
 	DashboardtypesVariableEnvelopeGithubComPersesSpecGoDashboardTextVariableSpecDTOKind as TextEnvelopeKind,
+=======
+	DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesTextVariableSpecDTOKind as TextEnvelopeKind,
+>>>>>>> upstream/main
 	DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesListVariableSpecDTOKind as ListEnvelopeKind,
 	DashboardtypesVariablePluginVariantGithubComSigNozSignozPkgTypesDashboardtypesCustomVariableSpecDTOKind as CustomPluginKind,
 	DashboardtypesVariablePluginVariantGithubComSigNozSignozPkgTypesDashboardtypesDynamicVariableSpecDTOKind as DynamicPluginKind,
@@ -9,7 +13,11 @@ import type {
 	DashboardtypesListVariableSpecDTO,
 	DashboardtypesVariableDTO,
 	DashboardtypesVariablePluginDTO,
+<<<<<<< HEAD
 	DashboardTextVariableSpecDTO,
+=======
+	DashboardtypesTextVariableSpecDTO,
+>>>>>>> upstream/main
 } from 'api/generated/services/sigNoz.schemas';
 
 import {
@@ -19,7 +27,10 @@ import {
 	signalForApi,
 	VARIABLE_SORT_DISABLED,
 	type VariableFormModel,
+<<<<<<< HEAD
 	type VariableSort,
+=======
+>>>>>>> upstream/main
 } from './variableFormModel';
 
 /** DTO envelope → flat form model (for display / editing). */
@@ -37,7 +48,11 @@ export function dtoToFormModel(
 
 	// Text variable — a distinct envelope (no list plugin).
 	if (dto.kind === TextEnvelopeKind.TextVariable) {
+<<<<<<< HEAD
 		const spec = dto.spec as DashboardTextVariableSpecDTO;
+=======
+		const spec = dto.spec as DashboardtypesTextVariableSpecDTO;
+>>>>>>> upstream/main
 		return {
 			...common,
 			type: 'TEXT',
@@ -52,7 +67,11 @@ export function dtoToFormModel(
 		...common,
 		multiSelect: spec.allowMultiple ?? false,
 		showAllOption: spec.allowAllValue ?? false,
+<<<<<<< HEAD
 		sort: (spec.sort as VariableSort) ?? VARIABLE_SORT_DISABLED,
+=======
+		sort: spec.sort ?? VARIABLE_SORT_DISABLED,
+>>>>>>> upstream/main
 		defaultValue: spec.defaultValue,
 	};
 	const plugin = spec.plugin;

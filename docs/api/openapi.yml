@@ -515,6 +515,13 @@ components:
         url:
           type: string
       type: object
+    AuthtypesDeprecatedPostableUserRole:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
     AuthtypesGettableAuthDomain:
       properties:
         authNProviderInfo:
@@ -618,13 +625,6 @@ components:
         provider:
           $ref: '#/components/schemas/AuthtypesAuthNProvider'
       type: object
-    AuthtypesPatchableRole:
-      properties:
-        description:
-          type: string
-      required:
-      - description
-      type: object
     AuthtypesPostableAuthDomain:
       properties:
         config:
@@ -667,17 +667,31 @@ components:
           type: string
         userRoles:
           items:
+<<<<<<< HEAD
             $ref: '#/components/schemas/AuthtypesPostableUserRole'
+=======
+            $ref: '#/components/schemas/AuthtypesDeprecatedPostableUserRole'
+>>>>>>> upstream/main
           type: array
       required:
       - email
       type: object
     AuthtypesPostableUserRole:
       properties:
+<<<<<<< HEAD
         id:
           type: string
       required:
       - id
+=======
+        roleId:
+          type: string
+        userId:
+          type: string
+      required:
+      - userId
+      - roleId
+>>>>>>> upstream/main
       type: object
     AuthtypesRelation:
       enum:
@@ -1024,6 +1038,8 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSAccountConfig'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesAzureAccountConfig'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPAccountConfig'
       type: object
     CloudintegrationtypesAgentReport:
       nullable: true
@@ -1169,6 +1185,8 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSConnectionArtifact'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesAzureConnectionArtifact'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPConnectionArtifact'
       type: object
     CloudintegrationtypesCredentials:
       properties:
@@ -1198,6 +1216,46 @@ components:
             $ref: '#/components/schemas/CloudintegrationtypesCollectedMetric'
           nullable: true
           type: array
+      type: object
+    CloudintegrationtypesGCPAccountConfig:
+      properties:
+        deploymentProjectId:
+          type: string
+        deploymentRegion:
+          type: string
+        projectIds:
+          items:
+            type: string
+          type: array
+      required:
+      - deploymentProjectId
+      - deploymentRegion
+      - projectIds
+      type: object
+    CloudintegrationtypesGCPConnectionArtifact:
+      type: object
+    CloudintegrationtypesGCPIntegrationConfig:
+      type: object
+    CloudintegrationtypesGCPServiceConfig:
+      properties:
+        logs:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPServiceLogsConfig'
+        metrics:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPServiceMetricsConfig'
+      type: object
+    CloudintegrationtypesGCPServiceLogsConfig:
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+      type: object
+    CloudintegrationtypesGCPServiceMetricsConfig:
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
       type: object
     CloudintegrationtypesGettableAccountWithConnectionArtifact:
       properties:
@@ -1331,6 +1389,8 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSPostableAccountConfig'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesAzureAccountConfig'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPAccountConfig'
       type: object
     CloudintegrationtypesPostableAgentCheckIn:
       properties:
@@ -1355,6 +1415,8 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSIntegrationConfig'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesAzureIntegrationConfig'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPIntegrationConfig'
       type: object
     CloudintegrationtypesService:
       properties:
@@ -1399,6 +1461,20 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSServiceConfig'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesAzureServiceConfig'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesGCPServiceConfig'
+      type: object
+    CloudintegrationtypesServiceDashboard:
+      properties:
+        description:
+          type: string
+        integrationDashboard:
+          $ref: '#/components/schemas/CloudintegrationtypesStorableIntegrationDashboard'
+        title:
+          type: string
+      required:
+      - title
+      - description
       type: object
     CloudintegrationtypesServiceDashboard:
       properties:
@@ -1441,6 +1517,10 @@ components:
       - cosmosdb
       - cassandradb
       - redis
+<<<<<<< HEAD
+=======
+      - cloudsql
+>>>>>>> upstream/main
       type: string
     CloudintegrationtypesServiceMetadata:
       properties:
@@ -1502,6 +1582,8 @@ components:
           $ref: '#/components/schemas/CloudintegrationtypesAWSAccountConfig'
         azure:
           $ref: '#/components/schemas/CloudintegrationtypesUpdatableAzureAccountConfig'
+        gcp:
+          $ref: '#/components/schemas/CloudintegrationtypesUpdatableGCPAccountConfig'
       type: object
     CloudintegrationtypesUpdatableAzureAccountConfig:
       properties:
@@ -1511,6 +1593,22 @@ components:
           type: array
       required:
       - resourceGroups
+      type: object
+    CloudintegrationtypesUpdatableGCPAccountConfig:
+      properties:
+        deploymentProjectId:
+          type: string
+        deploymentRegion:
+          type: string
+        projectIds:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - deploymentProjectId
+      - deploymentRegion
+      - projectIds
       type: object
     CloudintegrationtypesUpdatableService:
       properties:
@@ -2467,22 +2565,6 @@ components:
       - resource
       - selectors
       type: object
-    CoretypesPatchableObjects:
-      properties:
-        additions:
-          items:
-            $ref: '#/components/schemas/CoretypesObjectGroup'
-          nullable: true
-          type: array
-        deletions:
-          items:
-            $ref: '#/components/schemas/CoretypesObjectGroup'
-          nullable: true
-          type: array
-      required:
-      - additions
-      - deletions
-      type: object
     CoretypesResourceRef:
       properties:
         kind:
@@ -2541,6 +2623,7 @@ components:
           type: string
       type: object
     DashboardLink:
+<<<<<<< HEAD
       properties:
         name:
           type: string
@@ -2554,14 +2637,18 @@ components:
           type: string
       type: object
     DashboardTextVariableSpec:
+=======
+>>>>>>> upstream/main
       properties:
-        constant:
-          type: boolean
-        display:
-          $ref: '#/components/schemas/VariableDisplay'
         name:
           type: string
-        value:
+        renderVariables:
+          type: boolean
+        targetBlank:
+          type: boolean
+        tooltip:
+          type: string
+        url:
           type: string
       type: object
     DashboardtypesAxes:
@@ -2673,6 +2760,30 @@ components:
         updatedBy:
           type: string
       type: object
+    DashboardtypesDashboardPanelRef:
+      properties:
+        dashboardId:
+          type: string
+        dashboardName:
+          type: string
+        filterBy:
+          items:
+            type: string
+          type: array
+        groupBy:
+          items:
+            type: string
+          type: array
+        panelId:
+          type: string
+        panelName:
+          type: string
+      required:
+      - dashboardId
+      - dashboardName
+      - panelId
+      - panelName
+      type: object
     DashboardtypesDashboardSpec:
       properties:
         datasources:
@@ -2745,24 +2856,30 @@ components:
     DashboardtypesDatasourcePlugin:
       discriminator:
         mapping:
+<<<<<<< HEAD
           signoz/Datasource: '#/components/schemas/DashboardtypesDatasourcePluginVariantStruct'
         propertyName: kind
       oneOf:
       - $ref: '#/components/schemas/DashboardtypesDatasourcePluginVariantStruct'
+=======
+          signoz/Datasource: '#/components/schemas/DashboardtypesDatasourcePluginVariantGithubComSigNozSignozPkgTypesDashboardtypesSigNozDatasourceSpec'
+        propertyName: kind
+      oneOf:
+      - $ref: '#/components/schemas/DashboardtypesDatasourcePluginVariantGithubComSigNozSignozPkgTypesDashboardtypesSigNozDatasourceSpec'
+>>>>>>> upstream/main
       type: object
     DashboardtypesDatasourcePluginKind:
       enum:
       - signoz/Datasource
       type: string
-    DashboardtypesDatasourcePluginVariantStruct:
+    DashboardtypesDatasourcePluginVariantGithubComSigNozSignozPkgTypesDashboardtypesSigNozDatasourceSpec:
       properties:
         kind:
           enum:
           - signoz/Datasource
           type: string
         spec:
-          nullable: true
-          type: object
+          $ref: '#/components/schemas/DashboardtypesSigNozDatasourceSpec'
       required:
       - kind
       - spec
@@ -2859,6 +2976,13 @@ components:
         publicDashboard:
           $ref: '#/components/schemas/DashboardtypesGettablePublicDasbhboard'
       type: object
+    DashboardtypesGettablePublicDashboardDataV2:
+      properties:
+        dashboard:
+          $ref: '#/components/schemas/DashboardtypesGettableDashboardV2'
+        publicDashboard:
+          $ref: '#/components/schemas/DashboardtypesGettablePublicDasbhboard'
+      type: object
     DashboardtypesHistogramBuckets:
       properties:
         bucketCount:
@@ -2928,9 +3052,15 @@ components:
             type: string
           nullable: true
           type: object
+        mode:
+          $ref: '#/components/schemas/DashboardtypesLegendMode'
         position:
           $ref: '#/components/schemas/DashboardtypesLegendPosition'
       type: object
+    DashboardtypesLegendMode:
+      enum:
+      - list
+      type: string
     DashboardtypesLegendPosition:
       enum:
       - bottom
@@ -2977,16 +3107,91 @@ components:
         customAllValue:
           type: string
         defaultValue:
-          $ref: '#/components/schemas/VariableDefaultValue'
+          $ref: '#/components/schemas/DashboardtypesVariableDefaultValue'
         display:
           $ref: '#/components/schemas/DashboardtypesDisplay'
         name:
+          minLength: 1
           type: string
         plugin:
           $ref: '#/components/schemas/DashboardtypesVariablePlugin'
         sort:
-          nullable: true
+          $ref: '#/components/schemas/DashboardtypesListVariableSpecSort'
+      required:
+      - display
+      - name
+      type: object
+    DashboardtypesListVariableSpecSort:
+      enum:
+      - none
+      - alphabetical-asc
+      - alphabetical-desc
+      - numerical-asc
+      - numerical-desc
+      - alphabetical-ci-asc
+      - alphabetical-ci-desc
+      type: string
+    DashboardtypesListableDashboardForUserV2:
+      properties:
+        dashboards:
+          items:
+            $ref: '#/components/schemas/DashboardtypesListedDashboardForUserV2'
+          type: array
+        reservedKeywords:
+          items:
+            type: string
+          type: array
+        tags:
+          items:
+            $ref: '#/components/schemas/TagtypesGettableTag'
+          type: array
+        total:
+          format: int64
+          type: integer
+      required:
+      - dashboards
+      - total
+      - tags
+      - reservedKeywords
+      type: object
+    DashboardtypesListableDashboardV2:
+      properties:
+        dashboards:
+          items:
+            $ref: '#/components/schemas/DashboardtypesListedDashboardV2'
+          type: array
+        reservedKeywords:
+          items:
+            type: string
+          type: array
+        tags:
+          items:
+            $ref: '#/components/schemas/TagtypesGettableTag'
+          type: array
+        total:
+          format: int64
+          type: integer
+      required:
+      - dashboards
+      - total
+      - tags
+      - reservedKeywords
+      type: object
+    DashboardtypesListableDashboardView:
+      properties:
+        views:
+          items:
+            $ref: '#/components/schemas/DashboardtypesDashboardView'
+          type: array
+      required:
+      - views
+      type: object
+    DashboardtypesListedDashboardForUserV2:
+      properties:
+        createdAt:
+          format: date-time
           type: string
+<<<<<<< HEAD
       required:
       - display
       type: object
@@ -3040,6 +3245,8 @@ components:
         createdAt:
           format: date-time
           type: string
+=======
+>>>>>>> upstream/main
         createdBy:
           type: string
         id:
@@ -3490,17 +3697,24 @@ components:
       required:
       - queryValue
       type: object
+    DashboardtypesSigNozDatasourceSpec:
+      type: object
     DashboardtypesSource:
       enum:
       - user
       - system
       - integration
-      type: object
+      type: string
     DashboardtypesSpanGaps:
       properties:
         fillLessThan:
+          description: The maximum gap size to connect when fillOnlyBelow is true.
+            Gaps larger than this duration are left disconnected.
           type: string
         fillOnlyBelow:
+          description: Controls whether lines connect across null values. When false
+            (default), all gaps are connected. When true, only gaps smaller than fillLessThan
+            are connected.
           type: boolean
       type: object
     DashboardtypesStorableDashboardData:
@@ -3548,6 +3762,22 @@ components:
       - color
       - columnName
       type: object
+    DashboardtypesTextVariableSpec:
+      properties:
+        constant:
+          type: boolean
+        display:
+          $ref: '#/components/schemas/DashboardtypesDisplay'
+        name:
+          minLength: 1
+          type: string
+        value:
+          type: string
+      required:
+      - display
+      - value
+      - name
+      type: object
     DashboardtypesThresholdFormat:
       enum:
       - text
@@ -3567,7 +3797,6 @@ components:
       required:
       - value
       - color
-      - label
       type: object
     DashboardtypesTimePreference:
       enum:
@@ -3652,6 +3881,7 @@ components:
       discriminator:
         mapping:
           ListVariable: '#/components/schemas/DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesListVariableSpec'
+<<<<<<< HEAD
           TextVariable: '#/components/schemas/DashboardtypesVariableEnvelopeGithubComPersesSpecGoDashboardTextVariableSpec'
         propertyName: kind
       oneOf:
@@ -3669,7 +3899,20 @@ components:
       required:
       - kind
       - spec
+=======
+          TextVariable: '#/components/schemas/DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesTextVariableSpec'
+        propertyName: kind
+      oneOf:
+      - $ref: '#/components/schemas/DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesListVariableSpec'
+      - $ref: '#/components/schemas/DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesTextVariableSpec'
+>>>>>>> upstream/main
       type: object
+    DashboardtypesVariableDefaultValue:
+      oneOf:
+      - type: string
+      - items:
+          type: string
+        type: array
     DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesListVariableSpec:
       properties:
         kind:
@@ -3678,6 +3921,18 @@ components:
           type: string
         spec:
           $ref: '#/components/schemas/DashboardtypesListVariableSpec'
+      required:
+      - kind
+      - spec
+      type: object
+    DashboardtypesVariableEnvelopeGithubComSigNozSignozPkgTypesDashboardtypesTextVariableSpec:
+      properties:
+        kind:
+          enum:
+          - TextVariable
+          type: string
+        spec:
+          $ref: '#/components/schemas/DashboardtypesTextVariableSpec'
       required:
       - kind
       - spec
@@ -3761,9 +4016,13 @@ components:
       - type
       - code
       - message
+<<<<<<< HEAD
       - url
       - errors
       - retry
+=======
+      - errors
+>>>>>>> upstream/main
       - suggestions
       type: object
     ErrorsResponseerroradditional:
@@ -4136,6 +4395,8 @@ components:
           $ref: '#/components/schemas/InframonitoringtypesNodeCountsByReadiness'
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
       required:
       - clusterName
       - clusterCPU
@@ -4144,6 +4405,7 @@ components:
       - clusterMemoryAllocatable
       - nodeCountsByReadiness
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesClusters:
@@ -4199,6 +4461,8 @@ components:
           type: object
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
       required:
       - daemonSetName
       - daemonSetCPU
@@ -4210,6 +4474,7 @@ components:
       - desiredNodes
       - currentNodes
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesDaemonSets:
@@ -4265,6 +4530,8 @@ components:
           type: object
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
       required:
       - deploymentName
       - deploymentCPU
@@ -4276,6 +4543,7 @@ components:
       - desiredPods
       - availablePods
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesDeployments:
@@ -4408,6 +4676,8 @@ components:
           type: object
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
         successfulPods:
           type: integer
       required:
@@ -4423,6 +4693,7 @@ components:
       - failedPods
       - successfulPods
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesJobs:
@@ -4513,11 +4784,14 @@ components:
           type: string
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
       required:
       - namespaceName
       - namespaceCPU
       - namespaceMemory
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesNamespaces:
@@ -4583,11 +4857,14 @@ components:
           type: string
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
       required:
       - nodeName
       - condition
       - nodeCountsByReadiness
       - podCountsByPhase
+      - podCountsByStatus
       - nodeCPU
       - nodeCPUAllocatable
       - nodeMemory
@@ -4633,6 +4910,64 @@ components:
       - failed
       - unknown
       type: object
+    InframonitoringtypesPodCountsByStatus:
+      properties:
+        completed:
+          type: integer
+        containerCannotRun:
+          type: integer
+        containerCreating:
+          type: integer
+        crashLoopBackOff:
+          type: integer
+        createContainerConfigError:
+          type: integer
+        errImagePull:
+          type: integer
+        error:
+          type: integer
+        evicted:
+          type: integer
+        failed:
+          type: integer
+        imagePullBackOff:
+          type: integer
+        nodeAffinity:
+          type: integer
+        nodeLost:
+          type: integer
+        oomKilled:
+          type: integer
+        pending:
+          type: integer
+        running:
+          type: integer
+        shutdown:
+          type: integer
+        unexpectedAdmissionError:
+          type: integer
+        unknown:
+          type: integer
+      required:
+      - pending
+      - running
+      - failed
+      - unknown
+      - crashLoopBackOff
+      - imagePullBackOff
+      - errImagePull
+      - createContainerConfigError
+      - containerCreating
+      - oomKilled
+      - completed
+      - error
+      - containerCannotRun
+      - evicted
+      - nodeAffinity
+      - nodeLost
+      - shutdown
+      - unexpectedAdmissionError
+      type: object
     InframonitoringtypesPodPhase:
       enum:
       - pending
@@ -4663,6 +4998,8 @@ components:
           type: number
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
         podMemory:
           format: double
           type: number
@@ -4674,6 +5011,11 @@ components:
           type: number
         podPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodPhase'
+        podRestarts:
+          format: int64
+          type: integer
+        podStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodStatus'
         podUID:
           type: string
       required:
@@ -4686,9 +5028,34 @@ components:
       - podMemoryLimit
       - podPhase
       - podCountsByPhase
+      - podStatus
+      - podCountsByStatus
+      - podRestarts
       - podAge
       - meta
       type: object
+    InframonitoringtypesPodStatus:
+      enum:
+      - pending
+      - running
+      - failed
+      - unknown
+      - crashloopbackoff
+      - imagepullbackoff
+      - errimagepull
+      - createcontainerconfigerror
+      - containercreating
+      - oomkilled
+      - completed
+      - error
+      - containercannotrun
+      - evicted
+      - nodeaffinity
+      - nodelost
+      - shutdown
+      - unexpectedadmissionerror
+      - no_data
+      type: string
     InframonitoringtypesPods:
       properties:
         endTimeBeforeRetention:
@@ -4987,6 +5354,8 @@ components:
           type: object
         podCountsByPhase:
           $ref: '#/components/schemas/InframonitoringtypesPodCountsByPhase'
+        podCountsByStatus:
+          $ref: '#/components/schemas/InframonitoringtypesPodCountsByStatus'
         statefulSetCPU:
           format: double
           type: number
@@ -5018,6 +5387,7 @@ components:
       - desiredPods
       - currentPods
       - podCountsByPhase
+      - podCountsByStatus
       - meta
       type: object
     InframonitoringtypesStatefulSets:
@@ -5116,6 +5486,16 @@ components:
       - offset
       - limit
       type: object
+    LlmpricingruletypesGettableUnmappedModels:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/LlmpricingruletypesUnmappedModel'
+          nullable: true
+          type: array
+      required:
+      - items
+      type: object
     LlmpricingruletypesLLMPricingCacheCosts:
       properties:
         mode:
@@ -5205,6 +5585,19 @@ components:
         type: string
       nullable: true
       type: array
+    LlmpricingruletypesUnmappedModel:
+      properties:
+        modelName:
+          type: string
+        provider:
+          type: string
+        spanCount:
+          minimum: 0
+          type: integer
+      required:
+      - modelName
+      - spanCount
+      type: object
     LlmpricingruletypesUpdatableLLMPricingRule:
       properties:
         enabled:
@@ -5299,6 +5692,12 @@ components:
           type: string
         id:
           type: string
+<<<<<<< HEAD
+=======
+        ingestedSamples:
+          minimum: 0
+          type: integer
+>>>>>>> upstream/main
         ingestedSeries:
           minimum: 0
           type: integer
@@ -5311,9 +5710,15 @@ components:
           $ref: '#/components/schemas/MetricreductionruletypesMatchType'
         metricName:
           type: string
+<<<<<<< HEAD
         reductionPercent:
           format: double
           type: number
+=======
+        retainedSamples:
+          minimum: 0
+          type: integer
+>>>>>>> upstream/main
         retainedSeries:
           minimum: 0
           type: integer
@@ -5331,7 +5736,12 @@ components:
       - active
       - ingestedSeries
       - retainedSeries
+<<<<<<< HEAD
       - reductionPercent
+=======
+      - ingestedSamples
+      - retainedSamples
+>>>>>>> upstream/main
       type: object
     MetricreductionruletypesGettableReductionRulePreview:
       properties:
@@ -5374,15 +5784,32 @@ components:
         estimatedMonthlySavingsUsd:
           format: double
           type: number
+<<<<<<< HEAD
         ingestedSeries:
           minimum: 0
           type: integer
+=======
+        ingestedSamples:
+          minimum: 0
+          type: integer
+        ingestedSeries:
+          minimum: 0
+          type: integer
+        retainedSamples:
+          minimum: 0
+          type: integer
+>>>>>>> upstream/main
         retainedSeries:
           minimum: 0
           type: integer
       required:
       - ingestedSeries
       - retainedSeries
+<<<<<<< HEAD
+=======
+      - ingestedSamples
+      - retainedSamples
+>>>>>>> upstream/main
       - estimatedMonthlySavingsUsd
       type: object
     MetricreductionruletypesGettableReductionRules:
@@ -5448,7 +5875,10 @@ components:
       - metric
       - ingested_volume
       - reduced_volume
+<<<<<<< HEAD
       - reduction
+=======
+>>>>>>> upstream/main
       - last_updated
       type: string
     MetricreductionruletypesUpdatableReductionRule:
@@ -5589,6 +6019,16 @@ components:
       - dashboardId
       - widgetId
       - widgetName
+      type: object
+    MetricsexplorertypesMetricDashboardPanelsResponse:
+      properties:
+        dashboards:
+          items:
+            $ref: '#/components/schemas/DashboardtypesDashboardPanelRef'
+          nullable: true
+          type: array
+      required:
+      - dashboards
       type: object
     MetricsexplorertypesMetricDashboardsResponse:
       properties:
@@ -6158,6 +6598,25 @@ components:
       - asc
       - desc
       type: string
+    Querybuildertypesv5PreviewStatement:
+      properties:
+        db.statement.args:
+          items: {}
+          type: array
+        db.statement.query:
+          type: string
+        estimate:
+          items:
+            $ref: '#/components/schemas/TelemetrystoretypesEstimateEntry'
+          type: array
+        granules:
+          $ref: '#/components/schemas/TelemetrystoretypesGranules'
+      required:
+      - db.statement.query
+      - db.statement.args
+      - estimate
+      - granules
+      type: object
     Querybuildertypesv5PromQuery:
       properties:
         disabled:
@@ -6477,6 +6936,43 @@ components:
           $ref: '#/components/schemas/Querybuildertypesv5QueryType'
       required:
       - type
+<<<<<<< HEAD
+=======
+      type: object
+    Querybuildertypesv5QueryPreview:
+      properties:
+        error: {}
+        statements:
+          items:
+            $ref: '#/components/schemas/Querybuildertypesv5PreviewStatement'
+          type: array
+        valid:
+          type: boolean
+        warnings:
+          items:
+            type: string
+          type: array
+      required:
+      - valid
+      - error
+      - warnings
+      - statements
+      type: object
+    Querybuildertypesv5QueryRangePreviewResponse:
+      description: Response from the v5 query range preview (dry-run) endpoint. For
+        each query in the composite query, returns the underlying ClickHouse statement(s)
+        it renders to without executing them (one per PromQL metric selector; exactly
+        one for builder/ClickHouse/trace-operator queries), with the optional EXPLAIN
+        ESTIMATE and granule analysis attached per statement when requested.
+      properties:
+        compositeQuery:
+          additionalProperties:
+            $ref: '#/components/schemas/Querybuildertypesv5QueryPreview'
+          nullable: true
+          type: object
+      required:
+      - compositeQuery
+>>>>>>> upstream/main
       type: object
     Querybuildertypesv5QueryRangeRequest:
       description: Request body for the v5 query range endpoint. Supports builder
@@ -7218,6 +7714,13 @@ components:
       enum:
       - basic
       type: string
+    ServiceaccounttypesDeprecatedPostableServiceAccountRole:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
     ServiceaccounttypesGettableFactorAPIKey:
       properties:
         createdAt:
@@ -7274,10 +7777,13 @@ components:
       type: object
     ServiceaccounttypesPostableServiceAccountRole:
       properties:
-        id:
+        roleId:
+          type: string
+        serviceAccountId:
           type: string
       required:
-      - id
+      - serviceAccountId
+      - roleId
       type: object
     ServiceaccounttypesServiceAccount:
       properties:
@@ -7828,6 +8334,96 @@ components:
       - key
       - value
       type: object
+    TelemetrystoretypesEstimateEntry:
+      properties:
+        database:
+          type: string
+        marks:
+          format: int64
+          type: integer
+        parts:
+          format: int64
+          type: integer
+        rows:
+          format: int64
+          type: integer
+        table:
+          type: string
+      required:
+      - database
+      - table
+      - parts
+      - rows
+      - marks
+      type: object
+    TelemetrystoretypesGranules:
+      nullable: true
+      properties:
+        initial:
+          format: int64
+          type: integer
+        reads:
+          items:
+            $ref: '#/components/schemas/TelemetrystoretypesMergeTreeRead'
+          type: array
+        selected:
+          format: int64
+          type: integer
+        skipped:
+          format: int64
+          type: integer
+      required:
+      - initial
+      - selected
+      - skipped
+      - reads
+      type: object
+    TelemetrystoretypesIndexStep:
+      properties:
+        condition:
+          type: string
+        initialGranules:
+          format: int64
+          type: integer
+        initialParts:
+          format: int64
+          type: integer
+        keys:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        selectedGranules:
+          format: int64
+          type: integer
+        selectedParts:
+          format: int64
+          type: integer
+        type:
+          type: string
+      required:
+      - type
+      - name
+      - keys
+      - condition
+      - initialParts
+      - selectedParts
+      - initialGranules
+      - selectedGranules
+      type: object
+    TelemetrystoretypesMergeTreeRead:
+      properties:
+        steps:
+          items:
+            $ref: '#/components/schemas/TelemetrystoretypesIndexStep'
+          type: array
+        table:
+          type: string
+      required:
+      - table
+      - steps
+      type: object
     TelemetrytypesFieldContext:
       enum:
       - metric
@@ -8118,6 +8714,7 @@ components:
       required:
       - id
       type: object
+<<<<<<< HEAD
     VariableDefaultValue:
       type: object
     VariableDisplay:
@@ -8129,6 +8726,8 @@ components:
         name:
           type: string
       type: object
+=======
+>>>>>>> upstream/main
     ZeustypesGettableHost:
       properties:
         hosts:
@@ -10929,6 +11528,60 @@ paths:
       summary: Get a pricing rule
       tags:
       - llmpricingrules
+  /api/v1/llm_pricing_rules/unmapped_models:
+    get:
+      deprecated: false
+      description: Returns models seen in the last hour of trace data (gen_ai.request.model)
+        that no pricing rule pattern matches, so the user can add them to an existing
+        rule or create a new one.
+      operationId: ListUnmappedLLMModels
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LlmpricingruletypesGettableUnmappedModels'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - VIEWER
+      - tokenizer:
+        - VIEWER
+      summary: List unmapped models
+      tags:
+      - llmpricingrules
   /api/v1/logs/promote_paths:
     get:
       deprecated: false
@@ -11570,10 +12223,17 @@ paths:
       summary: Get role
       tags:
       - role
+<<<<<<< HEAD
     patch:
       deprecated: true
       description: This endpoint patches a role
       operationId: PatchRole
+=======
+    put:
+      deprecated: false
+      description: This endpoint updates a role
+      operationId: UpdateRole
+>>>>>>> upstream/main
       parameters:
       - in: path
         name: id
@@ -11584,7 +12244,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthtypesPatchableRole'
+              $ref: '#/components/schemas/AuthtypesUpdatableRole'
       responses:
         "204":
           description: No Content
@@ -11629,6 +12289,7 @@ paths:
         - role:update
       - tokenizer:
         - role:update
+<<<<<<< HEAD
       summary: Patch role
       tags:
       - role
@@ -11844,6 +12505,9 @@ paths:
       - tokenizer:
         - role:update
       summary: Patch objects for a role by relation
+=======
+      summary: Update role
+>>>>>>> upstream/main
       tags:
       - role
   /api/v1/route_policies:
@@ -12121,6 +12785,188 @@ paths:
       summary: Update route policy
       tags:
       - routepolicies
+  /api/v1/service_account_roles:
+    post:
+      deprecated: false
+      description: This endpoint assigns a role to a service account
+      operationId: CreateServiceAccountRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceaccounttypesPostableServiceAccountRole'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TypesIdentifiable'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - serviceaccount:attach
+        - role:attach
+      - tokenizer:
+        - serviceaccount:attach
+        - role:attach
+      summary: Create service account role
+      tags:
+      - serviceaccount
+  /api/v1/service_account_roles/{id}:
+    delete:
+      deprecated: false
+      description: This endpoint revokes a role from a service account
+      operationId: DeleteServiceAccountRole
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - serviceaccount:detach
+        - role:detach
+      - tokenizer:
+        - serviceaccount:detach
+        - role:detach
+      summary: Delete service account role
+      tags:
+      - serviceaccount
+    get:
+      deprecated: false
+      description: This endpoint gets an existing service account role
+      operationId: GetServiceAccountRole
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ServiceaccounttypesServiceAccountRole'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - serviceaccount:read
+      - tokenizer:
+        - serviceaccount:read
+      summary: Get service account role
+      tags:
+      - serviceaccount
   /api/v1/service_accounts:
     get:
       deprecated: false
@@ -12690,9 +13536,9 @@ paths:
       tags:
       - serviceaccount
     post:
-      deprecated: false
+      deprecated: true
       description: This endpoint assigns a role to a service account
-      operationId: CreateServiceAccountRole
+      operationId: CreateServiceAccountRoleDeprecated
       parameters:
       - in: path
         name: id
@@ -12703,7 +13549,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ServiceaccounttypesPostableServiceAccountRole'
+              $ref: '#/components/schemas/ServiceaccounttypesDeprecatedPostableServiceAccountRole'
       responses:
         "201":
           content:
@@ -12755,9 +13601,9 @@ paths:
       - serviceaccount
   /api/v1/service_accounts/{id}/roles/{rid}:
     delete:
-      deprecated: false
+      deprecated: true
       description: This endpoint revokes a role from service account
-      operationId: DeleteServiceAccountRole
+      operationId: DeleteServiceAccountRoleDeprecated
       parameters:
       - in: path
         name: id
@@ -17394,6 +18240,138 @@ paths:
       summary: Update my organization
       tags:
       - orgs
+  /api/v2/public/dashboards/{id}:
+    get:
+      deprecated: false
+      description: This endpoint returns the sanitized v2-shape dashboard data for
+        public access. Each panel query is reduced to a safe field subset, so filters
+        and raw query strings are not exposed.
+      operationId: GetPublicDashboardDataV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DashboardtypesGettablePublicDashboardDataV2'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - anonymous:
+        - public-dashboard:read
+      summary: Get public dashboard data (v2)
+      tags:
+      - dashboard
+  /api/v2/public/dashboards/{id}/panels/{key}/query_range:
+    get:
+      deprecated: false
+      description: This endpoint returns query range results for a panel of a v2-shape
+        public dashboard. The panel is addressed by its key in spec.panels.
+      operationId: GetPublicDashboardPanelQueryRangeV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Querybuildertypesv5QueryRangeResponse'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - anonymous:
+        - public-dashboard:read
+      summary: Get query range result (v2)
+      tags:
+      - dashboard
   /api/v2/readyz:
     get:
       operationId: Readyz
@@ -21727,6 +22705,184 @@ paths:
       summary: Rotate session
       tags:
       - sessions
+  /api/v2/user_roles:
+    post:
+      deprecated: false
+      description: This endpoint assigns a role to a user
+      operationId: CreateUserRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthtypesPostableUserRole'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TypesIdentifiable'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - ADMIN
+      - tokenizer:
+        - ADMIN
+      summary: Create user role
+      tags:
+      - users
+  /api/v2/user_roles/{id}:
+    delete:
+      deprecated: false
+      description: This endpoint revokes a role from a user
+      operationId: DeleteUserRole
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - ADMIN
+      - tokenizer:
+        - ADMIN
+      summary: Delete user role
+      tags:
+      - users
+    get:
+      deprecated: false
+      description: This endpoint gets an existing user role
+      operationId: GetUserRole
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthtypesUserRole'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - ADMIN
+      - tokenizer:
+        - ADMIN
+      summary: Get user role
+      tags:
+      - users
   /api/v2/users:
     get:
       deprecated: false
@@ -22180,7 +23336,7 @@ paths:
       tags:
       - users
     post:
-      deprecated: false
+      deprecated: true
       description: This endpoint assigns the role to the user roles by user id
       operationId: SetRoleByUserID
       parameters:
@@ -22231,7 +23387,7 @@ paths:
       - users
   /api/v2/users/{id}/roles/{roleId}:
     delete:
-      deprecated: false
+      deprecated: true
       description: This endpoint removes a role from the user by user id and role
         id
       operationId: RemoveUserRoleByUserIDAndRoleID
@@ -22763,6 +23919,97 @@ paths:
       summary: Put profile in Zeus for a deployment.
       tags:
       - zeus
+<<<<<<< HEAD
+  /api/v3/traces/{traceID}/flamegraph:
+    post:
+      deprecated: false
+      description: Returns the flamegraph view of spans for a given trace ID.
+      operationId: GetFlamegraph
+=======
+  /api/v3/metrics/dashboards:
+    get:
+      deprecated: false
+      description: This endpoint returns associated v2 dashboards for a specified
+        metric
+      operationId: GetMetricDashboardsV2
+>>>>>>> upstream/main
+      parameters:
+      - description: The name of the metric. May contain slashes (e.g. cloud-provider
+          metrics like run.googleapis.com/request_latencies).
+        in: query
+        name: metricName
+        required: true
+        schema:
+          description: The name of the metric. May contain slashes (e.g. cloud-provider
+            metrics like run.googleapis.com/request_latencies).
+          type: string
+<<<<<<< HEAD
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpantypesPostableFlamegraph'
+=======
+>>>>>>> upstream/main
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+<<<<<<< HEAD
+                    $ref: '#/components/schemas/SpantypesGettableFlamegraphTrace'
+=======
+                    $ref: '#/components/schemas/MetricsexplorertypesMetricDashboardPanelsResponse'
+>>>>>>> upstream/main
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - VIEWER
+      - tokenizer:
+        - VIEWER
+<<<<<<< HEAD
+=======
+      summary: Get metric dashboards (v2)
+      tags:
+      - metrics
   /api/v3/traces/{traceID}/flamegraph:
     post:
       deprecated: false
@@ -22829,6 +24076,7 @@ paths:
         - VIEWER
       - tokenizer:
         - VIEWER
+>>>>>>> upstream/main
       summary: Get flamegraph view for a trace
       tags:
       - tracedetail
@@ -23299,6 +24547,75 @@ paths:
       - tokenizer:
         - VIEWER
       summary: Query range
+      tags:
+      - querier
+  /api/v5/query_range/preview:
+    post:
+      deprecated: false
+      description: 'Validate a composite query without executing it. Accepts the same
+        payload as the query range endpoint. By default (verbose=true) returns, for
+        each query, the rendered underlying ClickHouse statement(s) with each statement''s
+        EXPLAIN ESTIMATE (per-table parts/rows/marks) and granule index analysis (candidate/surviving
+        granules and the per-index pruning funnel). Pass ?verbose=false for the lightweight
+        per-query verdict (valid/error/warnings) with no rendered SQL and no ClickHouse
+        round trips. Intended for agentic/dry-run consumption: per-query errors are
+        reported in the response rather than failing the whole request.'
+      operationId: QueryRangePreviewV5
+      parameters:
+      - in: query
+        name: verbose
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Querybuildertypesv5QueryRangeRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Querybuildertypesv5QueryRangePreviewResponse'
+                  status:
+                    type: string
+                required:
+                - status
+                - data
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderErrorResponse'
+          description: Internal Server Error
+      security:
+      - api_key:
+        - VIEWER
+      - tokenizer:
+        - VIEWER
+      summary: Query range preview
       tags:
       - querier
   /api/v5/substitute_vars:

@@ -26,16 +26,27 @@ var (
 	OrderByMetricName     = ReductionRuleOrderBy{valuer.NewString("metric")}
 	OrderByIngestedVolume = ReductionRuleOrderBy{valuer.NewString("ingested_volume")}
 	OrderByReducedVolume  = ReductionRuleOrderBy{valuer.NewString("reduced_volume")}
+<<<<<<< HEAD
 	OrderByReduction      = ReductionRuleOrderBy{valuer.NewString("reduction")}
+=======
+>>>>>>> upstream/main
 	OrderByLastUpdated    = ReductionRuleOrderBy{valuer.NewString("last_updated")}
 )
 
 func (ReductionRuleOrderBy) Enum() []any {
+<<<<<<< HEAD
 	return []any{OrderByMetricName, OrderByIngestedVolume, OrderByReducedVolume, OrderByReduction, OrderByLastUpdated}
 }
 
 type ListReductionRulesParams struct {
 	OrderBy    ReductionRuleOrderBy `query:"orderBy,default=reduction" json:"orderBy"`
+=======
+	return []any{OrderByMetricName, OrderByIngestedVolume, OrderByReducedVolume, OrderByLastUpdated}
+}
+
+type ListReductionRulesParams struct {
+	OrderBy    ReductionRuleOrderBy `query:"orderBy,default=ingested_volume" json:"orderBy"`
+>>>>>>> upstream/main
 	Order      Order                `query:"order,default=desc" json:"order"`
 	Search     string               `query:"search" json:"search"`
 	MetricName string               `query:"metricName" json:"metricName,omitempty"`

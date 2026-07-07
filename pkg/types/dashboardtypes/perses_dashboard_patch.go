@@ -73,7 +73,11 @@ func (p PatchableDashboardV2) Apply(existing *DashboardV2) (*UpdatableDashboardV
 	}
 	patched, err := p.patch.ApplyWithOptions(raw, &jsonpatch.ApplyOptions{AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true})
 	if err != nil {
+<<<<<<< HEAD
 		return nil, errors.Wrap(err, errors.TypeInvalidInput, ErrCodeDashboardInvalidPatch, "JSON Patch could not be applied to the target dashboard")
+=======
+		return nil, errors.Wrap(err, errors.TypeInvalidInput, ErrCodeDashboardInvalidPatch, "JSON Patch could not be applied to the target dashboard").WithAdditional(err.Error())
+>>>>>>> upstream/main
 	}
 	out := &UpdatableDashboardV2{}
 	if err := json.Unmarshal(patched, out); err != nil {

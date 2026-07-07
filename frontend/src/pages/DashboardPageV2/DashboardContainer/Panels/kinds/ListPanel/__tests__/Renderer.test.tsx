@@ -20,7 +20,11 @@ function panelWith(
 ): PanelOfKind<'signoz/ListPanel'> {
 	return {
 		kind: 'Panel',
+<<<<<<< HEAD
 		spec: { plugin: { kind: 'signoz/ListPanel', spec } },
+=======
+		spec: { plugin: { kind: 'signoz/ListPanel', spec }, queries: [] },
+>>>>>>> upstream/main
 	} as unknown as PanelOfKind<'signoz/ListPanel'>;
 }
 
@@ -162,4 +166,21 @@ describe('ListPanelRenderer', () => {
 
 		expect(queryByTestId('list-panel-pager')).not.toBeInTheDocument();
 	});
+<<<<<<< HEAD
+=======
+
+	it('swaps rows for skeletons while the next page loads (isPreviousData), keeping header + pager', () => {
+		const { getByText, queryByText, getByTestId, container } = renderPanel({
+			data: dataWith([{ data: { body: 'stale row' } }]),
+			pagination: makePagination({ canNext: true }),
+			isPreviousData: true,
+		});
+
+		expect(getByText('body')).toBeInTheDocument();
+		expect(getByTestId('list-panel-pager')).toBeInTheDocument();
+		// Stale page content is replaced by skeleton bars.
+		expect(queryByText('stale row')).not.toBeInTheDocument();
+		expect(container.querySelector('.ant-skeleton')).toBeInTheDocument();
+	});
+>>>>>>> upstream/main
 });

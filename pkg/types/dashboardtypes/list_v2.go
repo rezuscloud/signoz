@@ -145,9 +145,16 @@ func newListedDashboardV2(v2 *DashboardV2) *listedDashboardV2 {
 }
 
 type ListableDashboardV2 struct {
+<<<<<<< HEAD
 	Dashboards []*listedDashboardV2    `json:"dashboards" required:"true" nullable:"false"`
 	Total      int64                   `json:"total" required:"true"`
 	Tags       []*tagtypes.GettableTag `json:"tags" required:"true" nullable:"false"`
+=======
+	Dashboards       []*listedDashboardV2    `json:"dashboards" required:"true" nullable:"false"`
+	Total            int64                   `json:"total" required:"true"`
+	Tags             []*tagtypes.GettableTag `json:"tags" required:"true" nullable:"false"`
+	ReservedKeywords []DSLKey                `json:"reservedKeywords" required:"true" nullable:"false"`
+>>>>>>> upstream/main
 }
 
 func NewListableDashboardV2(dashboards []*StorableDashboard, total int64, tagsByEntity map[valuer.UUID][]*tagtypes.Tag, allTags []*tagtypes.Tag) (*ListableDashboardV2, error) {
@@ -160,9 +167,16 @@ func NewListableDashboardV2(dashboards []*StorableDashboard, total int64, tagsBy
 		items[i] = newListedDashboardV2(v2)
 	}
 	return &ListableDashboardV2{
+<<<<<<< HEAD
 		Dashboards: items,
 		Total:      total,
 		Tags:       tagtypes.NewGettableTagsFromTags(allTags),
+=======
+		Dashboards:       items,
+		Total:            total,
+		Tags:             tagtypes.NewGettableTagsFromTags(allTags),
+		ReservedKeywords: ReservedFilterKeys(),
+>>>>>>> upstream/main
 	}, nil
 }
 
@@ -174,9 +188,16 @@ type listedDashboardForUserV2 struct {
 }
 
 type ListableDashboardForUserV2 struct {
+<<<<<<< HEAD
 	Dashboards []*listedDashboardForUserV2 `json:"dashboards" required:"true" nullable:"false"`
 	Total      int64                       `json:"total" required:"true"`
 	Tags       []*tagtypes.GettableTag     `json:"tags" required:"true" nullable:"false"`
+=======
+	Dashboards       []*listedDashboardForUserV2 `json:"dashboards" required:"true" nullable:"false"`
+	Total            int64                       `json:"total" required:"true"`
+	Tags             []*tagtypes.GettableTag     `json:"tags" required:"true" nullable:"false"`
+	ReservedKeywords []DSLKey                    `json:"reservedKeywords" required:"true" nullable:"false"`
+>>>>>>> upstream/main
 }
 
 // StorableDashboardWithPinInfo is the per-row shape Store.ListForUser returns: the dashboard
@@ -200,8 +221,15 @@ func NewListableDashboardForUserV2(rows []*StorableDashboardWithPinInfo, total i
 		}
 	}
 	return &ListableDashboardForUserV2{
+<<<<<<< HEAD
 		Dashboards: items,
 		Total:      total,
 		Tags:       tagtypes.NewGettableTagsFromTags(allTags),
+=======
+		Dashboards:       items,
+		Total:            total,
+		Tags:             tagtypes.NewGettableTagsFromTags(allTags),
+		ReservedKeywords: ReservedFilterKeys(),
+>>>>>>> upstream/main
 	}, nil
 }

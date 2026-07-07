@@ -1,11 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from '@signozhq/ui/sonner';
 import { updateDashboardV2 } from 'api/generated/services/dashboard';
+<<<<<<< HEAD
 import type { DashboardtypesGettableDashboardV2DTO } from 'api/generated/services/sigNoz.schemas';
 import { useErrorModal } from 'providers/ErrorModalProvider';
 import APIError from 'types/api/error';
 
 import { dashboardToUpdatable } from './dashboardToUpdatable';
+=======
+import type {
+	DashboardtypesDashboardSpecDTO,
+	DashboardtypesGettableDashboardV2DTO,
+} from 'api/generated/services/sigNoz.schemas';
+import { useErrorModal } from 'providers/ErrorModalProvider';
+import { toAPIError } from 'utils/errorUtils';
+
+import { dashboardToUpdatable } from './dashboardToUpdatable';
+import { findPanelLayoutIssues } from './danglingPanels';
+>>>>>>> upstream/main
 import { useDashboardStore } from '../../store/useDashboardStore';
 
 export interface JsonValidity {
@@ -28,13 +40,37 @@ interface Result {
 	validity: JsonValidity;
 	isDirty: boolean;
 	isSaving: boolean;
+<<<<<<< HEAD
+=======
+	// Panel ids in the draft's `spec.panels` referenced by no layout — orphaned.
+	danglingPanelIds: string[];
+	// Panel ids a layout references that are missing from the draft's `spec.panels`.
+	missingPanelRefs: string[];
+>>>>>>> upstream/main
 	format: () => void;
 	reset: () => void;
 	apply: () => Promise<void>;
 }
 
+<<<<<<< HEAD
 const serialize = (dashboard: DashboardtypesGettableDashboardV2DTO): string =>
 	JSON.stringify(dashboard, null, 2);
+=======
+/**
+ * The editable, user-facing view: only `tags` and `spec`. Everything else
+ * (id, orgId, name, timestamps, locked, schemaVersion, image, …) is redacted so it
+ * can't be seen, copied, exported or edited; those keys are preserved on save (see `apply`).
+ */
+const redact = (
+	dashboard: DashboardtypesGettableDashboardV2DTO,
+): Pick<DashboardtypesGettableDashboardV2DTO, 'tags' | 'spec'> => ({
+	tags: dashboard.tags,
+	spec: dashboard.spec,
+});
+
+const serialize = (dashboard: DashboardtypesGettableDashboardV2DTO): string =>
+	JSON.stringify(redact(dashboard), null, 2);
+>>>>>>> upstream/main
 
 /** Derive a 1-based line number from a `JSON.parse` "position N" error message. */
 function errorLineFromMessage(
@@ -97,6 +133,26 @@ export function useJsonEditor({
 
 	const isDirty = draft !== appliedText;
 
+<<<<<<< HEAD
+=======
+	const { danglingPanelIds, missingPanelRefs } = useMemo<{
+		danglingPanelIds: string[];
+		missingPanelRefs: string[];
+	}>(() => {
+		if (!validity.valid) {
+			return { danglingPanelIds: [], missingPanelRefs: [] };
+		}
+		try {
+			const parsed = JSON.parse(draft) as {
+				spec?: DashboardtypesDashboardSpecDTO;
+			};
+			return findPanelLayoutIssues(parsed.spec);
+		} catch {
+			return { danglingPanelIds: [], missingPanelRefs: [] };
+		}
+	}, [draft, validity.valid]);
+
+>>>>>>> upstream/main
 	const format = useCallback((): void => {
 		try {
 			setDraft(JSON.stringify(JSON.parse(draft), null, 2));
@@ -115,17 +171,35 @@ export function useJsonEditor({
 		}
 		try {
 			setIsSaving(true);
+<<<<<<< HEAD
 			const parsed = JSON.parse(draft) as Record<string, unknown>;
 			await updateDashboardV2({ id: dashboardId }, dashboardToUpdatable(parsed));
+=======
+			// The draft only carries name/tags/spec; overlay it on the current dashboard
+			// so the redacted fields (schemaVersion, image, …) are preserved on save.
+			const edited = JSON.parse(draft) as Record<string, unknown>;
+			await updateDashboardV2(
+				{ id: dashboardId },
+				dashboardToUpdatable({ ...dashboard, ...edited }),
+			);
+>>>>>>> upstream/main
 			toast.success('Dashboard updated');
 			refetch();
 			onApplied();
 		} catch (error) {
+<<<<<<< HEAD
 			showErrorModal(error as APIError);
+=======
+			showErrorModal(toAPIError(error as Parameters<typeof toAPIError>[0]));
+>>>>>>> upstream/main
 		} finally {
 			setIsSaving(false);
 		}
 	}, [
+<<<<<<< HEAD
+=======
+		dashboard,
+>>>>>>> upstream/main
 		dashboardId,
 		validity.valid,
 		isDirty,
@@ -141,6 +215,11 @@ export function useJsonEditor({
 		validity,
 		isDirty,
 		isSaving,
+<<<<<<< HEAD
+=======
+		danglingPanelIds,
+		missingPanelRefs,
+>>>>>>> upstream/main
 		format,
 		reset,
 		apply,

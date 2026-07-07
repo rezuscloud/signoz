@@ -12,7 +12,14 @@ interface UseCreatePanelResult {
 	/** Pass the target section's layout index; omit → last/new section. */
 	openPicker: (layoutIndex?: number) => void;
 	closePicker: () => void;
+<<<<<<< HEAD
 	createPanel: (panelKind: PanelKind) => void;
+=======
+	/** The section the picker was opened against — seeds its section dropdown. */
+	targetLayoutIndex: number | undefined;
+	/** `layoutIndex` overrides the opened-against target (the dropdown's choice). */
+	createPanel: (panelKind: PanelKind, layoutIndex?: number) => void;
+>>>>>>> upstream/main
 }
 
 /**
@@ -38,16 +45,35 @@ export function useCreatePanel(): UseCreatePanelResult {
 	}, []);
 
 	const createPanel = useCallback(
+<<<<<<< HEAD
 		(panelKind: PanelKind): void => {
+=======
+		(panelKind: PanelKind, targetIndex?: number): void => {
+>>>>>>> upstream/main
 			setIsPickerOpen(false);
 			const path = generatePath(ROUTES.DASHBOARD_PANEL_EDITOR, {
 				dashboardId,
 				panelId: NEW_PANEL_ID,
 			});
+<<<<<<< HEAD
 			safeNavigate(`${path}${newPanelSearch(panelKind, layoutIndex)}`);
+=======
+			const target = targetIndex ?? layoutIndex;
+			safeNavigate(`${path}${newPanelSearch(panelKind, target)}`);
+>>>>>>> upstream/main
 		},
 		[safeNavigate, dashboardId, layoutIndex],
 	);
 
+<<<<<<< HEAD
 	return { isPickerOpen, openPicker, closePicker, createPanel };
+=======
+	return {
+		isPickerOpen,
+		openPicker,
+		closePicker,
+		targetLayoutIndex: layoutIndex,
+		createPanel,
+	};
+>>>>>>> upstream/main
 }

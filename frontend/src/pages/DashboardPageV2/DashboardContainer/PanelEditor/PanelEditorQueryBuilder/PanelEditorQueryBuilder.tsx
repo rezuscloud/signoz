@@ -8,23 +8,49 @@ import { Color } from '@signozhq/design-tokens';
 import { Atom, Terminal } from '@signozhq/icons';
 import { Tabs } from 'antd';
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
+=======
+import type { TelemetrytypesSignalDTO } from 'api/generated/services/sigNoz.schemas';
+>>>>>>> upstream/main
 import PromQLIcon from 'assets/Dashboard/PromQl';
 import { QueryBuilderV2 } from 'components/QueryBuilderV2/QueryBuilderV2';
 import TextToolTip from 'components/TextToolTip';
 import { PANEL_TYPES } from 'constants/queryBuilder';
 import ClickHouseQueryContainer from 'container/NewWidget/LeftContainer/QuerySection/QueryBuilder/ClickHouse';
 import PromQLQueryContainer from 'container/NewWidget/LeftContainer/QuerySection/QueryBuilder/promQL';
+<<<<<<< HEAD
 import { PANEL_TYPE_TO_QUERY_TYPES } from 'container/NewWidget/utils';
+=======
+>>>>>>> upstream/main
 import RunQueryBtn from 'container/QueryBuilder/components/RunQueryBtn/RunQueryBtn';
 import { QueryBuilderProps } from 'container/QueryBuilder/QueryBuilder.interfaces';
 import { useQueryBuilder } from 'hooks/queryBuilder/useQueryBuilder';
 import { useIsDarkMode } from 'hooks/useDarkMode';
 import { EQueryType } from 'types/common/dashboard';
 
+<<<<<<< HEAD
 import styles from './PanelEditorQueryBuilder.module.scss';
 
 interface PanelEditorQueryBuilderProps {
 	panelType: PANEL_TYPES;
+=======
+import {
+	getHiddenQueryBuilderFields,
+	getSupportedQueryTypes,
+} from '../../Panels/capabilities';
+import {
+	PANEL_KIND_TO_PANEL_TYPE,
+	type PanelKind,
+} from '../../Panels/types/panelKind';
+
+import styles from './PanelEditorQueryBuilder.module.scss';
+
+interface PanelEditorQueryBuilderProps {
+	/** The edited panel's visualization kind — drives supported query types + field visibility via the capabilities guard. */
+	panelKind: PanelKind;
+	/** The panel's current signal; selects per-signal query-builder field rules. */
+	signal: TelemetrytypesSignalDTO;
+>>>>>>> upstream/main
 	/** Preview fetch in flight — drives the Stage & Run button's loading/cancel state. */
 	isLoadingQueries: boolean;
 	/** Run the current query (Stage & Run button / ⌘↵). Always re-runs. */
@@ -41,12 +67,22 @@ interface PanelEditorQueryBuilderProps {
  * `QueryBuilderProvider`. `usePanelEditorQuerySync` owns the panel↔provider sync.
  */
 function PanelEditorQueryBuilder({
+<<<<<<< HEAD
 	panelType,
+=======
+	panelKind,
+	signal,
+>>>>>>> upstream/main
 	isLoadingQueries,
 	onStageRunQuery,
 	onCancelQuery,
 	footer,
 }: PanelEditorQueryBuilderProps): JSX.Element {
+<<<<<<< HEAD
+=======
+	// The shared QueryBuilderV2 / list-view checks still speak the legacy PANEL_TYPES.
+	const panelType = PANEL_KIND_TO_PANEL_TYPE[panelKind];
+>>>>>>> upstream/main
 	const { currentQuery, redirectWithQueryBuilderData } = useQueryBuilder();
 	const isDarkMode = useIsDarkMode();
 
@@ -74,6 +110,7 @@ function PanelEditorQueryBuilder({
 		[onStageRunQuery],
 	);
 
+<<<<<<< HEAD
 	const filterConfigs: QueryBuilderProps['filterConfigs'] = useMemo(
 		() => ({ stepInterval: { isHidden: false, isDisabled: false } }),
 		[],
@@ -81,6 +118,17 @@ function PanelEditorQueryBuilder({
 
 	const items = useMemo(() => {
 		const supportedQueryTypes = PANEL_TYPE_TO_QUERY_TYPES[panelType] || [];
+=======
+	// Per-kind query-builder field rules from the guard (e.g. List hides step interval
+	// and having), passed to QueryBuilderV2 as its `filterConfigs`.
+	const filterConfigs: QueryBuilderProps['filterConfigs'] = useMemo(
+		() => getHiddenQueryBuilderFields(panelKind, signal),
+		[panelKind, signal],
+	);
+
+	const items = useMemo(() => {
+		const supportedQueryTypes = getSupportedQueryTypes(panelKind);
+>>>>>>> upstream/main
 
 		const queryTypeComponents = {
 			[EQueryType.QUERY_BUILDER]: {
@@ -127,7 +175,11 @@ function PanelEditorQueryBuilder({
 			),
 			children: queryTypeComponents[queryType].component,
 		}));
+<<<<<<< HEAD
 	}, [panelType, filterConfigs, isDarkMode]);
+=======
+	}, [panelKind, panelType, filterConfigs, isDarkMode]);
+>>>>>>> upstream/main
 
 	return (
 		<div
@@ -147,7 +199,11 @@ function PanelEditorQueryBuilder({
 							<TextToolTip text="This will temporarily save the current query and graph state. This will persist across tab change" />
 							<RunQueryBtn
 								className="run-query-dashboard-btn"
+<<<<<<< HEAD
 								label="Stage & Run Query"
+=======
+								label="Run Query"
+>>>>>>> upstream/main
 								onStageRunQuery={onStageRunQuery}
 								isLoadingQueries={isLoadingQueries}
 								handleCancelQuery={onCancelQuery}

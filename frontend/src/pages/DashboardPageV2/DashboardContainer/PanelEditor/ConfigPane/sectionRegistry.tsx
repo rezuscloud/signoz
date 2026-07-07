@@ -8,6 +8,7 @@ import type {
 	DashboardtypesPanelSpecDTO,
 	DashboardtypesTimeSeriesChartAppearanceDTO,
 } from 'api/generated/services/sigNoz.schemas';
+<<<<<<< HEAD
 import type {
 	AnyThreshold,
 	PanelFormattingSlice,
@@ -16,6 +17,17 @@ import type {
 	SectionSpecMap,
 } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
 
+=======
+import {
+	SectionKind,
+	type AnyThreshold,
+	type PanelFormattingSlice,
+	type SectionEditorProps,
+	type SectionSpecMap,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+
+import type { SectionEditorContext } from './sectionContext';
+>>>>>>> upstream/main
 import AxesSection from './sections/AxesSection/AxesSection';
 import BucketsSection from './sections/BucketsSection/BucketsSection';
 import ChartAppearanceSection from './sections/ChartAppearanceSection/ChartAppearanceSection';
@@ -69,27 +81,43 @@ function updatePluginSlice(
 export const SECTION_REGISTRY: {
 	[K in SectionKind]?: SectionDescriptor<K>;
 } = {
+<<<<<<< HEAD
 	formatting: {
+=======
+	[SectionKind.Formatting]: {
+>>>>>>> upstream/main
 		Component: FormattingSection,
 		get: (spec): PanelFormattingSlice | undefined =>
 			getPluginSlice<PanelFormattingSlice>(spec, 'formatting'),
 		update: (spec, formatting): PanelSpec =>
 			updatePluginSlice(spec, 'formatting', formatting),
 	},
+<<<<<<< HEAD
 	axes: {
+=======
+	[SectionKind.Axes]: {
+>>>>>>> upstream/main
 		Component: AxesSection,
 		get: (spec): DashboardtypesAxesDTO | undefined =>
 			getPluginSlice<DashboardtypesAxesDTO>(spec, 'axes'),
 		update: (spec, axes): PanelSpec => updatePluginSlice(spec, 'axes', axes),
 	},
+<<<<<<< HEAD
 	legend: {
+=======
+	[SectionKind.Legend]: {
+>>>>>>> upstream/main
 		Component: LegendSection,
 		get: (spec): DashboardtypesLegendDTO | undefined =>
 			getPluginSlice<DashboardtypesLegendDTO>(spec, 'legend'),
 		update: (spec, legend): PanelSpec =>
 			updatePluginSlice(spec, 'legend', legend),
 	},
+<<<<<<< HEAD
 	chartAppearance: {
+=======
+	[SectionKind.ChartAppearance]: {
+>>>>>>> upstream/main
 		Component: ChartAppearanceSection,
 		get: (spec): DashboardtypesTimeSeriesChartAppearanceDTO | undefined =>
 			getPluginSlice<DashboardtypesTimeSeriesChartAppearanceDTO>(
@@ -99,7 +127,11 @@ export const SECTION_REGISTRY: {
 		update: (spec, chartAppearance): PanelSpec =>
 			updatePluginSlice(spec, 'chartAppearance', chartAppearance),
 	},
+<<<<<<< HEAD
 	visualization: {
+=======
+	[SectionKind.Visualization]: {
+>>>>>>> upstream/main
 		Component: VisualizationSection,
 		get: (spec): DashboardtypesBarChartVisualizationDTO | undefined =>
 			getPluginSlice<DashboardtypesBarChartVisualizationDTO>(
@@ -109,14 +141,22 @@ export const SECTION_REGISTRY: {
 		update: (spec, visualization): PanelSpec =>
 			updatePluginSlice(spec, 'visualization', visualization),
 	},
+<<<<<<< HEAD
 	buckets: {
+=======
+	[SectionKind.Buckets]: {
+>>>>>>> upstream/main
 		Component: BucketsSection,
 		get: (spec): DashboardtypesHistogramBucketsDTO | undefined =>
 			getPluginSlice<DashboardtypesHistogramBucketsDTO>(spec, 'histogramBuckets'),
 		update: (spec, buckets): PanelSpec =>
 			updatePluginSlice(spec, 'histogramBuckets', buckets),
 	},
+<<<<<<< HEAD
 	contextLinks: {
+=======
+	[SectionKind.ContextLinks]: {
+>>>>>>> upstream/main
 		Component: ContextLinksSection,
 		// Panel-level slice (spec.links), not under the plugin spec — no cast needed.
 		get: (spec): DashboardLinkDTO[] | undefined => spec.links,
@@ -125,7 +165,11 @@ export const SECTION_REGISTRY: {
 	// One editor for every threshold variant (label / comparison / table); the kind's
 	// `controls.variant` picks the row editor + element shape. All persist to the same
 	// plugin.spec.thresholds key.
+<<<<<<< HEAD
 	thresholds: {
+=======
+	[SectionKind.Thresholds]: {
+>>>>>>> upstream/main
 		Component: ThresholdsSection,
 		get: (spec): AnyThreshold[] | undefined =>
 			getPluginSlice<AnyThreshold[]>(spec, 'thresholds'),
@@ -142,6 +186,7 @@ export const SECTION_REGISTRY: {
  * `get` → `Component` → `update` without any further casts.
  */
 export interface ErasedSectionDescriptor {
+<<<<<<< HEAD
 	Component: ComponentType<{
 		value: unknown;
 		controls?: unknown;
@@ -158,6 +203,15 @@ export interface ErasedSectionDescriptor {
 		// suggestions scoped to it (List column picker).
 		signal?: unknown;
 	}>;
+=======
+	Component: ComponentType<
+		{
+			value: unknown;
+			controls?: unknown;
+			onChange: (next: unknown) => void;
+		} & SectionEditorContext
+	>;
+>>>>>>> upstream/main
 	get: (spec: PanelSpec) => unknown;
 	update: (spec: PanelSpec, value: unknown) => PanelSpec;
 }

@@ -20,7 +20,15 @@ import JsonEditor from './JsonEditor';
 
 import styles from './NewDashboardModal.module.scss';
 
+<<<<<<< HEAD
 function ImportJsonPanel(): JSX.Element {
+=======
+interface Props {
+	onClose: () => void;
+}
+
+function ImportJsonPanel({ onClose }: Props): JSX.Element {
+>>>>>>> upstream/main
 	const { safeNavigate } = useSafeNavigate();
 	const { t } = useTranslation(['dashboard', 'common']);
 	const { showErrorModal } = useErrorModal();
@@ -59,6 +67,10 @@ function ImportJsonPanel(): JSX.Element {
 			const parsed = JSON.parse(editorValue) as Record<string, unknown>;
 			const payload = normalizeToPostable(parsed);
 			const response = await createDashboardV2(payload);
+<<<<<<< HEAD
+=======
+			onClose();
+>>>>>>> upstream/main
 			safeNavigate(
 				generatePath(ROUTES.DASHBOARD, { dashboardId: response.data.id }),
 			);

@@ -12,7 +12,11 @@ export function useAutoSelect(
 	variable: VariableFormModel,
 	options: string[],
 	selection: VariableSelection,
+<<<<<<< HEAD
 	onChange: (selection: VariableSelection) => void,
+=======
+	onAutoSelect: (selection: VariableSelection) => void,
+>>>>>>> upstream/main
 ): void {
 	useEffect(() => {
 		if (options.length === 0 || selection.allSelected) {
@@ -28,11 +32,19 @@ export function useAutoSelect(
 		if (isValid) {
 			return;
 		}
+<<<<<<< HEAD
 		const fallback = (variable.defaultValue as { value?: string } | undefined)
 			?.value;
 		const initial =
 			fallback && options.includes(fallback) ? fallback : options[0];
 		onChange({
+=======
+		const dv = variable.defaultValue;
+		const fallback = Array.isArray(dv) ? dv[0] : dv;
+		const initial =
+			fallback && options.includes(fallback) ? fallback : options[0];
+		onAutoSelect({
+>>>>>>> upstream/main
 			value: variable.multiSelect ? [initial] : initial,
 			allSelected: false,
 		});

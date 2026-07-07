@@ -1,4 +1,15 @@
+<<<<<<< HEAD
 import { useEffect, useMemo, useRef, useState } from 'react';
+=======
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	type MouseEvent as ReactMouseEvent,
+} from 'react';
+>>>>>>> upstream/main
 import { Table } from 'antd';
 import type { DashboardtypesTablePanelSpecDTO } from 'api/generated/services/sigNoz.schemas';
 import { useResizeObserver } from 'hooks/useDimensions';
@@ -8,6 +19,12 @@ import { getScalarResults } from 'pages/DashboardPageV2/DashboardContainer/query
 import PanelStyles from '../../panel.module.scss';
 import { PanelRendererProps } from '../../types/rendererProps';
 import { resolveDecimalPrecision } from '../../utils/chartAppearance/resolvers';
+<<<<<<< HEAD
+=======
+import { enrichTableClick } from '../../utils/drilldown/enrichTableClick';
+import { getBuilderQueries } from '../../utils/getBuilderQueries';
+import { getPanelTimeRange } from '../../utils/getPanelTimeRange';
+>>>>>>> upstream/main
 import { useResizableColumns } from '../../hooks/useResizableColumns';
 import NoData from '../../components/NoData/NoData';
 
@@ -25,8 +42,16 @@ function TablePanelRenderer({
 	panelId,
 	panel,
 	data,
+<<<<<<< HEAD
 	refetch,
 	searchTerm = '',
+=======
+	isFetching,
+	refetch,
+	searchTerm = '',
+	onClick,
+	enableDrillDown,
+>>>>>>> upstream/main
 }: PanelRendererProps<'signoz/TablePanel'>): JSX.Element {
 	// Measure the panel so each page roughly fills it (min 10 rows) with a pinned header.
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -42,6 +67,14 @@ function TablePanelRenderer({
 		[panel.spec.plugin.spec],
 	);
 
+<<<<<<< HEAD
+=======
+	const builderQueries = useMemo(
+		() => getBuilderQueries(panel.spec.queries || []),
+		[panel.spec.queries],
+	);
+
+>>>>>>> upstream/main
 	// V5 joins every query into a single scalar result, so the first non-empty
 	// table is the whole panel.
 	const table = useMemo(
@@ -64,6 +97,37 @@ function TablePanelRenderer({
 		[spec.thresholds],
 	);
 
+<<<<<<< HEAD
+=======
+	const handleCellClick = useCallback(
+		({
+			columnId,
+			record,
+			event,
+		}: {
+			columnId: string;
+			record: TableRowData;
+			event: ReactMouseEvent<HTMLElement>;
+		}): void => {
+			if (!onClick || !table) {
+				return;
+			}
+			const payload = enrichTableClick({
+				record,
+				columnId,
+				table,
+				builderQueries,
+				coordinates: { x: event.clientX, y: event.clientY },
+				timeRange: getPanelTimeRange(data.requestPayload),
+			});
+			if (payload) {
+				onClick(payload);
+			}
+		},
+		[onClick, table, builderQueries, data.requestPayload],
+	);
+
+>>>>>>> upstream/main
 	const columns = useMemo(
 		() =>
 			table
@@ -72,9 +136,23 @@ function TablePanelRenderer({
 						columnUnits: spec.formatting?.columnUnits ?? {},
 						decimalPrecision,
 						thresholdsByColumn,
+<<<<<<< HEAD
 					})
 				: [],
 		[table, spec.formatting?.columnUnits, decimalPrecision, thresholdsByColumn],
+=======
+						onCellClick: enableDrillDown ? handleCellClick : undefined,
+					})
+				: [],
+		[
+			table,
+			spec.formatting?.columnUnits,
+			decimalPrecision,
+			thresholdsByColumn,
+			enableDrillDown,
+			handleCellClick,
+		],
+>>>>>>> upstream/main
 	);
 
 	// User-resizable columns, persisted per panel to localStorage.
@@ -106,7 +184,11 @@ function TablePanelRenderer({
 			className={PanelStyles.panelContainer}
 		>
 			{!table || dataSource.length === 0 ? (
+<<<<<<< HEAD
 				<NoData onRetry={refetch} />
+=======
+				<NoData isFetching={isFetching} onRetry={refetch} />
+>>>>>>> upstream/main
 			) : (
 				<div className={styles.container}>
 					<Table

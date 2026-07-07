@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FullScreenHandle } from 'react-full-screen';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,15 @@ import {
 	Configure,
 	Copy,
 	FileJson,
+=======
+import { useCallback, useMemo, useState } from 'react';
+import { FullScreenHandle } from 'react-full-screen';
+import { generatePath } from 'react-router-dom';
+import {
+	Braces,
+	Configure,
+	Copy,
+>>>>>>> upstream/main
 	Fullscreen,
 	Grid3X3,
 	LockKeyhole,
@@ -64,7 +74,10 @@ function DashboardActions({
 }: DashboardActionsProps): JSX.Element {
 	const canEdit = useDashboardStore((s) => s.isEditable);
 	const { user } = useAppContext();
+<<<<<<< HEAD
 	const { t } = useTranslation(['dashboard', 'common']);
+=======
+>>>>>>> upstream/main
 	const { safeNavigate } = useSafeNavigate();
 	const { showErrorModal } = useErrorModal();
 
@@ -74,7 +87,10 @@ function DashboardActions({
 	const [isCloning, setIsCloning] = useState<boolean>(false);
 	const [isNewSectionOpen, setIsNewSectionOpen] = useState<boolean>(false);
 
+<<<<<<< HEAD
 	const [state, setCopy] = useCopyToClipboard();
+=======
+>>>>>>> upstream/main
 	const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
 	const deleteDashboardMutation = useDeleteDashboard(dashboard.id);
 
@@ -90,6 +106,7 @@ function DashboardActions({
 		[addSection],
 	);
 
+<<<<<<< HEAD
 	useEffect(() => {
 		if (state.error) {
 			toast.error(t('something_went_wrong', { ns: 'common' }));
@@ -116,6 +133,8 @@ function DashboardActions({
 		URL.revokeObjectURL(url);
 	}, [dashboardDataJSON, title]);
 
+=======
+>>>>>>> upstream/main
 	const handleClone = useCallback(async (): Promise<void> => {
 		if (!dashboard.id) {
 			return;
@@ -176,6 +195,7 @@ function DashboardActions({
 			onClick: handle.enter,
 		});
 
+<<<<<<< HEAD
 		const dataGroup: MenuItem[] = [
 			{
 				key: 'export',
@@ -191,6 +211,8 @@ function DashboardActions({
 			},
 		];
 
+=======
+>>>>>>> upstream/main
 		const layoutGroup: MenuItem[] = [];
 		if (canEdit) {
 			layoutGroup.push({
@@ -208,7 +230,10 @@ function DashboardActions({
 				label: 'Dashboard',
 				children: dashboardGroup,
 			},
+<<<<<<< HEAD
 			{ type: 'group', key: 'group-data', label: 'Data', children: dataGroup },
+=======
+>>>>>>> upstream/main
 		];
 		if (layoutGroup.length > 0) {
 			items.push({
@@ -240,9 +265,12 @@ function DashboardActions({
 		handleClone,
 		onLockToggle,
 		handle.enter,
+<<<<<<< HEAD
 		exportJSON,
 		setCopy,
 		dashboardDataJSON,
+=======
+>>>>>>> upstream/main
 	]);
 
 	return (
@@ -287,7 +315,11 @@ function DashboardActions({
 				onClick={(): void => setIsJsonEditorOpen(true)}
 				size="md"
 			>
+<<<<<<< HEAD
 				Edit as JSON
+=======
+				JSON
+>>>>>>> upstream/main
 			</Button>
 			{!isDashboardLocked && (
 				<Button

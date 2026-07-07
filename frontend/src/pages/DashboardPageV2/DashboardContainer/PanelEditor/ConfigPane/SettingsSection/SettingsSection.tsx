@@ -26,13 +26,22 @@ function SettingsSection({
 }: SettingsSectionProps): JSX.Element {
 	const [isOpen, setIsOpen] = useState(defaultOpen);
 
+<<<<<<< HEAD
+=======
+	const serializedTitle = title.toLowerCase().replace(/\s+/g, '-');
+
+>>>>>>> upstream/main
 	return (
 		<section className={styles.section}>
 			<button
 				type="button"
 				className={styles.header}
 				aria-expanded={isOpen}
+<<<<<<< HEAD
 				data-testid={`config-section-${title}`}
+=======
+				data-testid={`config-section-${serializedTitle}`}
+>>>>>>> upstream/main
 				onClick={(): void => setIsOpen((prev) => !prev)}
 			>
 				{icon && (

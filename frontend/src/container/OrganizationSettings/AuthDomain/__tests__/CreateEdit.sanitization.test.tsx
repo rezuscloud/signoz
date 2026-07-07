@@ -186,9 +186,15 @@ describe('CreateEdit — payload sanitization', () => {
 
 			expect(payload.config.roleMapping?.useRoleAttribute).toBe(false);
 			expect(payload.config.roleMapping?.groupMappings).toStrictEqual({
+<<<<<<< HEAD
 				'admin-group': 'ADMIN',
 				'dev-team': 'EDITOR',
 				viewers: 'VIEWER',
+=======
+				'admin-group': 'signoz-admin',
+				'dev-team': 'signoz-editor',
+				viewers: 'signoz-viewer',
+>>>>>>> upstream/main
 			});
 		});
 	});

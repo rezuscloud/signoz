@@ -18,6 +18,13 @@ func NewGetter(store serviceaccounttypes.Store) serviceaccount.Getter {
 	return &getter{store: store}
 }
 
+<<<<<<< HEAD
+=======
+func (getter *getter) GetServiceAccountRole(ctx context.Context, orgID valuer.UUID, id valuer.UUID) (*serviceaccounttypes.ServiceAccountRole, error) {
+	return getter.store.GetServiceAccountRoleByOrgIDAndID(ctx, orgID, id)
+}
+
+>>>>>>> upstream/main
 func (getter *getter) OnBeforeRoleDelete(ctx context.Context, orgID valuer.UUID, roleID valuer.UUID, _ string) error {
 	serviceAccounts, err := getter.store.GetServiceAccountsByOrgIDAndRoleID(ctx, orgID, roleID)
 	if err != nil {

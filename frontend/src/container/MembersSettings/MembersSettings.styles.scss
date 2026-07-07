@@ -1,11 +1,24 @@
+<<<<<<< HEAD
+=======
+@use '../../styles/scrollbar' as *;
+
+>>>>>>> upstream/main
 .members-settings-page {
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacing-8);
 	padding: var(--padding-4) var(--padding-2) var(--padding-6) var(--padding-4);
 	height: 100%;
+<<<<<<< HEAD
 }
 
+=======
+	overflow-y: auto;
+
+	@include custom-scrollbar;
+}
+
+>>>>>>> upstream/main
 .members-settings {
 	&__header {
 		display: flex;

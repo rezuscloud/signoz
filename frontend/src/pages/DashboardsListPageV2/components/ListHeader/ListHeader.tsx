@@ -3,7 +3,11 @@ import { Popover, Tooltip } from 'antd';
 import { Button } from '@signozhq/ui/button';
 import { Switch } from '@signozhq/ui/switch';
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
 import { ArrowDown, ArrowUp, Check, HdmiPort } from '@signozhq/icons';
+=======
+import { ArrowDown, ArrowUp, Check, Columns3 } from '@signozhq/icons';
+>>>>>>> upstream/main
 
 import {
 	DashboardtypesListOrderDTO,
@@ -54,7 +58,11 @@ function ListHeader({
 
 	const metadataContent = (
 		<div className={styles.metaPanel}>
+<<<<<<< HEAD
 			<Typography.Text className={styles.sortHeading}>Metadata</Typography.Text>
+=======
+			<Typography.Text className={styles.sortHeading}>Columns</Typography.Text>
+>>>>>>> upstream/main
 			{METADATA_COLUMNS.map((col) => (
 				<div key={col.key} className={styles.metaRow}>
 					<Typography.Text className={styles.metaLabel}>{col.label}</Typography.Text>
@@ -171,7 +179,11 @@ function ListHeader({
 							)
 						}
 					>
+<<<<<<< HEAD
 						<span className={styles.sortPrefix}>Sort:</span>{' '}
+=======
+						<Typography.Text className={styles.sortPrefix}>Sort:</Typography.Text>{' '}
+>>>>>>> upstream/main
 						{SORT_LABELS[sortColumn]}{' '}
 					</Button>
 				</Popover>
@@ -183,15 +195,26 @@ function ListHeader({
 					placement="bottomRight"
 					arrow={false}
 				>
+<<<<<<< HEAD
 					<Tooltip title="Metadata">
+=======
+					<Tooltip title="Columns">
+>>>>>>> upstream/main
 						<Button
 							variant="ghost"
 							color="secondary"
 							size="icon"
+<<<<<<< HEAD
 							aria-label="Metadata"
 							testId="configure-metadata-trigger"
 						>
 							<HdmiPort size={14} />
+=======
+							aria-label="Columns"
+							testId="configure-columns-trigger"
+						>
+							<Columns3 size={14} />
+>>>>>>> upstream/main
 						</Button>
 					</Tooltip>
 				</Popover>

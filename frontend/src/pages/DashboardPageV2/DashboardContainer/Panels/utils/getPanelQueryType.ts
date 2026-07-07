@@ -12,7 +12,11 @@ import { deriveQueryType } from '../../queryV5/persesQueryAdapters';
 export function getPanelQueryType(
 	panel: DashboardtypesPanelDTO,
 ): EQueryType | undefined {
+<<<<<<< HEAD
 	const envelopes = toQueryEnvelopes(panel.spec.queries || []);
+=======
+	const envelopes = toQueryEnvelopes(panel.spec.queries);
+>>>>>>> upstream/main
 	if (envelopes.length === 0) {
 		return undefined;
 	}

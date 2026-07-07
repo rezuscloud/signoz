@@ -1,17 +1,32 @@
 import { EllipsisVertical } from '@signozhq/icons';
 import { Button } from '@signozhq/ui/button';
 import { DropdownMenuSimple } from '@signozhq/ui/dropdown-menu';
+<<<<<<< HEAD
+=======
+import type { DashboardtypesPanelDTO } from 'api/generated/services/sigNoz.schemas';
+import type { PanelQueryData } from 'pages/DashboardPageV2/DashboardContainer/queryV5/types';
+>>>>>>> upstream/main
 
 import ConfirmDeleteDialog from '../../../components/ConfirmDeleteDialog/ConfirmDeleteDialog';
 import type { PanelActionsConfig } from '../Panel';
 import { usePanelActionItems } from './usePanelActionItems';
 import styles from './PanelActionsMenu.module.scss';
+<<<<<<< HEAD
 import { PanelKind } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/panelKind';
 
 interface PanelActionsMenuProps {
 	panelId: string;
 	/** Full plugin kind (e.g. `signoz/TimeSeriesPanel`);*/
 	panelKind: PanelKind;
+=======
+
+interface PanelActionsMenuProps {
+	panelId: string;
+	/** The panel itself — seeds "Create Alerts" and the download filename. */
+	panel: DashboardtypesPanelDTO;
+	/** The panel's query response — the source for "Download as CSV". */
+	data: PanelQueryData;
+>>>>>>> upstream/main
 	/** Layout context for move/delete — absent outside editable sectioned mode. */
 	panelActions?: PanelActionsConfig;
 }
@@ -23,12 +38,22 @@ interface PanelActionsMenuProps {
  */
 function PanelActionsMenu({
 	panelId,
+<<<<<<< HEAD
 	panelKind,
+=======
+	panel,
+	data,
+>>>>>>> upstream/main
 	panelActions,
 }: PanelActionsMenuProps): JSX.Element | null {
 	const { items, deleteConfirm } = usePanelActionItems({
 		panelId,
+<<<<<<< HEAD
 		panelKind,
+=======
+		panel,
+		data,
+>>>>>>> upstream/main
 		panelActions,
 	});
 

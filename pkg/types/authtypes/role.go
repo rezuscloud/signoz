@@ -11,13 +11,11 @@ import (
 	"github.com/SigNoz/signoz/pkg/types"
 	"github.com/SigNoz/signoz/pkg/types/coretypes"
 	"github.com/SigNoz/signoz/pkg/valuer"
-	openfgav1 "github.com/openfga/api/proto/openfga/v1"
 	"github.com/uptrace/bun"
 )
 
 var (
 	ErrCodeRoleInvalidInput                 = errors.MustNewCode("role_invalid_input")
-	ErrCodeRoleEmptyPatch                   = errors.MustNewCode("role_empty_patch")
 	ErrCodeInvalidTypeRelation              = errors.MustNewCode("role_invalid_type_relation")
 	ErrCodeRoleNotFound                     = errors.MustNewCode("role_not_found")
 	ErrCodeRoleAlreadyExists                = errors.MustNewCode("role_already_exists")
@@ -77,6 +75,7 @@ type Role struct {
 type RoleWithTransactionGroups struct {
 	*Role
 	TransactionGroups TransactionGroups `json:"transactionGroups" required:"true" nullable:"false"`
+<<<<<<< HEAD
 }
 
 type PostableRole struct {
@@ -88,10 +87,19 @@ type PostableRole struct {
 type UpdatableRole struct {
 	Description       string            `json:"description" required:"true"`
 	TransactionGroups TransactionGroups `json:"transactionGroups" required:"true" nullable:"false"`
+=======
+>>>>>>> upstream/main
 }
 
-type PatchableRole struct {
-	Description string `json:"description" required:"true"`
+type PostableRole struct {
+	Name              string            `json:"name" required:"true"`
+	Description       string            `json:"description" required:"false"`
+	TransactionGroups TransactionGroups `json:"transactionGroups" required:"false" nullable:"false"`
+}
+
+type UpdatableRole struct {
+	Description       string            `json:"description" required:"true"`
+	TransactionGroups TransactionGroups `json:"transactionGroups" required:"true" nullable:"false"`
 }
 
 func NewRole(name, description string, roleType valuer.String, orgID valuer.UUID) *Role {
@@ -150,13 +158,18 @@ func NewStatsFromRoles(roles []*Role) map[string]any {
 	return stats
 }
 
+<<<<<<< HEAD
 func (role *Role) PatchMetadata(description string) error {
+=======
+func (role *RoleWithTransactionGroups) Update(description string, transactionGroups TransactionGroups) error {
+>>>>>>> upstream/main
 	err := role.ErrIfManaged()
 	if err != nil {
 		return err
 	}
 
 	role.Description = description
+	role.TransactionGroups = transactionGroups
 	role.UpdatedAt = time.Now()
 	return nil
 }
@@ -216,6 +229,7 @@ func (role *PostableRole) UnmarshalJSON(data []byte) error {
 	role.Name = shadow.Name
 	role.Description = shadow.Description
 	role.TransactionGroups = transactionGroups
+<<<<<<< HEAD
 	return nil
 }
 
@@ -239,74 +253,37 @@ func (role *UpdatableRole) UnmarshalJSON(data []byte) error {
 
 	role.Description = *shadow.Description
 	role.TransactionGroups = shadow.TransactionGroups
+=======
+>>>>>>> upstream/main
 	return nil
 }
 
-func (role *PatchableRole) UnmarshalJSON(data []byte) error {
-	type shadowPatchableRole struct {
-		Description string `json:"description"`
-	}
+func (role *UpdatableRole) UnmarshalJSON(data []byte) error {
+	shadow := struct {
+		Description       *string          `json:"description"`
+		TransactionGroups *json.RawMessage `json:"transactionGroups"`
+	}{}
 
-	var shadowRole shadowPatchableRole
-	if err := json.Unmarshal(data, &shadowRole); err != nil {
+	if err := json.Unmarshal(data, &shadow); err != nil {
 		return err
 	}
 
-	if shadowRole.Description == "" {
-		return errors.New(errors.TypeInvalidInput, ErrCodeRoleEmptyPatch, "empty role patch request received, description must be present")
+	if shadow.Description == nil {
+		return errors.New(errors.TypeInvalidInput, ErrCodeRoleInvalidInput, "description is required").WithAdditional("send an empty string to clear the description")
 	}
 
-	role.Description = shadowRole.Description
+	if shadow.TransactionGroups == nil {
+		return errors.New(errors.TypeInvalidInput, ErrCodeRoleInvalidInput, "transactionGroups is required").WithAdditional("send an empty array to clear the role's transaction groups")
+	}
 
+	transactionGroups, err := NewTransactionGroups(*shadow.TransactionGroups)
+	if err != nil {
+		return err
+	}
+
+	role.Description = *shadow.Description
+	role.TransactionGroups = transactionGroups
 	return nil
-}
-
-func GetAdditionTuples(name string, orgID valuer.UUID, relation Relation, additions []*coretypes.Object) ([]*openfgav1.TupleKey, error) {
-	tuples := make([]*openfgav1.TupleKey, 0)
-
-	for _, object := range additions {
-		resource := coretypes.MustNewResourceFromTypeAndKind(object.Resource.Type, object.Resource.Kind)
-		transactionTuples := NewTuples(
-			resource,
-			MustNewSubject(
-				coretypes.NewResourceRole(),
-				name,
-				orgID,
-				&coretypes.VerbAssignee,
-			),
-			relation,
-			[]coretypes.Selector{object.Selector},
-			orgID,
-		)
-
-		tuples = append(tuples, transactionTuples...)
-	}
-
-	return tuples, nil
-}
-
-func GetDeletionTuples(name string, orgID valuer.UUID, relation Relation, deletions []*coretypes.Object) ([]*openfgav1.TupleKey, error) {
-	tuples := make([]*openfgav1.TupleKey, 0)
-
-	for _, object := range deletions {
-		resource := coretypes.MustNewResourceFromTypeAndKind(object.Resource.Type, object.Resource.Kind)
-		transactionTuples := NewTuples(
-			resource,
-			MustNewSubject(
-				coretypes.NewResourceRole(),
-				name,
-				orgID,
-				&coretypes.VerbAssignee,
-			),
-			relation,
-			[]coretypes.Selector{object.Selector},
-			orgID,
-		)
-
-		tuples = append(tuples, transactionTuples...)
-	}
-
-	return tuples, nil
 }
 
 func MustGetSigNozManagedRoleFromExistingRole(role types.Role) string {

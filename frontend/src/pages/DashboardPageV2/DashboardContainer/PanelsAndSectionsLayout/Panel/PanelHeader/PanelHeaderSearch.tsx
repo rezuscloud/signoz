@@ -43,6 +43,10 @@ function PanelHeaderSearch({
 					color="secondary"
 					size="icon"
 					onClick={(): void => setExpanded(true)}
+<<<<<<< HEAD
+=======
+					className={styles.searchTrigger}
+>>>>>>> upstream/main
 					data-testid="panel-header-search-trigger"
 					aria-label="Search"
 				>

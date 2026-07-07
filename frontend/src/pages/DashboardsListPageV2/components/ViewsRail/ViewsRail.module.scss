@@ -28,6 +28,10 @@
 	font-weight: var(--font-weight-semibold);
 	letter-spacing: -0.01em;
 	color: var(--l1-foreground);
+<<<<<<< HEAD
+=======
+	text-align: left;
+>>>>>>> upstream/main
 }
 
 .search {
@@ -76,7 +80,17 @@
 	padding: 1px 6px;
 }
 
+<<<<<<< HEAD
 .row {
+=======
+.deleteName {
+	color: var(--danger-background);
+	font-weight: var(--font-weight-medium);
+}
+
+.row {
+	position: relative;
+>>>>>>> upstream/main
 	display: flex;
 	align-items: center;
 	margin: 3px 0;
@@ -92,6 +106,7 @@
 	background: var(--l2-background);
 }
 
+<<<<<<< HEAD
 .item {
 	// Neutralise the signoz Button defaults so it reads as a full-width,
 	// left-aligned list row; the row coordinates hover/active colours below.
@@ -113,6 +128,29 @@
 .row:hover .item,
 .rowActive .item {
 	--button-variant-ghost-color: var(--l1-foreground);
+=======
+// A left accent bar reads the active row more clearly than background alone.
+.rowActive::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 3px;
+	height: 18px;
+	border-radius: 0 3px 3px 0;
+	background: var(--primary-background);
+}
+
+.item {
+	--button-display: flex;
+	--button-justify-content: flex-start;
+	--button-padding: 9px 10px;
+	flex: 1;
+	min-width: 0;
+	width: 100%;
+	font-size: var(--font-size-base);
+>>>>>>> upstream/main
 }
 
 .itemIcon {
@@ -125,7 +163,10 @@
 }
 
 .itemLabel {
+<<<<<<< HEAD
 	flex: 1;
+=======
+>>>>>>> upstream/main
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -139,6 +180,7 @@
 	flex: none;
 }
 
+<<<<<<< HEAD
 .itemAction {
 	// Square icon button that surfaces on row hover and turns red on its own
 	// hover; colours flow through the signoz Button tokens.
@@ -158,6 +200,44 @@
 
 .row:hover .itemAction {
 	opacity: 1;
+=======
+// Ghost action icons overlaid on the row's right edge — absolutely positioned so
+// they never reserve layout space or affect row height. Hidden until row hover,
+// and inert while hidden so they can't intercept clicks meant for the row.
+.itemActions {
+	position: absolute;
+	right: 6px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.1s;
+}
+
+.itemAction {
+	--button-height: 20px;
+	--button-padding: 0;
+	--button-border-radius: 4px;
+	--button-variant-ghost-color: var(--l3-foreground);
+	--button-variant-ghost-hover-background-color: var(--l1-background);
+	--button-variant-ghost-hover-color: var(--l1-foreground);
+	width: 20px;
+	height: 20px;
+	flex: none;
+}
+
+.itemActionDanger {
+	--button-variant-ghost-hover-background-color: var(--danger-background);
+	--button-variant-ghost-hover-color: var(--danger-color, #fff);
+}
+
+.row:hover .itemActions {
+	opacity: 1;
+	pointer-events: auto;
+>>>>>>> upstream/main
 }
 
 .empty {
@@ -217,6 +297,7 @@
 	margin-top: 2px;
 }
 
+<<<<<<< HEAD
 .iconGrid {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
@@ -248,6 +329,8 @@
 	color: var(--primary-background);
 }
 
+=======
+>>>>>>> upstream/main
 .saveActions {
 	display: flex;
 	justify-content: flex-end;

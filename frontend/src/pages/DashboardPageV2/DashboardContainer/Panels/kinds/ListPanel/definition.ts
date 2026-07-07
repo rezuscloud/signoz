@@ -2,6 +2,11 @@ import type { PanelDefinition } from '../../types/panelDefinition';
 import Renderer from './Renderer';
 import { sections } from './sections';
 import { TelemetrytypesSignalDTO } from 'api/generated/services/sigNoz.schemas';
+<<<<<<< HEAD
+=======
+import { OPERATORS } from 'constants/queryBuilder';
+import { EQueryType } from 'types/common/dashboard';
+>>>>>>> upstream/main
 
 export const definition: PanelDefinition<'signoz/ListPanel'> = {
 	kind: 'signoz/ListPanel',
@@ -12,13 +17,38 @@ export const definition: PanelDefinition<'signoz/ListPanel'> = {
 		TelemetrytypesSignalDTO.logs,
 		TelemetrytypesSignalDTO.traces,
 	],
+<<<<<<< HEAD
+=======
+	// Raw rows have no aggregation, so step interval / having never apply, and the
+	// Where clause searches the log/span body via `body CONTAINS`. Traces additionally
+	// hide `limit` (the server paginates raw spans). Mirrors QueryBuilderV2's internal
+	// list configs — the capabilities guard is the single source for both.
+	supportedQueryTypes: [EQueryType.QUERY_BUILDER],
+	queryBuilderFields: {
+		default: {
+			stepInterval: { isHidden: true, isDisabled: true },
+			having: { isHidden: true, isDisabled: true },
+			filters: { customKey: 'body', customOp: OPERATORS.CONTAINS },
+		},
+		[TelemetrytypesSignalDTO.traces]: {
+			limit: { isHidden: true, isDisabled: true },
+		},
+	},
+>>>>>>> upstream/main
 	sections,
 	actions: {
 		view: true,
 		edit: true,
 		clone: true,
+<<<<<<< HEAD
 		download: false,
 		createAlert: false,
 		search: true,
+=======
+		download: { csv: false, png: true, svg: true },
+		createAlert: false,
+		search: true,
+		drilldown: false,
+>>>>>>> upstream/main
 	},
 };

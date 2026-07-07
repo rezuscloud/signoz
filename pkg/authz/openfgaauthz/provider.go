@@ -181,11 +181,16 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 	return provider.Grant(ctx, orgID, []string{authtypes.SigNozAdminRoleName}, authtypes.MustNewSubject(coretypes.NewResourceUser(), userID.String(), orgID, nil))
 }
 
+<<<<<<< HEAD
 // Create persists the role via the community SQL store. The interface accepts
 // *RoleWithTransactionGroups (an EE shape); the community build performs role
 // CRUD only and ignores transaction-group reconciliation (EE-only).
 func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
 	return provider.store.Create(ctx, role.Role)
+=======
+func (setter *provider) Create(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
+	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+>>>>>>> upstream/main
 }
 
 func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) (*authtypes.Role, error) {
@@ -206,6 +211,7 @@ func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, ro
 	return role, nil
 }
 
+<<<<<<< HEAD
 func (provider *provider) GetObjects(ctx context.Context, orgID valuer.UUID, id valuer.UUID, relation authtypes.Relation) ([]*coretypes.Object, error) {
 	role, err := provider.store.Get(ctx, orgID, id)
 	if err != nil {
@@ -243,6 +249,10 @@ func (provider *provider) Update(ctx context.Context, orgID valuer.UUID, role *a
 
 func (provider *provider) Patch(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) error {
 	return provider.store.Update(ctx, orgID, role)
+=======
+func (provider *provider) Update(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
+	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+>>>>>>> upstream/main
 }
 
 func (provider *provider) PatchObjects(ctx context.Context, orgID valuer.UUID, name string, relation authtypes.Relation, additions []*coretypes.Object, deletions []*coretypes.Object) error {

@@ -1,5 +1,9 @@
 import { Color } from '@signozhq/design-tokens';
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
+=======
+import { Spin } from 'antd';
+>>>>>>> upstream/main
 import { useGetMetricReductionRuleTimeseries } from 'api/generated/services/metrics';
 import { PANEL_TYPES } from 'constants/queryBuilder';
 import BarChart from 'container/DashboardContainer/visualization/charts/BarChart/BarChart';
@@ -25,7 +29,13 @@ interface VolumeControlChartProps {
 }
 
 function VolumeControlChart({ enabled }: VolumeControlChartProps): JSX.Element {
+<<<<<<< HEAD
 	const { data } = useGetMetricReductionRuleTimeseries({ query: { enabled } });
+=======
+	const { data, isLoading, isError } = useGetMetricReductionRuleTimeseries({
+		query: { enabled },
+	});
+>>>>>>> upstream/main
 
 	const isDarkMode = useIsDarkMode();
 	const { timezone } = useTimezone();
@@ -65,11 +75,42 @@ function VolumeControlChart({ enabled }: VolumeControlChartProps): JSX.Element {
 
 	return (
 		<div className={styles.chart} data-testid="volume-control-chart">
+<<<<<<< HEAD
 			<Typography.Text className={styles.chartTitle} size={'small'}>
 				Series volume over time · ingested vs retained
 			</Typography.Text>
 			<div className={styles.chartBody} ref={graphRef}>
 				{dimensions.width > 0 && (
+=======
+			<div className={styles.chartHeader}>
+				<Typography.Text className={styles.chartTitle} size={'small'}>
+					Sample volume · ingested vs retained
+				</Typography.Text>
+				<Typography.Text size="small" color="muted">
+					Last 6 hours
+				</Typography.Text>
+			</div>
+			<div className={styles.chartBody} ref={graphRef}>
+				{isLoading && (
+					<div
+						className={styles.chartStatus}
+						data-testid="volume-control-chart-loading"
+					>
+						<Spin size="small" />
+					</div>
+				)}
+				{!isLoading && isError && (
+					<div
+						className={styles.chartStatus}
+						data-testid="volume-control-chart-error"
+					>
+						<Typography.Text size="small" color="danger">
+							Failed to load chart
+						</Typography.Text>
+					</div>
+				)}
+				{!isLoading && !isError && dimensions.width > 0 && (
+>>>>>>> upstream/main
 					<BarChart
 						config={config}
 						data={chartData}

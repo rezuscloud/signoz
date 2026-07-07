@@ -10,11 +10,19 @@ export interface ConfigSegmentedItem {
 	icon?: SegmentIconName;
 }
 
+<<<<<<< HEAD
 interface ConfigSegmentedProps {
 	testId: string;
 	value: string | undefined;
 	items: ConfigSegmentedItem[];
 	onChange: (value: string) => void;
+=======
+interface ConfigSegmentedProps<T extends string = string> {
+	testId: string;
+	value: T | undefined;
+	items: ConfigSegmentedItem[];
+	onChange: (value: T) => void;
+>>>>>>> upstream/main
 }
 
 /**
@@ -23,12 +31,20 @@ interface ConfigSegmentedProps {
  * brightens with the selected state (it inherits the toggle's `currentColor`). Built on
  * the Periscope ToggleGroup so it stays theme-faithful.
  */
+<<<<<<< HEAD
 function ConfigSegmented({
+=======
+function ConfigSegmented<T extends string = string>({
+>>>>>>> upstream/main
 	testId,
 	value,
 	items,
 	onChange,
+<<<<<<< HEAD
 }: ConfigSegmentedProps): JSX.Element {
+=======
+}: ConfigSegmentedProps<T>): JSX.Element {
+>>>>>>> upstream/main
 	return (
 		<ToggleGroupSimple
 			type="single"
@@ -47,7 +63,11 @@ function ConfigSegmented({
 			}))}
 			// Single toggle-groups emit '' when the active segment is re-clicked; ignore that
 			// so a required choice (e.g. scale, position) can't be cleared to an empty value.
+<<<<<<< HEAD
 			onChange={(next: string): void => {
+=======
+			onChange={(next: T): void => {
+>>>>>>> upstream/main
 				if (next) {
 					onChange(next);
 				}

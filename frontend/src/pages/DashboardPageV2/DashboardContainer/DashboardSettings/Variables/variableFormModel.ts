@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 import { TelemetrytypesSignalDTO } from 'api/generated/services/sigNoz.schemas';
 import type { VariableDefaultValueDTO } from 'api/generated/services/sigNoz.schemas';
+=======
+import {
+	DashboardtypesListVariableSpecSortDTO,
+	TelemetrytypesSignalDTO,
+} from 'api/generated/services/sigNoz.schemas';
+import type { DashboardtypesVariableDefaultValueDTO } from 'api/generated/services/sigNoz.schemas';
+>>>>>>> upstream/main
 import { sortBy } from 'lodash-es';
 
 /**
@@ -24,6 +32,7 @@ export const DYNAMIC_SIGNAL_ALL = 'all' as const;
 export type DynamicSignalOption = TelemetrySignal | typeof DYNAMIC_SIGNAL_ALL;
 
 /**
+<<<<<<< HEAD
  * Sort order for list-variable values. The wire (Perses) validates `sort`
  * against a fixed method set. There is no generated TS enum for it
  * (`DashboardtypesListOrderDTO` is the query-builder order, a different field),
@@ -37,6 +46,21 @@ export const VARIABLE_SORT = {
 	NUMERICAL_DESC: 'numerical-desc',
 	CI_ASC: 'alphabetical-ci-asc',
 	CI_DESC: 'alphabetical-ci-desc',
+=======
+ * Sort order for list-variable values, keyed by the generated wire enum so the
+ * form model and the DTO `sort` field share one source of truth. The friendly
+ * keys (`DISABLED` / `ASC` / …) are UI-facing; the values are the Perses `Sort`
+ * tokens the wire validates against.
+ */
+export const VARIABLE_SORT = {
+	DISABLED: DashboardtypesListVariableSpecSortDTO.none,
+	ASC: DashboardtypesListVariableSpecSortDTO['alphabetical-asc'],
+	DESC: DashboardtypesListVariableSpecSortDTO['alphabetical-desc'],
+	NUMERICAL_ASC: DashboardtypesListVariableSpecSortDTO['numerical-asc'],
+	NUMERICAL_DESC: DashboardtypesListVariableSpecSortDTO['numerical-desc'],
+	CI_ASC: DashboardtypesListVariableSpecSortDTO['alphabetical-ci-asc'],
+	CI_DESC: DashboardtypesListVariableSpecSortDTO['alphabetical-ci-desc'],
+>>>>>>> upstream/main
 } as const;
 
 export type VariableSort = (typeof VARIABLE_SORT)[keyof typeof VARIABLE_SORT];
@@ -133,7 +157,11 @@ export interface VariableFormModel {
 	 * Runtime-selected default, not editable in the management tab yet; carried
 	 * through edits so saving a definition doesn't clobber it.
 	 */
+<<<<<<< HEAD
 	defaultValue?: VariableDefaultValueDTO;
+=======
+	defaultValue?: DashboardtypesVariableDefaultValueDTO;
+>>>>>>> upstream/main
 }
 
 export function emptyVariableFormModel(): VariableFormModel {

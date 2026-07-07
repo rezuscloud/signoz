@@ -18,22 +18,37 @@ interface VariableSelectorProps {
 	variable: VariableFormModel;
 	/** All variables (Dynamic uses them to scope options by sibling selections). */
 	variables: VariableFormModel[];
+<<<<<<< HEAD
 	/** Names this variable depends on (for Query gating). */
 	parents: string[];
+=======
+>>>>>>> upstream/main
 	/** All current selections (Query passes them as the request payload). */
 	selections: VariableSelectionMap;
 	selection: VariableSelection;
 	onChange: (selection: VariableSelection) => void;
+<<<<<<< HEAD
+=======
+	/** Batched fill applied when options resolve (Query/Dynamic auto-selection). */
+	onAutoSelect: (selection: VariableSelection) => void;
+>>>>>>> upstream/main
 }
 
 /** One labelled variable control; dispatches on the variable type. */
 function VariableSelector({
 	variable,
 	variables,
+<<<<<<< HEAD
 	parents,
 	selections,
 	selection,
 	onChange,
+=======
+	selections,
+	selection,
+	onChange,
+	onAutoSelect,
+>>>>>>> upstream/main
 }: VariableSelectorProps): JSX.Element {
 	const customOptions = useMemo(
 		() =>
@@ -61,10 +76,17 @@ function VariableSelector({
 				return (
 					<QuerySelector
 						variable={variable}
+<<<<<<< HEAD
 						parents={parents}
 						selections={selections}
 						selection={selection}
 						onChange={onChange}
+=======
+						selections={selections}
+						selection={selection}
+						onChange={onChange}
+						onAutoSelect={onAutoSelect}
+>>>>>>> upstream/main
 					/>
 				);
 			case 'DYNAMIC':
@@ -75,6 +97,10 @@ function VariableSelector({
 						selections={selections}
 						selection={selection}
 						onChange={onChange}
+<<<<<<< HEAD
+=======
+						onAutoSelect={onAutoSelect}
+>>>>>>> upstream/main
 					/>
 				);
 			case 'CUSTOM':

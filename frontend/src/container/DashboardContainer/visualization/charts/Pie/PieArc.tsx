@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import type { MouseEvent as ReactMouseEvent } from 'react';
+>>>>>>> upstream/main
 import type { PrecisionOption } from 'components/Graph/types';
 import { getYAxisFormattedValue } from 'components/Graph/yAxisConfig';
 
@@ -27,7 +31,11 @@ interface PieArcProps {
 	fill: string;
 	onEnter: (slice: PieSlice, centroidX: number, centroidY: number) => void;
 	onLeave: () => void;
+<<<<<<< HEAD
 	onClick?: (slice: PieSlice) => void;
+=======
+	onClick?: (slice: PieSlice, event: ReactMouseEvent) => void;
+>>>>>>> upstream/main
 }
 
 /**
@@ -72,7 +80,11 @@ export default function PieArc({
 		<g
 			onMouseEnter={(): void => onEnter(slice, centroidX, centroidY)}
 			onMouseLeave={onLeave}
+<<<<<<< HEAD
 			onClick={(): void => onClick?.(slice)}
+=======
+			onClick={(event): void => onClick?.(slice, event)}
+>>>>>>> upstream/main
 		>
 			<path d={arcPath} fill={fill} />
 			{shouldShowLabel && (

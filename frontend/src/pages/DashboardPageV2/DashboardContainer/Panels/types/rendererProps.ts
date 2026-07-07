@@ -34,6 +34,11 @@ export interface BaseRendererProps {
 	/** Raw V5 fetch result — response + the request that produced it. */
 	data: PanelQueryData;
 	isFetching: boolean;
+<<<<<<< HEAD
+=======
+	/** Showing a prior page's data while the next loads; list renderers swap in skeleton rows. */
+	isPreviousData?: boolean;
+>>>>>>> upstream/main
 	error: Error | null;
 	/** Re-run the panel query; wired to the no-data Retry affordance. Optional so standalone call sites (e.g. the editor preview) can omit it. */
 	refetch?: () => void;

@@ -1,16 +1,33 @@
+<<<<<<< HEAD
 import type { ChangeEvent } from 'react';
 import { Typography } from '@signozhq/ui/typography';
 import { Input } from 'antd';
+=======
+import { Typography } from '@signozhq/ui/typography';
+>>>>>>> upstream/main
 import {
 	DashboardtypesFillModeDTO,
 	DashboardtypesLineInterpolationDTO,
 	DashboardtypesLineStyleDTO,
 } from 'api/generated/services/sigNoz.schemas';
+<<<<<<< HEAD
 import type { SectionEditorProps } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+=======
+import type {
+	SectionEditorProps,
+	SectionKind,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+>>>>>>> upstream/main
 
 import ConfigSegmented from '../../controls/ConfigSegmented/ConfigSegmented';
 import ConfigSelect from '../../controls/ConfigSelect/ConfigSelect';
 import ConfigSwitch from '../../controls/ConfigSwitch/ConfigSwitch';
+<<<<<<< HEAD
+=======
+import { SegmentIcon } from '../../controls/segmentIcons';
+import type { SectionEditorContext } from '../../sectionContext';
+import DisconnectValuesField from './DisconnectValuesField';
+>>>>>>> upstream/main
 
 import styles from './ChartAppearanceSection.module.scss';
 
@@ -31,22 +48,38 @@ const LINE_INTERPOLATION_OPTIONS = [
 	{
 		value: DashboardtypesLineInterpolationDTO.linear,
 		label: 'Linear',
+<<<<<<< HEAD
 		icon: 'interp-linear' as const,
+=======
+		icon: <SegmentIcon name="interp-linear" />,
+>>>>>>> upstream/main
 	},
 	{
 		value: DashboardtypesLineInterpolationDTO.spline,
 		label: 'Spline',
+<<<<<<< HEAD
 		icon: 'interp-spline' as const,
+=======
+		icon: <SegmentIcon name="interp-spline" />,
+>>>>>>> upstream/main
 	},
 	{
 		value: DashboardtypesLineInterpolationDTO.step_before,
 		label: 'Step before',
+<<<<<<< HEAD
 		icon: 'interp-step-before' as const,
+=======
+		icon: <SegmentIcon name="interp-step-before" />,
+>>>>>>> upstream/main
 	},
 	{
 		value: DashboardtypesLineInterpolationDTO.step_after,
 		label: 'Step after',
+<<<<<<< HEAD
 		icon: 'interp-step-after' as const,
+=======
+		icon: <SegmentIcon name="interp-step-after" />,
+>>>>>>> upstream/main
 	},
 ];
 
@@ -77,6 +110,7 @@ function ChartAppearanceSection({
 	value,
 	controls,
 	onChange,
+<<<<<<< HEAD
 }: SectionEditorProps<'chartAppearance'>): JSX.Element {
 	// `spanGaps.fillLessThan` is a stringified seconds threshold: empty means "connect
 	// every gap" (the chart default), a number means "only bridge gaps shorter than this".
@@ -87,6 +121,11 @@ function ChartAppearanceSection({
 			spanGaps: raw === '' ? undefined : { ...value?.spanGaps, fillLessThan: raw },
 		});
 	};
+=======
+	stepInterval,
+}: SectionEditorProps<SectionKind.ChartAppearance> &
+	Pick<SectionEditorContext, 'stepInterval'>): JSX.Element {
+>>>>>>> upstream/main
 	return (
 		<>
 			{controls.lineStyle && (
@@ -114,7 +153,11 @@ function ChartAppearanceSection({
 						onChange={(next): void =>
 							onChange({
 								...value,
+<<<<<<< HEAD
 								lineInterpolation: next as DashboardtypesLineInterpolationDTO,
+=======
+								lineInterpolation: next,
+>>>>>>> upstream/main
 							})
 						}
 					/>
@@ -146,6 +189,7 @@ function ChartAppearanceSection({
 			)}
 
 			{controls.spanGaps && (
+<<<<<<< HEAD
 				<div className={styles.field}>
 					<Typography.Text>Connect gaps shorter than (s)</Typography.Text>
 					<Input
@@ -156,6 +200,14 @@ function ChartAppearanceSection({
 						onChange={handleSpanGaps}
 					/>
 				</div>
+=======
+				<DisconnectValuesField
+					testId="panel-editor-v2-span-gaps"
+					value={value?.spanGaps}
+					stepInterval={stepInterval}
+					onChange={(spanGaps): void => onChange({ ...value, spanGaps })}
+				/>
+>>>>>>> upstream/main
 			)}
 		</>
 	);

@@ -11,6 +11,10 @@ export enum FeatureKeys {
 	USE_JSON_BODY = 'use_json_body',
 	USE_FINE_GRAINED_AUTHZ = 'use_fine_grained_authz',
 	USE_DASHBOARD_V2 = 'use_dashboard_v2',
+<<<<<<< HEAD
 	EMABLE_AI_OBSERVABILITY = 'enable_ai_observability',
+=======
+	ENABLE_AI_OBSERVABILITY = 'enable_ai_observability',
+>>>>>>> upstream/main
 	ENABLE_METRICS_REDUCTION = 'enable_metrics_reduction',
 }

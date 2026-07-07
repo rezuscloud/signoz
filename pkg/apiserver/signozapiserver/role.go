@@ -142,6 +142,7 @@ func (provider *provider) addRoleRoutes(router *mux.Router) error {
 			Selector: provider.roleSelector,
 		}),
 	)).Methods(http.MethodDelete).GetError(); err != nil {
+<<<<<<< HEAD
 		return err
 	}
 
@@ -223,6 +224,8 @@ func (provider *provider) addRoleRoutes(router *mux.Router) error {
 			Selector: provider.roleSelector,
 		}),
 	)).Methods(http.MethodPatch).GetError(); err != nil {
+=======
+>>>>>>> upstream/main
 		return err
 	}
 

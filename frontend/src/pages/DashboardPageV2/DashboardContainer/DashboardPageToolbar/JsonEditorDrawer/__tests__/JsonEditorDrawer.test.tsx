@@ -1,4 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+<<<<<<< HEAD
+=======
+import { TooltipProvider } from '@signozhq/ui/tooltip';
+>>>>>>> upstream/main
 import type { DashboardtypesGettableDashboardV2DTO } from 'api/generated/services/sigNoz.schemas';
 
 import JsonEditorDrawer from '../JsonEditorDrawer';
@@ -48,11 +52,20 @@ function hookValue(
 		validity: { valid: true, lineCount: 3 },
 		isDirty: true,
 		isSaving: false,
+<<<<<<< HEAD
+=======
+		danglingPanelIds: [],
+		missingPanelRefs: [],
+>>>>>>> upstream/main
 		format: jest.fn(),
 		reset: jest.fn(),
 		apply: jest.fn().mockResolvedValue(undefined),
 		...overrides,
+<<<<<<< HEAD
 	};
+=======
+	} as ReturnType<typeof useJsonEditor>;
+>>>>>>> upstream/main
 }
 
 describe('JsonEditorDrawer', () => {
@@ -81,6 +94,45 @@ describe('JsonEditorDrawer', () => {
 		);
 	});
 
+<<<<<<< HEAD
+=======
+	it('warns about dangling panels, and hides the warning when there are none', () => {
+		mockUseJsonEditor.mockReturnValue(
+			hookValue({ danglingPanelIds: ['p1', 'p2'] }),
+		);
+		const { rerender } = render(
+			<TooltipProvider>
+				<JsonEditorDrawer dashboard={dashboard} isOpen onClose={jest.fn()} />
+			</TooltipProvider>,
+		);
+		expect(screen.getByTestId('json-editor-dangling-warning')).toHaveTextContent(
+			'2 panels not present in layout',
+		);
+
+		mockUseJsonEditor.mockReturnValue(hookValue({ danglingPanelIds: [] }));
+		rerender(
+			<TooltipProvider>
+				<JsonEditorDrawer dashboard={dashboard} isOpen onClose={jest.fn()} />
+			</TooltipProvider>,
+		);
+		expect(
+			screen.queryByTestId('json-editor-dangling-warning'),
+		).not.toBeInTheDocument();
+	});
+
+	it('warns about layout refs to missing panels', () => {
+		mockUseJsonEditor.mockReturnValue(hookValue({ missingPanelRefs: ['ghost'] }));
+		render(
+			<TooltipProvider>
+				<JsonEditorDrawer dashboard={dashboard} isOpen onClose={jest.fn()} />
+			</TooltipProvider>,
+		);
+		expect(
+			screen.getByTestId('json-editor-missing-ref-warning'),
+		).toHaveTextContent('1 layout item references a panel that no longer exists');
+	});
+
+>>>>>>> upstream/main
 	it('shows the error line and message when invalid', () => {
 		mockUseJsonEditor.mockReturnValue(
 			hookValue({

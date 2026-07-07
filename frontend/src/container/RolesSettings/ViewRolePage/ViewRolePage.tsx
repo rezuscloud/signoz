@@ -10,7 +10,11 @@ import { Typography } from '@signozhq/ui/typography';
 import { Skeleton } from 'antd';
 import { useGetRole } from 'api/generated/services/role';
 import ErrorInPlace from 'components/ErrorInPlace/ErrorInPlace';
+<<<<<<< HEAD
 import PermissionDeniedFullPage from 'components/PermissionDeniedFullPage/PermissionDeniedFullPage';
+=======
+import PermissionDeniedFullPage from 'lib/authz/components/PermissionDeniedFullPage/PermissionDeniedFullPage';
+>>>>>>> upstream/main
 import { useDeleteRoleModal } from 'container/RolesSettings/DeleteRoleModal/useDeleteRoleModal';
 import { useRoleAuthZ } from 'container/RolesSettings/hooks/useRoleAuthZ';
 import { transformApiToRolePermissions } from 'container/RolesSettings/hooks/useRolePermissions';

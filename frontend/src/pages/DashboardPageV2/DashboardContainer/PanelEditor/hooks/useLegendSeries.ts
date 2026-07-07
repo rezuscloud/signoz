@@ -40,7 +40,11 @@ export function useLegendSeries(
 			getTimeSeriesResults(data?.response),
 			data.legendMap,
 		);
+<<<<<<< HEAD
 		const builderQueries = getBuilderQueries(panel?.spec?.queries || []);
+=======
+		const builderQueries = getBuilderQueries(panel.spec.queries);
+>>>>>>> upstream/main
 
 		const byLabel = new Map<string, string>();
 		series.forEach((s) => {

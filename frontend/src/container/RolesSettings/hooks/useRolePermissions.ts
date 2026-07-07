@@ -18,7 +18,11 @@ import {
 	useGetRole,
 	useUpdateRole,
 } from 'api/generated/services/role';
+<<<<<<< HEAD
 import type { AuthZResource, AuthZVerb } from 'hooks/useAuthZ/types';
+=======
+import type { AuthZResource, AuthZVerb } from 'lib/authz/hooks/useAuthZ/types';
+>>>>>>> upstream/main
 
 import {
 	getResourcePanel,

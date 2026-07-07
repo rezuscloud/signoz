@@ -3,12 +3,20 @@ import {
 	CoretypesTypeDTO,
 } from 'api/generated/services/sigNoz.schemas';
 import * as roleApi from 'api/generated/services/role';
+<<<<<<< HEAD
 import * as useAuthZModule from 'hooks/useAuthZ/useAuthZ';
+=======
+import * as useAuthZModule from 'lib/authz/hooks/useAuthZ/useAuthZ';
+>>>>>>> upstream/main
 import {
 	customRoleResponse,
 	managedRoleResponse,
 } from 'mocks-server/__mockdata__/roles';
+<<<<<<< HEAD
 import { mockUseAuthZGrantAll } from 'tests/authz-test-utils';
+=======
+import { mockUseAuthZGrantAll } from 'lib/authz/utils/authz-test-utils';
+>>>>>>> upstream/main
 
 import * as useRolePermissionsModule from '../../hooks/useRolePermissions';
 

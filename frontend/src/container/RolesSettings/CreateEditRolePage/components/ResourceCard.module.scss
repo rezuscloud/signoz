@@ -8,6 +8,13 @@
 	transition: border-color 0.15s ease;
 }
 
+<<<<<<< HEAD
+=======
+.resourceCardError {
+	border-color: var(--destructive);
+}
+
+>>>>>>> upstream/main
 .resourceCardHeader {
 	display: flex;
 	align-items: center;

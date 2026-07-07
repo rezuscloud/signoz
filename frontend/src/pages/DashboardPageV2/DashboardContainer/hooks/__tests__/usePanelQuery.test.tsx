@@ -328,6 +328,15 @@ describe('usePanelQuery', () => {
 			expect(result.current.pagination).toBeUndefined();
 		});
 
+<<<<<<< HEAD
+=======
+		it('keeps previous data while paging so the table/pager stay mounted on page change', () => {
+			renderHook(() => usePanelQuery({ panel: listPanel({}), panelId: 'p1' }));
+			const [{ keepPreviousData }] = mockUseGetQueryRangeV5.mock.calls[0];
+			expect(keepPreviousData).toBe(true);
+		});
+
+>>>>>>> upstream/main
 		it('changes the page size (and re-requests with the new limit) via setPageSize', () => {
 			const { result } = renderHook(() =>
 				usePanelQuery({ panel: listPanel({}), panelId: 'p1' }),
@@ -377,6 +386,7 @@ describe('usePanelQuery', () => {
 			expect(result.current.pagination?.canNext).toBe(false);
 		});
 
+<<<<<<< HEAD
 		it('flags canNext on a full page and clears it on a partial page', () => {
 			withResponse(rawResponse(25));
 			const full = renderHook(() =>
@@ -397,6 +407,22 @@ describe('usePanelQuery', () => {
 				usePanelQuery({ panel: listPanel({}), panelId: 'p1' }),
 			);
 			expect(result.current.pagination?.canNext).toBe(true);
+=======
+		it('drives canNext from the response cursor, not the row count', () => {
+			// Full page but no cursor → backend says these are the last rows.
+			withResponse(rawResponse(25));
+			const noCursor = renderHook(() =>
+				usePanelQuery({ panel: listPanel({}), panelId: 'p1' }),
+			);
+			expect(noCursor.result.current.pagination?.canNext).toBe(false);
+
+			// Cursor present (even on a partial page) → more rows.
+			withResponse(rawResponse(3, 'cursor-1'));
+			const withCursor = renderHook(() =>
+				usePanelQuery({ panel: listPanel({}), panelId: 'p1' }),
+			);
+			expect(withCursor.result.current.pagination?.canNext).toBe(true);
+>>>>>>> upstream/main
 		});
 
 		it('advances pageIndex and enables canPrev after goNext', () => {

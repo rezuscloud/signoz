@@ -4,5 +4,10 @@ package metricreductionruletypes
 type GettableReductionRuleStats struct {
 	IngestedSeries             uint64  `json:"ingestedSeries" required:"true"`
 	RetainedSeries             uint64  `json:"retainedSeries" required:"true"`
+<<<<<<< HEAD
+=======
+	IngestedSamples            uint64  `json:"ingestedSamples" required:"true"`
+	RetainedSamples            uint64  `json:"retainedSamples" required:"true"`
+>>>>>>> upstream/main
 	EstimatedMonthlySavingsUsd float64 `json:"estimatedMonthlySavingsUsd" required:"true"`
 }

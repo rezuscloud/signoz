@@ -86,9 +86,16 @@ type Modules struct {
 	MetricsExplorer     metricsexplorer.Module
 	MetricReductionRule metricreductionrule.Module
 	InfraMonitoring     inframonitoring.Module
+<<<<<<< HEAD
 	Promote             promote.Module
 	ServiceAccount      serviceaccount.Module
 	CloudIntegration    cloudintegration.Module
+=======
+	Promote              promote.Module
+	ServiceAccount       serviceaccount.Module
+	ServiceAccountGetter serviceaccount.Getter
+	CloudIntegration     cloudintegration.Module
+>>>>>>> upstream/main
 	LogsPipeline        logspipeline.Module
 	RuleStateHistory    rulestatehistory.Module
 	TraceDetail         tracedetail.Module
@@ -117,6 +124,7 @@ func NewModules(
 	userGetter user.Getter,
 	userRoleStore authtypes.UserRoleStore,
 	serviceAccount serviceaccount.Module,
+	serviceAccountGetter serviceaccount.Getter,
 	cloudIntegrationModule cloudintegration.Module,
 	retentionGetter retention.Getter,
 	fl flagger.Flagger,
@@ -150,17 +158,30 @@ func NewModules(
 		Session:             implsession.NewModule(providerSettings, authNs, userSetter, userGetter, authDomainModule, tokenizer, orgGetter, authz),
 		SpanPercentile:      implspanpercentile.NewModule(querier, providerSettings),
 		Services:            implservices.NewModule(querier, telemetryStore),
+<<<<<<< HEAD
 		MetricsExplorer:     implmetricsexplorer.NewModule(telemetryStore, telemetryMetadataStore, cache, ruleStore, dashboard, providerSettings, config.MetricsExplorer),
 		MetricReductionRule: metricReductionRule,
 		InfraMonitoring:     implinframonitoring.NewModule(telemetryStore, telemetryMetadataStore, querier, providerSettings, config.InfraMonitoring),
 		Promote:             implpromote.NewModule(telemetryMetadataStore, telemetryStore),
 		ServiceAccount:      serviceAccount,
+=======
+		MetricsExplorer:     implmetricsexplorer.NewModule(telemetryStore, telemetryMetadataStore, cache, ruleStore, dashboard, fl, providerSettings, config.MetricsExplorer),
+		MetricReductionRule: metricReductionRule,
+		InfraMonitoring:     implinframonitoring.NewModule(telemetryStore, telemetryMetadataStore, querier, fl, providerSettings, config.InfraMonitoring),
+		Promote:             implpromote.NewModule(telemetryMetadataStore, telemetryStore),
+		ServiceAccount:       serviceAccount,
+		ServiceAccountGetter: serviceAccountGetter,
+>>>>>>> upstream/main
 		LogsPipeline:        impllogspipeline.NewModule(sqlstore),
 		RuleStateHistory:    implrulestatehistory.NewModule(implrulestatehistory.NewStore(telemetryStore, telemetryMetadataStore, providerSettings.Logger)),
 		CloudIntegration:    cloudIntegrationModule,
 		TraceDetail:         impltracedetail.NewModule(impltracedetail.NewTraceStore(telemetryStore), providerSettings, config.TraceDetail),
 		SpanMapper:          implspanmapper.NewModule(implspanmapper.NewStore(sqlstore), fl),
+<<<<<<< HEAD
 		LLMPricingRule:      impllmpricingrule.NewModule(impllmpricingrule.NewStore(sqlstore), fl),
+=======
+		LLMPricingRule:      impllmpricingrule.NewModule(impllmpricingrule.NewStore(sqlstore), fl, querier),
+>>>>>>> upstream/main
 		Tag:                 tagModule,
 	}
 }

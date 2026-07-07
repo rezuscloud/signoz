@@ -1,6 +1,12 @@
 import { KeyboardEvent, useCallback } from 'react';
 import MEditor from '@monaco-editor/react';
+<<<<<<< HEAD
 import { Button } from '@signozhq/ui/button';
+=======
+import { TriangleAlert } from '@signozhq/icons';
+import { Button } from '@signozhq/ui/button';
+import { TooltipSimple } from '@signozhq/ui/tooltip';
+>>>>>>> upstream/main
 import { Typography } from '@signozhq/ui/typography';
 import cx from 'classnames';
 import { Drawer } from 'antd';
@@ -26,8 +32,23 @@ function JsonEditorDrawer({
 }: JsonEditorDrawerProps): JSX.Element {
 	const [, copyToClipboard] = useCopyToClipboard();
 
+<<<<<<< HEAD
 	const { draft, setDraft, validity, isDirty, isSaving, format, reset, apply } =
 		useJsonEditor({ dashboard, isOpen, onApplied: onClose });
+=======
+	const {
+		draft,
+		setDraft,
+		validity,
+		isDirty,
+		isSaving,
+		danglingPanelIds,
+		missingPanelRefs,
+		format,
+		reset,
+		apply,
+	} = useJsonEditor({ dashboard, isOpen, onApplied: onClose });
+>>>>>>> upstream/main
 
 	const onCopy = useCallback((): void => {
 		copyToClipboard(draft);
@@ -48,6 +69,10 @@ function JsonEditorDrawer({
 
 	const onKeyDown = useCallback(
 		(event: KeyboardEvent<HTMLDivElement>): void => {
+<<<<<<< HEAD
+=======
+			event.stopPropagation();
+>>>>>>> upstream/main
 			if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
 				event.preventDefault();
 				void apply();
@@ -60,6 +85,22 @@ function JsonEditorDrawer({
 	const validationText = validity.valid
 		? `Valid JSON · ${validity.lineCount} lines`
 		: `Line ${validity.errorLine ?? '?'} · ${validity.message ?? 'Invalid JSON'}`;
+<<<<<<< HEAD
+=======
+	const plural = (n: number): string => (n === 1 ? '' : 's');
+	const danglingWarning =
+		danglingPanelIds.length > 0
+			? `${danglingPanelIds.length} panel${plural(
+					danglingPanelIds.length,
+				)} not present in layout — they won't be shown after saving.`
+			: null;
+	const missingRefWarning =
+		missingPanelRefs.length > 0
+			? `${missingPanelRefs.length} layout item${plural(
+					missingPanelRefs.length,
+				)} ${missingPanelRefs.length === 1 ? 'references' : 'reference'} a panel that no longer exists.`
+			: null;
+>>>>>>> upstream/main
 
 	return (
 		<Drawer
@@ -71,6 +112,7 @@ function JsonEditorDrawer({
 			rootClassName={styles.root}
 			footer={
 				<div className={styles.footer}>
+<<<<<<< HEAD
 					<Typography.Text
 						className={cx(styles.validation, {
 							[styles.validationValid]: validity.valid,
@@ -80,6 +122,51 @@ function JsonEditorDrawer({
 					>
 						{validationText}
 					</Typography.Text>
+=======
+					<div className={styles.footerStatus}>
+						<Typography.Text
+							className={cx(styles.validation, {
+								[styles.validationValid]: validity.valid,
+								[styles.validationInvalid]: !validity.valid,
+							})}
+							data-testid="json-editor-validation"
+						>
+							{validationText}
+						</Typography.Text>
+						{danglingWarning && (
+							<TooltipSimple
+								title={danglingPanelIds.join(', ')}
+								tooltipContentProps={{ className: styles.warningTooltip }}
+							>
+								<span
+									className={styles.danglingWarning}
+									data-testid="json-editor-dangling-warning"
+								>
+									<TriangleAlert size={12} className={styles.warningIcon} />
+									<Typography.Text className={styles.warningText}>
+										{danglingWarning}
+									</Typography.Text>
+								</span>
+							</TooltipSimple>
+						)}
+						{missingRefWarning && (
+							<TooltipSimple
+								title={missingPanelRefs.join(', ')}
+								tooltipContentProps={{ className: styles.warningTooltip }}
+							>
+								<span
+									className={styles.danglingWarning}
+									data-testid="json-editor-missing-ref-warning"
+								>
+									<TriangleAlert size={12} className={styles.warningIcon} />
+									<Typography.Text className={styles.warningText}>
+										{missingRefWarning}
+									</Typography.Text>
+								</span>
+							</TooltipSimple>
+						)}
+					</div>
+>>>>>>> upstream/main
 					<div className={styles.footerActions}>
 						<Button
 							variant="outlined"

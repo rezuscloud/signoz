@@ -3,12 +3,21 @@ import ROUTES from 'constants/routes';
 import { server } from 'mocks-server/server';
 import { rest } from 'msw';
 import { render, screen, userEvent, waitFor, within } from 'tests/test-utils';
+<<<<<<< HEAD
 import { useAuthZ } from 'hooks/useAuthZ/useAuthZ';
 import { mockUseAuthZGrantAll } from 'tests/authz-test-utils';
 
 import CreateEditRolePage from '../CreateEditRolePage';
 
 jest.mock('hooks/useAuthZ/useAuthZ');
+=======
+import { useAuthZ } from 'lib/authz/hooks/useAuthZ/useAuthZ';
+import { mockUseAuthZGrantAll } from 'lib/authz/utils/authz-test-utils';
+
+import CreateEditRolePage from '../CreateEditRolePage';
+
+jest.mock('lib/authz/hooks/useAuthZ/useAuthZ');
+>>>>>>> upstream/main
 const mockUseAuthZ = useAuthZ as jest.MockedFunction<typeof useAuthZ>;
 
 const rolesApiBase = '*/api/v1/roles';
@@ -216,6 +225,50 @@ describe('CreateRolePage', () => {
 			);
 		});
 
+<<<<<<< HEAD
+=======
+		it('shows error banner with "Role name is required" when saving with empty name', async () => {
+			const user = userEvent.setup();
+			renderCreatePage();
+
+			const descInput = screen.getByTestId('role-description-input');
+			await user.type(descInput, 'Description only');
+
+			const saveBtn = screen.getByTestId('save-button');
+			await user.click(saveBtn);
+
+			await expect(
+				screen.findByTestId('save-error-banner'),
+			).resolves.toBeInTheDocument();
+
+			await expect(
+				screen.findByText('Role name is required'),
+			).resolves.toBeInTheDocument();
+		});
+
+		it('clears error banner when user starts typing in name field', async () => {
+			const user = userEvent.setup();
+			renderCreatePage();
+
+			const descInput = screen.getByTestId('role-description-input');
+			await user.type(descInput, 'Description only');
+
+			const saveBtn = screen.getByTestId('save-button');
+			await user.click(saveBtn);
+
+			await expect(
+				screen.findByTestId('save-error-banner'),
+			).resolves.toBeInTheDocument();
+
+			const nameInput = screen.getByTestId('role-name-input');
+			await user.type(nameInput, 'a');
+
+			await waitFor(() => {
+				expect(screen.queryByTestId('save-error-banner')).not.toBeInTheDocument();
+			});
+		});
+
+>>>>>>> upstream/main
 		it('shows error banner when API fails', async () => {
 			server.use(
 				rest.post(rolesApiBase, (_req, res, ctx) =>

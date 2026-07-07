@@ -51,6 +51,26 @@ const isBuilderQueryEnvelope = (
 ): boolean =>
 	envelope.type === Querybuildertypesv5QueryEnvelopeBuilderDTOType.builder_query;
 
+<<<<<<< HEAD
+=======
+/**
+ * Clears the V1 explorer's `pageSize`/`offset` before conversion — the shared mapper folds
+ * `pageSize` into the V5 `limit`, which usePanelQuery would read as a user cap and hide the
+ * pager. Dropped here, `limit` reflects only a real user limit and List panels page by default.
+ */
+const withoutExplorerPaging = (query: Query): Query => ({
+	...query,
+	builder: {
+		...query.builder,
+		queryData: query.builder.queryData.map((data) => ({
+			...data,
+			pageSize: undefined,
+			offset: undefined,
+		})),
+	},
+});
+
+>>>>>>> upstream/main
 export function deriveQueryType(
 	envelopes: Querybuildertypesv5QueryEnvelopeDTO[],
 ): EQueryType {
@@ -74,6 +94,7 @@ export function deriveQueryType(
 }
 
 /**
+<<<<<<< HEAD
  * Perses panel queries → V1 `Query` (to seed the query builder), via the V5 envelope
  * list + `mapQueryDataFromApi`. An empty panel opens on a fresh metrics builder query.
  */
@@ -82,6 +103,16 @@ export function fromPerses(
 	panelType: PANEL_TYPES,
 ): Query {
 	const envelopes = toQueryEnvelopes(queries ?? []);
+=======
+ * V5 query-envelope list → V1 `Query`, via `mapQueryDataFromApi`. An empty list opens
+ * on a fresh metrics builder query. Used by `fromPerses` and by the envelopes a
+ * `/substitute_vars` round-trip returns with dashboard variables resolved.
+ */
+export function envelopesToQuery(
+	envelopes: Querybuildertypesv5QueryEnvelopeDTO[],
+	panelType: PANEL_TYPES,
+): Query {
+>>>>>>> upstream/main
 	if (envelopes.length === 0) {
 		return initialQueriesMap[DataSource.METRICS];
 	}
@@ -100,6 +131,20 @@ export function fromPerses(
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Perses panel queries → V1 `Query` (to seed the query builder), via the V5 envelope
+ * list + `mapQueryDataFromApi`. An empty panel opens on a fresh metrics builder query.
+ */
+export function fromPerses(
+	queries: DashboardtypesQueryDTO[],
+	panelType: PANEL_TYPES,
+): Query {
+	return envelopesToQuery(toQueryEnvelopes(queries), panelType);
+}
+
+/**
+>>>>>>> upstream/main
  * V1 `Query` → perses panel queries (to write the builder result back to the editor
  * draft). Wrapped in a single `signoz/CompositeQuery` to satisfy the
  * `panel.queries.length === 1` invariant. Exception: List emits its one builder query
@@ -109,7 +154,15 @@ export function toPerses(
 	query: Query,
 	panelType: PANEL_TYPES,
 ): DashboardtypesQueryDTO[] {
+<<<<<<< HEAD
 	const composite = mapCompositeQueryFromQuery(query, panelType);
+=======
+	// List panels page server-side via usePanelQuery, so drop the V1 explorer's paging
+	// fields before conversion — otherwise the shared mapper folds them into `limit`.
+	const source =
+		panelType === PANEL_TYPES.LIST ? withoutExplorerPaging(query) : query;
+	const composite = mapCompositeQueryFromQuery(source, panelType);
+>>>>>>> upstream/main
 	const envelopes = toGeneratedEnvelopes(composite.queries ?? []);
 
 	if (panelType === PANEL_TYPES.LIST) {

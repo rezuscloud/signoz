@@ -7,6 +7,15 @@
 	padding: 12px 16px 0 16px;
 }
 
+<<<<<<< HEAD
+=======
+.chartHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+>>>>>>> upstream/main
 .chartTitle {
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
@@ -15,3 +24,14 @@
 .chartBody {
 	height: 340px;
 }
+<<<<<<< HEAD
+=======
+
+.chartStatus {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+}
+>>>>>>> upstream/main

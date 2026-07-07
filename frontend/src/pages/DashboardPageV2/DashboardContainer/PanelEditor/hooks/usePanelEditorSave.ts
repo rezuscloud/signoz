@@ -1,10 +1,14 @@
 import { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { v4 as uuid } from 'uuid';
+<<<<<<< HEAD
 import {
 	getGetDashboardV2QueryKey,
 	usePatchDashboardV2,
 } from 'api/generated/services/dashboard';
+=======
+import { getGetDashboardV2QueryKey } from 'api/generated/services/dashboard';
+>>>>>>> upstream/main
 import {
 	type DashboardtypesJSONPatchOperationDTO,
 	type DashboardtypesPanelSpecDTO,
@@ -13,6 +17,10 @@ import {
 	type GetDashboardV2200,
 } from 'api/generated/services/sigNoz.schemas';
 
+<<<<<<< HEAD
+=======
+import { useOptimisticPatch } from '../../hooks/useOptimisticPatch';
+>>>>>>> upstream/main
 import { createPanelOps } from '../../patchOps';
 
 interface UsePanelEditorSaveArgs {
@@ -43,6 +51,7 @@ export function usePanelEditorSave({
 	layoutIndex,
 }: UsePanelEditorSaveArgs): UsePanelEditorSaveApi {
 	const queryClient = useQueryClient();
+<<<<<<< HEAD
 	const { mutateAsync, isLoading, error } = usePatchDashboardV2();
 
 	const save = useCallback(
@@ -52,6 +61,16 @@ export function usePanelEditorSave({
 			let ops: DashboardtypesJSONPatchOperationDTO[];
 			if (isNew) {
 				// Resolve the target section against the freshest dashboard we have.
+=======
+	const { patchAsync, isPatching, error } = useOptimisticPatch(dashboardId);
+
+	const save = useCallback(
+		async (spec: DashboardtypesPanelSpecDTO): Promise<void> => {
+			let ops: DashboardtypesJSONPatchOperationDTO[];
+			if (isNew) {
+				// Resolve the target section against the freshest dashboard we have.
+				const dashboardQueryKey = getGetDashboardV2QueryKey({ id: dashboardId });
+>>>>>>> upstream/main
 				const cached =
 					queryClient.getQueryData<GetDashboardV2200>(dashboardQueryKey);
 				ops = createPanelOps({
@@ -70,6 +89,7 @@ export function usePanelEditorSave({
 				];
 			}
 
+<<<<<<< HEAD
 			await mutateAsync({ pathParams: { id: dashboardId }, data: ops });
 			await queryClient.invalidateQueries(dashboardQueryKey);
 		},
@@ -77,4 +97,13 @@ export function usePanelEditorSave({
 	);
 
 	return { save, isSaving: isLoading, error: (error as Error) ?? null };
+=======
+			// Optimistic cache write + settle refetch (replaces the manual invalidate).
+			await patchAsync(ops);
+		},
+		[dashboardId, panelId, isNew, layoutIndex, patchAsync, queryClient],
+	);
+
+	return { save, isSaving: isPatching, error };
+>>>>>>> upstream/main
 }

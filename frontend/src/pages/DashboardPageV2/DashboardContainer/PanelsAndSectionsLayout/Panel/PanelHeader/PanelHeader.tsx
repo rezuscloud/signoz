@@ -1,9 +1,19 @@
 import { useMemo } from 'react';
 import { Info, Loader } from '@signozhq/icons';
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
 import type { Querybuildertypesv5QueryWarnDataDTO as WarningDTO } from 'api/generated/services/sigNoz.schemas';
 import cx from 'classnames';
 import type { PanelTimePreferenceLabel } from 'pages/DashboardPageV2/DashboardContainer/hooks/resolvePanelTimeWindow';
+=======
+import type {
+	DashboardtypesPanelDTO,
+	Querybuildertypesv5QueryWarnDataDTO as WarningDTO,
+} from 'api/generated/services/sigNoz.schemas';
+import cx from 'classnames';
+import type { PanelTimePreferenceLabel } from 'pages/DashboardPageV2/DashboardContainer/hooks/resolvePanelTimeWindow';
+import type { PanelQueryData } from 'pages/DashboardPageV2/DashboardContainer/queryV5/types';
+>>>>>>> upstream/main
 
 import type { PanelActionsConfig } from '../Panel';
 import PanelActionsMenu from '../PanelActionsMenu/PanelActionsMenu';
@@ -14,6 +24,7 @@ import {
 	panelStatusFromWarning,
 } from '../PanelStatus/utils';
 import styles from './PanelHeader.module.scss';
+<<<<<<< HEAD
 import { PanelKind } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/panelKind';
 import { TooltipSimple } from '@signozhq/ui/tooltip';
 
@@ -23,6 +34,16 @@ interface PanelHeaderProps {
 	panelId: string;
 	/** Full plugin kind — drives kind-gated menu actions. */
 	panelKind: PanelKind;
+=======
+import { TooltipSimple } from '@signozhq/ui/tooltip';
+
+interface PanelHeaderProps {
+	panelId: string;
+	/** The panel itself — its query seeds the menu's "Create Alerts" action. */
+	panel: DashboardtypesPanelDTO;
+	/** The panel's query response — the menu's source for "Download as CSV". */
+	data: PanelQueryData;
+>>>>>>> upstream/main
 	/** Background refresh in flight — shows a spinner without blinking the chart. */
 	isFetching: boolean;
 	/** Latest query error — surfaced as a header error indicator. */
@@ -49,10 +70,16 @@ interface PanelHeaderProps {
 
 /** Panel chrome: drag handle, title, refetch + status indicators, actions. */
 function PanelHeader({
+<<<<<<< HEAD
 	name,
 	description,
 	panelId,
 	panelKind,
+=======
+	panelId,
+	panel,
+	data,
+>>>>>>> upstream/main
 	isFetching,
 	error,
 	warning,
@@ -63,6 +90,11 @@ function PanelHeader({
 	onSearchChange,
 	hideActions,
 }: PanelHeaderProps): JSX.Element {
+<<<<<<< HEAD
+=======
+	const name = panel.spec.display.name;
+	const description = panel.spec.display.description;
+>>>>>>> upstream/main
 	const errorDetail = useMemo(() => panelStatusFromError(error), [error]);
 
 	const warningDetail = useMemo(
@@ -116,7 +148,12 @@ function PanelHeader({
 				{!hideActions && (
 					<PanelActionsMenu
 						panelId={panelId}
+<<<<<<< HEAD
 						panelKind={panelKind}
+=======
+						panel={panel}
+						data={data}
+>>>>>>> upstream/main
 						panelActions={panelActions}
 					/>
 				)}

@@ -20,15 +20,24 @@ import { getBuilderQueries } from '../../utils/getBuilderQueries';
 
 import { buildHistogramConfig } from './utils/buildConfig';
 import { prepareHistogramData } from './prepareData';
+<<<<<<< HEAD
 import { ChartClickData } from 'lib/uPlotV2/plugins/TooltipPlugin/types';
+=======
+>>>>>>> upstream/main
 
 function HistogramPanelRenderer({
 	panelId,
 	panel,
 	data,
+<<<<<<< HEAD
 	refetch,
 	panelMode,
 	onClick,
+=======
+	isFetching,
+	refetch,
+	panelMode,
+>>>>>>> upstream/main
 }: PanelRendererProps<'signoz/HistogramPanel'>): JSX.Element {
 	const graphRef = useRef<HTMLDivElement>(null);
 	const containerDimensions = useResizeObserver(graphRef);
@@ -41,7 +50,11 @@ function HistogramPanelRenderer({
 	);
 
 	const builderQueries = useMemo(
+<<<<<<< HEAD
 		() => getBuilderQueries(panel.spec.queries || []),
+=======
+		() => getBuilderQueries(panel.spec.queries),
+>>>>>>> upstream/main
 		[panel.spec.queries],
 	);
 
@@ -100,6 +113,7 @@ function HistogramPanelRenderer({
 
 	const isQueriesMerged = spec.histogramBuckets?.mergeAllActiveQueries ?? false;
 
+<<<<<<< HEAD
 	const handleChartClick = useCallback(
 		(args: ChartClickData) => {
 			onClick?.(args);
@@ -107,13 +121,21 @@ function HistogramPanelRenderer({
 		[onClick],
 	);
 
+=======
+>>>>>>> upstream/main
 	return (
 		<div
 			ref={graphRef}
 			data-testid="histogram-panel-renderer"
 			className={PanelStyles.panelContainer}
 		>
+<<<<<<< HEAD
 			{flatSeries.length === 0 && <NoData onRetry={refetch} />}
+=======
+			{flatSeries.length === 0 && (
+				<NoData isFetching={isFetching} onRetry={refetch} />
+			)}
+>>>>>>> upstream/main
 			{flatSeries.length > 0 &&
 				containerDimensions.width > 0 &&
 				containerDimensions.height > 0 && (
@@ -127,7 +149,10 @@ function HistogramPanelRenderer({
 						width={containerDimensions.width}
 						height={containerDimensions.height}
 						renderTooltipFooter={renderTooltipFooter}
+<<<<<<< HEAD
 						onClick={handleChartClick}
+=======
+>>>>>>> upstream/main
 					/>
 				)}
 		</div>

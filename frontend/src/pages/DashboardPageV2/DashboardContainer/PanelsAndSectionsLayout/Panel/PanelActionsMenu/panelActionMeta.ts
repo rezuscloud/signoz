@@ -3,12 +3,22 @@ import type { ComponentTypes } from 'utils/permission';
 
 /**
  * Every action the panel menu can offer: per-kind gated capabilities (minus
+<<<<<<< HEAD
  * `search`, a header control) plus the chrome actions every kind gets. The
  * `Record<PanelActionId, …>` below forces a meta entry per id, so adding an
  * action without declaring its gates is a compile error.
  */
 export type PanelActionId =
 	| Exclude<keyof PanelActionCapabilities, 'search'>
+=======
+ * `search` and `drilldown`, which are renderer-wired controls, not menu items)
+ * plus the chrome actions every kind gets. The `Record<PanelActionId, …>` below
+ * forces a meta entry per id, so adding an action without declaring its gates is
+ * a compile error.
+ */
+export type PanelActionId =
+	| Exclude<keyof PanelActionCapabilities, 'search' | 'drilldown'>
+>>>>>>> upstream/main
 	| 'move'
 	| 'delete';
 
@@ -36,6 +46,11 @@ export const PANEL_ACTION_META: Record<PanelActionId, PanelActionMeta> = {
 	view: { capability: 'view' },
 	edit: { permission: 'edit_widget', capability: 'edit' },
 	clone: { permission: 'edit_widget' },
+<<<<<<< HEAD
+=======
+	// Single entry for every export format (CSV/PNG/SVG); like view it isn't
+	// role-gated (V1 parity). The per-format options live in usePanelActionItems.
+>>>>>>> upstream/main
 	download: { capability: 'download' },
 	createAlert: { capability: 'createAlert' },
 	// Moving a panel between sections mutates the dashboard layout.

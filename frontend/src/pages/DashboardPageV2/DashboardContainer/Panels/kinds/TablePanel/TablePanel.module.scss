@@ -18,3 +18,14 @@
 		@include custom-scrollbar;
 	}
 }
+<<<<<<< HEAD
+=======
+
+.clickableCell {
+	cursor: pointer;
+
+	&:hover {
+		color: var(--primary-background);
+	}
+}
+>>>>>>> upstream/main

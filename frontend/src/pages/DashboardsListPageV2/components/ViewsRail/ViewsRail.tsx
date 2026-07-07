@@ -3,12 +3,28 @@ import { Modal } from 'antd';
 import { Button } from '@signozhq/ui/button';
 import { Input } from '@signozhq/ui/input';
 import { Typography } from '@signozhq/ui/typography';
+<<<<<<< HEAD
 import { CircleAlert, Plus, Search, Trash2 } from '@signozhq/icons';
 import cx from 'classnames';
 
 import type { SavedView } from '../../types';
 import { type BuiltinView, iconByName } from '../../views';
 import SaveViewPopover from './SaveViewPopover';
+=======
+import {
+	Bookmark,
+	CircleAlert,
+	PenLine,
+	Plus,
+	Search,
+	Trash2,
+} from '@signozhq/icons';
+import cx from 'classnames';
+
+import type { SavedView } from '../../types';
+import { type BuiltinView } from '../../utils/views';
+import ViewNamePopover from './ViewNamePopover';
+>>>>>>> upstream/main
 
 import styles from './ViewsRail.module.scss';
 
@@ -16,15 +32,27 @@ interface Props {
 	activeViewId: string;
 	builtinViews: BuiltinView[];
 	customViews: SavedView[];
+<<<<<<< HEAD
+=======
+	customViewsLoading: boolean;
+>>>>>>> upstream/main
 	isCustomActive: boolean;
 	isModified: boolean;
 	collapsed?: boolean;
 	onSelect: (id: string) => void;
+<<<<<<< HEAD
 	onSave: (name: string, icon: string) => void;
 	onSaveChanges: () => void;
 	onReset: () => void;
 	onClearFilters: () => void;
 	onDelete: (id: string) => void;
+=======
+	onSave: (name: string) => void;
+	onSaveChanges: () => void;
+	onReset: () => void;
+	onDelete: (id: string) => void;
+	onRename: (id: string, name: string) => void;
+>>>>>>> upstream/main
 }
 
 interface ViewRow {
@@ -40,6 +68,10 @@ function ViewsRail({
 	activeViewId,
 	builtinViews,
 	customViews,
+<<<<<<< HEAD
+=======
+	customViewsLoading,
+>>>>>>> upstream/main
 	isCustomActive,
 	isModified,
 	collapsed = false,
@@ -47,10 +79,18 @@ function ViewsRail({
 	onSave,
 	onSaveChanges,
 	onReset,
+<<<<<<< HEAD
 	onClearFilters,
 	onDelete,
 }: Props): JSX.Element {
 	const [saveOpen, setSaveOpen] = useState(false);
+=======
+	onDelete,
+	onRename,
+}: Props): JSX.Element {
+	const [saveOpen, setSaveOpen] = useState(false);
+	const [renamingId, setRenamingId] = useState<string | null>(null);
+>>>>>>> upstream/main
 	const [query, setQuery] = useState('');
 	const [modal, contextHolder] = Modal.useModal();
 
@@ -73,11 +113,16 @@ function ViewsRail({
 			const { destroy } = modal.confirm({
 				title: (
 					<Typography.Title level={5}>
+<<<<<<< HEAD
 						Delete the
 						<span style={{ color: 'var(--danger-background)', fontWeight: 500 }}>
 							{' '}
 							{label}{' '}
 						</span>
+=======
+						Delete the{' '}
+						<Typography.Text className={styles.deleteName}>{label}</Typography.Text>{' '}
+>>>>>>> upstream/main
 						view?
 					</Typography.Title>
 				),
@@ -116,6 +161,7 @@ function ViewsRail({
 					onClick={(): void => onSelect(row.id)}
 					testId={`dashboards-view-${row.id}`}
 				>
+<<<<<<< HEAD
 					<span className={styles.itemIcon}>
 						<Icon size={14} />
 					</span>
@@ -136,6 +182,53 @@ function ViewsRail({
 					>
 						<Trash2 size={12} />
 					</Button>
+=======
+					<Icon size={16} className={styles.itemIcon} />
+					<Typography.Text className={styles.itemLabel}>{row.label}</Typography.Text>
+					{active && isModified && (
+						<div className={styles.dirtyDot} title="Unsaved changes" />
+					)}
+				</Button>
+				{row.deletable && (
+					<div className={styles.itemActions}>
+						<ViewNamePopover
+							open={renamingId === row.id}
+							onOpenChange={(open): void => setRenamingId(open ? row.id : null)}
+							onSubmit={(name): void => onRename(row.id, name)}
+							title="Rename view"
+							confirmLabel="Rename"
+							initialName={row.label}
+							testIdPrefix="rename-view"
+							trigger={
+								<Button
+									variant="ghost"
+									color="secondary"
+									size="icon"
+									className={styles.itemAction}
+									aria-label="Rename view"
+									title="Rename view"
+									onClick={(e): void => e.stopPropagation()}
+								>
+									<PenLine size={12} />
+								</Button>
+							}
+						/>
+						<Button
+							variant="ghost"
+							color="secondary"
+							size="icon"
+							className={cx(styles.itemAction, styles.itemActionDanger)}
+							aria-label="Delete view"
+							title="Delete view"
+							onClick={(e): void => {
+								e.stopPropagation();
+								confirmDelete(row.id, row.label);
+							}}
+						>
+							<Trash2 size={12} />
+						</Button>
+					</div>
+>>>>>>> upstream/main
 				)}
 			</div>
 		);
@@ -145,10 +238,20 @@ function ViewsRail({
 		<aside className={cx(styles.rail, { [styles.collapsed]: collapsed })}>
 			<div className={styles.header}>
 				<h4 className={styles.headerTitle}>Views</h4>
+<<<<<<< HEAD
 				<SaveViewPopover
 					open={saveOpen}
 					onOpenChange={setSaveOpen}
 					onSave={onSave}
+=======
+				<ViewNamePopover
+					open={saveOpen}
+					onOpenChange={setSaveOpen}
+					onSubmit={onSave}
+					title="Save as view"
+					confirmLabel="Save view"
+					testIdPrefix="save-view"
+>>>>>>> upstream/main
 					trigger={
 						<Button
 							variant="ghost"
@@ -166,7 +269,11 @@ function ViewsRail({
 			<div className={styles.search}>
 				<Input
 					value={query}
+<<<<<<< HEAD
 					placeholder="Search views"
+=======
+					placeholder="Filter views by name"
+>>>>>>> upstream/main
 					prefix={<Search size={12} />}
 					testId="dashboards-view-search"
 					onChange={(e: ChangeEvent<HTMLInputElement>): void =>
@@ -196,9 +303,19 @@ function ViewsRail({
 					<>
 						<div className={cx(styles.groupLabel, styles.groupLabelSpaced)}>
 							My views
+<<<<<<< HEAD
 							<span className={styles.groupCount}>{customViews.length}</span>
 						</div>
 						{customViews.length === 0 ? (
+=======
+							<Typography.Text className={styles.groupCount}>
+								{customViews.length}
+							</Typography.Text>
+						</div>
+						{customViewsLoading ? (
+							<div className={styles.empty}>Loading views…</div>
+						) : customViews.length === 0 ? (
+>>>>>>> upstream/main
 							<div className={styles.empty}>
 								No saved views yet. Filter the list, then save it as a view.
 							</div>
@@ -207,7 +324,11 @@ function ViewsRail({
 								renderItem({
 									id: v.id,
 									label: v.name,
+<<<<<<< HEAD
 									icon: iconByName(v.icon),
+=======
+									icon: Bookmark,
+>>>>>>> upstream/main
 									deletable: true,
 								}),
 							)
@@ -264,6 +385,7 @@ function ViewsRail({
 						>
 							Save as new view
 						</Button>
+<<<<<<< HEAD
 						<Button
 							variant="ghost"
 							color="secondary"
@@ -271,6 +393,10 @@ function ViewsRail({
 							onClick={onClearFilters}
 						>
 							Clear
+=======
+						<Button variant="ghost" color="secondary" size="sm" onClick={onReset}>
+							Reset
+>>>>>>> upstream/main
 						</Button>
 					</div>
 				</div>

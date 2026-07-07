@@ -65,6 +65,10 @@ type provider struct {
 	zeusHandler                zeus.Handler
 	querierHandler             querier.Handler
 	serviceAccountHandler      serviceaccount.Handler
+<<<<<<< HEAD
+=======
+	serviceAccountGetter       serviceaccount.Getter
+>>>>>>> upstream/main
 	factoryHandler             factory.Handler
 	cloudIntegrationHandler    cloudintegration.Handler
 	ruleStateHistoryHandler    rulestatehistory.Handler
@@ -99,6 +103,7 @@ func NewFactory(
 	zeusHandler zeus.Handler,
 	querierHandler querier.Handler,
 	serviceAccountHandler serviceaccount.Handler,
+	serviceAccountGetter serviceaccount.Getter,
 	factoryHandler factory.Handler,
 	cloudIntegrationHandler cloudintegration.Handler,
 	ruleStateHistoryHandler rulestatehistory.Handler,
@@ -136,6 +141,7 @@ func NewFactory(
 			zeusHandler,
 			querierHandler,
 			serviceAccountHandler,
+			serviceAccountGetter,
 			factoryHandler,
 			cloudIntegrationHandler,
 			ruleStateHistoryHandler,
@@ -175,6 +181,7 @@ func newProvider(
 	zeusHandler zeus.Handler,
 	querierHandler querier.Handler,
 	serviceAccountHandler serviceaccount.Handler,
+	serviceAccountGetter serviceaccount.Getter,
 	factoryHandler factory.Handler,
 	cloudIntegrationHandler cloudintegration.Handler,
 	ruleStateHistoryHandler rulestatehistory.Handler,
@@ -213,6 +220,10 @@ func newProvider(
 		zeusHandler:                zeusHandler,
 		querierHandler:             querierHandler,
 		serviceAccountHandler:      serviceAccountHandler,
+<<<<<<< HEAD
+=======
+		serviceAccountGetter:       serviceAccountGetter,
+>>>>>>> upstream/main
 		factoryHandler:             factoryHandler,
 		cloudIntegrationHandler:    cloudIntegrationHandler,
 		ruleStateHistoryHandler:    ruleStateHistoryHandler,

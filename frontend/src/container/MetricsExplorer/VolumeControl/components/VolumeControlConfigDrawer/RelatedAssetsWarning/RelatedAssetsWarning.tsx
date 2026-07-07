@@ -53,12 +53,20 @@ function RelatedAssetsWarning({
 		<div className={styles.warning} data-testid="volume-control-warning">
 			<Info size={14} />
 			<div className={styles.warningBody}>
+<<<<<<< HEAD
 				<Typography.Text as="div" size="small" weight="semibold" color="warning">
+=======
+				<Typography.Text as="div" size="base" weight="semibold" color="warning">
+>>>>>>> upstream/main
 					This rule affects {impacted.length} related asset
 					{impacted.length > 1 ? 's' : ''}.
 				</Typography.Text>
 				{impactedLabels.length > 0 && (
+<<<<<<< HEAD
 					<Typography.Text as="div" size="sm" color="muted">
+=======
+					<Typography.Text as="div" size="base" color="muted">
+>>>>>>> upstream/main
 						{impactedLabels.join(', ')} will no longer be queryable; affected panels
 						fall back to aggregated data once the rule applies.
 					</Typography.Text>
@@ -73,7 +81,11 @@ function RelatedAssetsWarning({
 							<li key={`${asset.type}-${asset.id}-${asset.widget?.id ?? ''}`}>
 								{href ? (
 									<Typography.Link
+<<<<<<< HEAD
 										size="sm"
+=======
+										size="base"
+>>>>>>> upstream/main
 										href={href}
 										target="_blank"
 										rel="noopener noreferrer"
@@ -81,7 +93,11 @@ function RelatedAssetsWarning({
 										{label}
 									</Typography.Link>
 								) : (
+<<<<<<< HEAD
 									<Typography.Text size="sm" color="muted">
+=======
+									<Typography.Text size="base" color="muted">
+>>>>>>> upstream/main
 										{label}
 									</Typography.Text>
 								)}

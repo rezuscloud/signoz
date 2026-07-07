@@ -1,5 +1,6 @@
 import { Typography } from '@signozhq/ui/typography';
 import { DashboardtypesLegendPositionDTO } from 'api/generated/services/sigNoz.schemas';
+<<<<<<< HEAD
 import type { SectionEditorProps } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
 
 import ConfigSegmented from '../../controls/ConfigSegmented/ConfigSegmented';
@@ -12,6 +13,21 @@ type LegendSectionProps = SectionEditorProps<'legend'> & {
 	/** Panel's resolved series, forwarded by SectionSlot for the colors control. */
 	legendSeries?: LegendSeries[];
 };
+=======
+import type {
+	SectionEditorProps,
+	SectionKind,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+
+import ConfigSegmented from '../../controls/ConfigSegmented/ConfigSegmented';
+import LegendColors from '../../controls/LegendColors/LegendColors';
+import type { SectionEditorContext } from '../../sectionContext';
+
+import styles from './LegendSection.module.scss';
+
+type LegendSectionProps = SectionEditorProps<SectionKind.Legend> &
+	Pick<SectionEditorContext, 'legendSeries'>;
+>>>>>>> upstream/main
 
 const POSITION_OPTIONS = [
 	{

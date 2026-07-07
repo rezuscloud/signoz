@@ -2,7 +2,14 @@ import type { DashboardtypesTimeSeriesPanelSpecDTO } from 'api/generated/service
 import { Timezone } from 'components/CustomTimePicker/timezoneUtils';
 import { PANEL_TYPES } from 'constants/queryBuilder';
 import { PanelMode } from 'container/DashboardContainer/visualization/panels/types';
+<<<<<<< HEAD
 import { buildBaseConfig } from 'pages/DashboardPageV2/DashboardContainer/Panels/utils/baseConfigBuilder';
+=======
+import {
+	buildBaseConfig,
+	minStepInterval,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/utils/baseConfigBuilder';
+>>>>>>> upstream/main
 import {
 	FILL_MODE_MAP,
 	LINE_INTERPOLATION_MAP,
@@ -80,7 +87,18 @@ export function buildTimeSeriesConfig({
 		onClick,
 	});
 
+<<<<<<< HEAD
 	addSeries({ builder, spec, builderQueries, series, isDarkMode });
+=======
+	addSeries({
+		builder,
+		spec,
+		builderQueries,
+		series,
+		stepIntervals,
+		isDarkMode,
+	});
+>>>>>>> upstream/main
 
 	return builder;
 }
@@ -90,6 +108,11 @@ interface AddSeriesArgs {
 	spec: DashboardtypesTimeSeriesPanelSpecDTO;
 	builderQueries: BuilderQuery[];
 	series: PanelSeries[];
+<<<<<<< HEAD
+=======
+	/** Per-query step intervals (seconds); floor for a numeric spanGaps threshold. */
+	stepIntervals?: Record<string, number>;
+>>>>>>> upstream/main
 	isDarkMode: boolean;
 }
 
@@ -102,13 +125,30 @@ function addSeries({
 	spec,
 	builderQueries,
 	series,
+<<<<<<< HEAD
+=======
+	stepIntervals,
+>>>>>>> upstream/main
 	isDarkMode,
 }: AddSeriesArgs): void {
 	const chartAppearance = spec.chartAppearance;
 	// `customColors` is nullable on the spec; coerce so `addSeries` always gets
 	// a defined record (it dereferences keys without a guard).
 	const colorMapping = spec.legend?.customColors ?? {};
+<<<<<<< HEAD
 	const spanGaps = resolveSpanGaps(chartAppearance?.spanGaps?.fillLessThan);
+=======
+	const resolvedSpanGaps = chartAppearance?.spanGaps
+		? resolveSpanGaps(chartAppearance.spanGaps)
+		: true;
+	// A numeric spanGaps is a max-gap threshold (seconds); floor it at the step interval so a
+	// sub-step value doesn't break the line at every normal point. Boolean `true` passes through.
+	const minStep = stepIntervals ? minStepInterval(stepIntervals) : undefined;
+	const spanGaps =
+		typeof resolvedSpanGaps === 'number' && minStep !== undefined
+			? Math.max(minStep, resolvedSpanGaps)
+			: resolvedSpanGaps;
+>>>>>>> upstream/main
 
 	const lineStyle = chartAppearance?.lineStyle
 		? LINE_STYLE_MAP[chartAppearance.lineStyle]

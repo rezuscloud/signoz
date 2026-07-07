@@ -12,7 +12,11 @@ import {
 } from 'api/generated/services/sigNoz.schemas';
 
 import type { PanelKind } from './Panels/types/panelKind';
+<<<<<<< HEAD
 import type { DefaultPluginSpec } from './Panels/utils/buildDefaultPluginSpec';
+=======
+import type { SeededPluginSpec } from './Panels/utils/buildPluginSpec';
+>>>>>>> upstream/main
 import type { GridItem } from './utils';
 
 /**
@@ -36,7 +40,11 @@ export function panelRef(panelId: string): string {
  */
 export function createDefaultPanel(
 	pluginKind: PanelKind,
+<<<<<<< HEAD
 	pluginSpec: DefaultPluginSpec = {},
+=======
+	pluginSpec: SeededPluginSpec = {},
+>>>>>>> upstream/main
 	queries: DashboardtypesQueryDTO[] = [],
 ): DashboardtypesPanelDTO {
 	return {
@@ -121,7 +129,11 @@ export function addPanelToSectionOps({
 interface CreatePanelOpsArgs {
 	/** Current sections, used to resolve the target and the next free row. */
 	layouts: DashboardtypesLayoutDTO[];
+<<<<<<< HEAD
 	/** Preferred section (from the "Add panel" trigger); falls back to the last. */
+=======
+	/** Preferred section (from a section's "Add panel" trigger); falls back to the root (first) section. */
+>>>>>>> upstream/main
 	layoutIndex: number | undefined;
 	panelId: string;
 	panel: DashboardtypesPanelDTO;
@@ -132,13 +144,24 @@ const NEW_PANEL_SIZE = { width: 6, height: 6 };
 /** Columns in the section grid — mirrors `cols` on SectionGrid's GridLayout. */
 const GRID_COLS = 12;
 
+<<<<<<< HEAD
+=======
+/** Minimal placement fields shared by grid-item DTOs and flattened `GridItem`s. */
+type PlacedItem = Pick<DashboardGridItemDTO, 'x' | 'y' | 'width' | 'height'>;
+
+>>>>>>> upstream/main
 /**
  * Placement for a new grid item: drop it right of the last row if there's room,
  * else wrap to a fresh row at the bottom. Only the last row is considered (items
  * sharing the greatest top-y); gaps in earlier rows are left alone.
  */
+<<<<<<< HEAD
 function findFreeSlot(
 	items: DashboardGridItemDTO[],
+=======
+export function findFreeSlot(
+	items: PlacedItem[],
+>>>>>>> upstream/main
 	width: number,
 ): { x: number; y: number } {
 	const w = Math.min(width, GRID_COLS);
@@ -163,8 +186,13 @@ function findFreeSlot(
 
 /**
  * Ops to persist a brand-new panel (editor save path): resolve the target
+<<<<<<< HEAD
  * section (requested index if valid, else last, else a freshly-created one) and
  * place the panel via `findFreeSlot`.
+=======
+ * section (requested index if valid, else the root/first section, else a
+ * freshly-created one) and place the panel via `findFreeSlot`.
+>>>>>>> upstream/main
  */
 export function createPanelOps({
 	layouts,
@@ -174,6 +202,7 @@ export function createPanelOps({
 }: CreatePanelOpsArgs): DashboardtypesJSONPatchOperationDTO[] {
 	const ops: DashboardtypesJSONPatchOperationDTO[] = [];
 
+<<<<<<< HEAD
 	const requested =
 		layoutIndex !== undefined && layouts[layoutIndex] !== undefined
 			? layoutIndex
@@ -182,6 +211,19 @@ export function createPanelOps({
 	let targetIndex = requested;
 	let items: DashboardGridItemDTO[] = layouts[requested]?.spec.items ?? [];
 	if (targetIndex < 0) {
+=======
+	let targetIndex: number;
+	let items: DashboardGridItemDTO[];
+	if (layoutIndex !== undefined && layouts[layoutIndex] !== undefined) {
+		// Explicit section — a section's own "New Panel" trigger.
+		targetIndex = layoutIndex;
+		items = layouts[layoutIndex]?.spec.items ?? [];
+	} else if (layouts.length > 0) {
+		// No section specified (toolbar "New Panel") → the root (first) section.
+		targetIndex = 0;
+		items = layouts[0]?.spec.items ?? [];
+	} else {
+>>>>>>> upstream/main
 		// No sections yet — create an untitled one and target it.
 		ops.push(addSectionOp(''));
 		targetIndex = 0;

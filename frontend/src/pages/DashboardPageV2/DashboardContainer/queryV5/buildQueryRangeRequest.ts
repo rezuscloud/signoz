@@ -3,11 +3,22 @@ import type {
 	Querybuildertypesv5BuilderQuerySpecDTO,
 	Querybuildertypesv5ClickHouseQueryDTO,
 	Querybuildertypesv5CompositeQueryDTO,
+<<<<<<< HEAD
 	Querybuildertypesv5PromQueryDTO,
 	Querybuildertypesv5QueryEnvelopeDTO,
 	Querybuildertypesv5QueryRangeRequestDTO,
 } from 'api/generated/services/sigNoz.schemas';
 import {
+=======
+	Querybuildertypesv5OrderByDTO,
+	Querybuildertypesv5PromQueryDTO,
+	Querybuildertypesv5QueryEnvelopeDTO,
+	Querybuildertypesv5QueryRangeRequestDTO,
+	Querybuildertypesv5QueryRangeRequestDTOVariables,
+} from 'api/generated/services/sigNoz.schemas';
+import {
+	Querybuildertypesv5OrderDirectionDTO,
+>>>>>>> upstream/main
 	Querybuildertypesv5QueryEnvelopeBuilderDTOType,
 	Querybuildertypesv5QueryEnvelopeClickHouseSQLDTOType,
 	Querybuildertypesv5QueryEnvelopePromQLDTOType,
@@ -23,6 +34,10 @@ interface QuerySpecView {
 	signal?: string;
 	stepInterval?: number | string;
 	aggregations?: { metricName?: string }[];
+<<<<<<< HEAD
+=======
+	order?: Querybuildertypesv5OrderByDTO[];
+>>>>>>> upstream/main
 }
 
 /**
@@ -59,7 +74,11 @@ export function toQueryEnvelopes(
 	queries: DashboardtypesQueryDTO[],
 ): Querybuildertypesv5QueryEnvelopeDTO[] {
 	// Backend invariant: panel.queries.length === 1. Only the first entry is consumed.
+<<<<<<< HEAD
 	if (!queries || queries.length === 0) {
+=======
+	if (queries.length === 0) {
+>>>>>>> upstream/main
 		return [];
 	}
 	const plugin = queries[0].spec.plugin;
@@ -166,6 +185,51 @@ function withBarStepInterval(
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Enforces a total order on logs-list requests so offset paging can't duplicate/drop
+ * same-millisecond rows: default the primary to `timestamp desc`, then always append `id`
+ * (logs-explorer parity). Request-only; traces keep their order.
+ */
+function withListOrderTiebreaker(
+	envelopes: Querybuildertypesv5QueryEnvelopeDTO[],
+): Querybuildertypesv5QueryEnvelopeDTO[] {
+	return envelopes.map((envelope) => {
+		if (
+			envelope.type !==
+			Querybuildertypesv5QueryEnvelopeBuilderDTOType.builder_query
+		) {
+			return envelope;
+		}
+		const spec = envelope.spec as QuerySpecView;
+		const order = spec.order ?? [];
+		if (spec.signal !== 'logs' || order.some((o) => o.key?.name === 'id')) {
+			return envelope;
+		}
+		const primary =
+			order.length > 0
+				? order
+				: [
+						{
+							key: { name: 'timestamp' },
+							direction: Querybuildertypesv5OrderDirectionDTO.desc,
+						},
+					];
+		return {
+			...envelope,
+			spec: {
+				...envelope.spec,
+				order: [
+					...primary,
+					{ key: { name: 'id' }, direction: primary[0].direction },
+				],
+			} as Querybuildertypesv5BuilderQuerySpecDTO,
+		};
+	});
+}
+
+/**
+>>>>>>> upstream/main
  * Stamps offset/limit onto builder-query envelopes (server-side paging for raw/list); other
  * kinds pass through.
  */
@@ -202,11 +266,20 @@ export interface BuildQueryRangeRequestArgs {
 	fillGaps?: boolean;
 	/** Server-side paging for raw/list panels, written onto the builder queries' `offset`/`limit`. */
 	pagination?: { offset: number; limit: number };
+<<<<<<< HEAD
+=======
+	/** Runtime variable values (name → {type,value}) substituted server-side; built by `buildVariablesPayload`. */
+	variables?: Querybuildertypesv5QueryRangeRequestDTOVariables;
+>>>>>>> upstream/main
 }
 
 /**
  * Builds the V5 query-range request DTO directly from the panel's perses queries (no V1 `Query`
+<<<<<<< HEAD
  * intermediary). Variables are absent (`variables: {}`) until V2 grows its own variable plumbing.
+=======
+ * intermediary). `variables` carries the runtime selection (empty when the dashboard has none).
+>>>>>>> upstream/main
  */
 export function buildQueryRangeRequest({
 	queries,
@@ -215,11 +288,21 @@ export function buildQueryRangeRequest({
 	endMs,
 	fillGaps = false,
 	pagination,
+<<<<<<< HEAD
+=======
+	variables = {},
+>>>>>>> upstream/main
 }: BuildQueryRangeRequestArgs): Querybuildertypesv5QueryRangeRequestDTO {
 	let envelopes = toQueryEnvelopes(queries);
 	if (panelType === PANEL_TYPES.BAR) {
 		envelopes = withBarStepInterval(envelopes, startMs, endMs);
 	}
+<<<<<<< HEAD
+=======
+	if (panelType === PANEL_TYPES.LIST) {
+		envelopes = withListOrderTiebreaker(envelopes);
+	}
+>>>>>>> upstream/main
 	if (pagination) {
 		envelopes = withPagination(envelopes, pagination);
 	}
@@ -234,7 +317,11 @@ export function buildQueryRangeRequest({
 			formatTableResultForUI: panelType === PANEL_TYPES.TABLE,
 			fillGaps,
 		},
+<<<<<<< HEAD
 		variables: {},
+=======
+		variables,
+>>>>>>> upstream/main
 	};
 }
 

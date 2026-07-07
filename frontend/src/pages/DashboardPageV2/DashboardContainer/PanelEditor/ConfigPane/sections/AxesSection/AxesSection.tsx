@@ -1,7 +1,14 @@
 import type { ChangeEvent } from 'react';
 import { Typography } from '@signozhq/ui/typography';
 import { Input } from 'antd';
+<<<<<<< HEAD
 import type { SectionEditorProps } from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+=======
+import type {
+	SectionEditorProps,
+	SectionKind,
+} from 'pages/DashboardPageV2/DashboardContainer/Panels/types/sections';
+>>>>>>> upstream/main
 
 import ConfigSegmented from '../../controls/ConfigSegmented/ConfigSegmented';
 
@@ -22,7 +29,11 @@ function AxesSection({
 	value,
 	controls,
 	onChange,
+<<<<<<< HEAD
 }: SectionEditorProps<'axes'>): JSX.Element {
+=======
+}: SectionEditorProps<SectionKind.Axes>): JSX.Element {
+>>>>>>> upstream/main
 	// An empty field clears the bound (null); otherwise parse to a number, ignoring
 	// transient non-numeric input (e.g. a lone "-") by leaving the bound unset.
 	const handleBound =

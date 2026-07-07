@@ -1,12 +1,35 @@
 package dashboardtypes
 
 import (
+<<<<<<< HEAD
+=======
+	"slices"
+	"strings"
+
+>>>>>>> upstream/main
 	"github.com/SigNoz/signoz/pkg/errors"
 	qbtypesv5 "github.com/SigNoz/signoz/pkg/types/querybuildertypes/querybuildertypesv5"
 )
 
 var ErrCodeDashboardListFilterInvalid = errors.MustNewCode("dashboard_list_filter_invalid")
 
+<<<<<<< HEAD
+=======
+// ReservedFilterKeys returns the reserved (column-level) DSL keys the list
+// filter accepts, sorted alphabetically. The list API surfaces these so clients
+// can distinguish reserved keywords from tag keys when building filters.
+func ReservedFilterKeys() []DSLKey {
+	keys := make([]DSLKey, 0, len(ReservedOps))
+	for key := range ReservedOps {
+		keys = append(keys, key)
+	}
+	slices.SortFunc(keys, func(a, b DSLKey) int {
+		return strings.Compare(string(a), string(b))
+	})
+	return keys
+}
+
+>>>>>>> upstream/main
 // ReservedOps lists the operators each reserved (column-level) DSL key accepts.
 // Any non-reserved key is treated as a tag key and uses TagKeyOps.
 var ReservedOps = map[DSLKey]map[qbtypesv5.FilterOperator]struct{}{

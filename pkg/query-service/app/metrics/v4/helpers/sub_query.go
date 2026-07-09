@@ -257,7 +257,11 @@ func PrepareTimeseriesFilterQuery(start, end int64, mq *v3.BuilderQuery) (string
 	var groupTags []v3.AttributeKey = mq.GroupBy
 
 	conditions = append(conditions, fmt.Sprintf("metric_name IN %s", utils.ClickHouseFormattedMetricNames(mq.AggregateAttribute.Key)))
-	conditions = append(conditions, fmt.Sprintf("temporality = '%s'", mq.Temporality))
+	if mq.Temporality != "" && mq.Temporality != v3.Unspecified {
+		conditions = append(conditions, fmt.Sprintf("temporality = '%s'", mq.Temporality))
+	} else {
+		conditions = append(conditions, "temporality IN ('Cumulative', 'Unspecified', 'Delta')")
+	}
 	if constants.IsDotMetricsEnabled {
 		conditions = append(conditions, "__normalized = false")
 	} else {
@@ -353,7 +357,11 @@ func PrepareTimeseriesFilterQueryV3(start, end int64, mq *v3.BuilderQuery) (stri
 	var groupTags []v3.AttributeKey = mq.GroupBy
 
 	conditions = append(conditions, fmt.Sprintf("metric_name IN %s", utils.ClickHouseFormattedMetricNames(mq.AggregateAttribute.Key)))
-	conditions = append(conditions, fmt.Sprintf("temporality = '%s'", mq.Temporality))
+	if mq.Temporality != "" && mq.Temporality != v3.Unspecified {
+		conditions = append(conditions, fmt.Sprintf("temporality = '%s'", mq.Temporality))
+	} else {
+		conditions = append(conditions, "temporality IN ('Cumulative', 'Unspecified', 'Delta')")
+	}
 	if constants.IsDotMetricsEnabled {
 		conditions = append(conditions, "__normalized = false")
 	} else {

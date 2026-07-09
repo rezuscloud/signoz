@@ -181,20 +181,78 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 	return provider.Grant(ctx, orgID, []string{authtypes.SigNozAdminRoleName}, authtypes.MustNewSubject(coretypes.NewResourceUser(), userID.String(), orgID, nil))
 }
 
-func (setter *provider) Create(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+// Create persists the role via the community SQL store. The interface accepts
+// *RoleWithTransactionGroups (an EE shape); the community build performs role
+// CRUD only and ignores transaction-group reconciliation (EE-only).
+func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
+	return provider.store.Create(ctx, role.Role)
 }
 
-func (provider *provider) GetOrCreate(_ context.Context, _ valuer.UUID, _ *authtypes.Role) (*authtypes.Role, error) {
-	return nil, errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) (*authtypes.Role, error) {
+	existing, err := provider.store.GetByOrgIDAndName(ctx, orgID, role.Name)
+	if err != nil && !errors.Ast(err, errors.TypeNotFound) {
+		return nil, err
+	}
+
+	if existing != nil {
+		return existing, nil
+	}
+
+	err = provider.store.Create(ctx, role)
+	if err != nil {
+		return nil, err
+	}
+
+	return role, nil
 }
 
-func (provider *provider) Update(_ context.Context, _ valuer.UUID, _ *authtypes.RoleWithTransactionGroups) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+// Update reconciles role metadata via the community SQL store (transaction-group
+// reconciliation is EE-only and intentionally not implemented here).
+func (provider *provider) Update(ctx context.Context, orgID valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
+	return provider.store.Update(ctx, orgID, role.Role)
 }
 
-func (provider *provider) Delete(_ context.Context, _ valuer.UUID, _ valuer.UUID) error {
-	return errors.Newf(errors.TypeUnsupported, authtypes.ErrCodeRoleUnsupported, "not implemented")
+func (provider *provider) Delete(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error {
+	role, err := provider.store.Get(ctx, orgID, id)
+	if err != nil {
+		return err
+	}
+
+	roleSubject := authtypes.MustNewSubject(
+		coretypes.NewResourceRole(),
+		role.Name,
+		orgID,
+		&coretypes.VerbAssignee,
+	)
+	roleObject := coretypes.NewResourceRole().Object(orgID, role.Name)
+
+	roleTuples, err := provider.ReadTuples(ctx, &openfgav1.ReadRequestTupleKey{
+		User: roleSubject,
+	})
+	if err != nil {
+		return err
+	}
+
+	assigneeTuples, err := provider.ReadTuples(ctx, &openfgav1.ReadRequestTupleKey{
+		Object:   roleObject,
+		Relation: coretypes.VerbAssignee.StringValue(),
+	})
+	if err != nil {
+		return err
+	}
+
+	allDeletions := make([]*openfgav1.TupleKey, 0, len(roleTuples)+len(assigneeTuples))
+	allDeletions = append(allDeletions, roleTuples...)
+	allDeletions = append(allDeletions, assigneeTuples...)
+
+	if len(allDeletions) > 0 {
+		err = provider.Write(ctx, nil, allDeletions)
+		if err != nil {
+			return err
+		}
+	}
+
+	return provider.store.Delete(ctx, orgID, id)
 }
 
 func (provider *provider) CheckTransactions(ctx context.Context, subject string, orgID valuer.UUID, transactions []*authtypes.Transaction) ([]*authtypes.TransactionWithAuthorization, error) {

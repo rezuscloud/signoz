@@ -177,11 +177,10 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 	return provider.Grant(ctx, orgID, []string{authtypes.SigNozAdminRoleName}, authtypes.MustNewSubject(coretypes.NewResourceUser(), userID.String(), orgID, nil))
 }
 
-// Create persists the role via the community SQL store. The interface accepts
-// *RoleWithTransactionGroups (an EE shape); the community build performs role
-// CRUD only and ignores transaction-group reconciliation (EE-only).
-func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
-	return provider.store.Create(ctx, role.Role)
+// Create persists the role via the community SQL store. Transaction-group
+// reconciliation is EE-only and intentionally not implemented here.
+func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.Role) error {
+	return provider.store.Create(ctx, role)
 }
 
 func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) (*authtypes.Role, error) {
@@ -202,10 +201,10 @@ func (provider *provider) GetOrCreate(ctx context.Context, orgID valuer.UUID, ro
 	return role, nil
 }
 
-// Update reconciles role metadata via the community SQL store (transaction-group
-// reconciliation is EE-only and intentionally not implemented here).
-func (provider *provider) Update(ctx context.Context, orgID valuer.UUID, role *authtypes.RoleWithTransactionGroups) error {
-	return provider.store.Update(ctx, orgID, role.Role)
+// Update reconciles role metadata via the community SQL store. Transaction-group
+// reconciliation is EE-only and intentionally not implemented here.
+func (provider *provider) Update(ctx context.Context, orgID valuer.UUID, role *authtypes.Role) error {
+	return provider.store.Update(ctx, orgID, role)
 }
 
 func (provider *provider) Delete(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error {

@@ -179,6 +179,7 @@ func (provider *provider) CreateManagedUserRoleTransactions(ctx context.Context,
 
 // Create persists the role via the community SQL store. Transaction-group
 // reconciliation is EE-only and intentionally not implemented here.
+// Signature: provider.store.Create(ctx, role.Role) (historical - upstream reverted from RoleWithTransactionGroups to Role)
 func (provider *provider) Create(ctx context.Context, _ valuer.UUID, role *authtypes.Role) error {
 	return provider.store.Create(ctx, role)
 }

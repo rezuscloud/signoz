@@ -1496,6 +1496,9 @@ components:
       - redis
       - cloudsql_postgres
       - memorystore_redis
+      - computeengine
+      - gke
+      - cloudstorage
       type: string
     CloudintegrationtypesServiceMetadata:
       properties:
@@ -7238,6 +7241,10 @@ components:
           $ref: '#/components/schemas/RuletypesAlertState'
         overallStateChanged:
           type: boolean
+        relatedLogsLink:
+          type: string
+        relatedTracesLink:
+          type: string
         ruleId:
           type: string
         ruleName:
@@ -7423,6 +7430,8 @@ components:
       - below
       - equal
       - not_equal
+      - above_or_equal
+      - below_or_equal
       - outside_bounds
       type: string
     RuletypesCumulativeSchedule:
@@ -9930,14 +9939,9 @@ paths:
     get:
       deprecated: false
       description: This endpoint lists the services metadata for the specified cloud
-        provider
+        provider, without any account context.
       operationId: ListServicesMetadata
       parameters:
-      - in: query
-        name: cloud_integration_id
-        required: false
-        schema:
-          type: string
       - in: path
         name: cloud_provider
         required: true
@@ -9987,14 +9991,10 @@ paths:
   /api/v1/cloud_integrations/{cloud_provider}/services/{service_id}:
     get:
       deprecated: false
-      description: This endpoint gets a service for the specified cloud provider
+      description: This endpoint gets a service definition for the specified cloud
+        provider, without any account context.
       operationId: GetService
       parameters:
-      - in: query
-        name: cloud_integration_id
-        required: false
-        schema:
-          type: string
       - in: path
         name: cloud_provider
         required: true

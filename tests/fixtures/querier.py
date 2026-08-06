@@ -78,12 +78,15 @@ class BuilderQuery:
     signal: str
     name: str = "A"
     source: str | None = None
+    query_type: str = "builder_query"
     limit: int | None = None
     offset: int | None = None
     filter_expression: str | None = None
+    having_expression: str | None = None
     select_fields: list[TelemetryFieldKey] | None = None
     order: list[OrderBy] | None = None
     aggregations: list[Aggregation | MetricAggregation] | None = None
+    group_by: list[TelemetryFieldKey] | None = None
     step_interval: int | None = None
 
     def to_dict(self) -> dict:
@@ -99,16 +102,20 @@ class BuilderQuery:
             spec["offset"] = self.offset
         if self.filter_expression:
             spec["filter"] = {"expression": self.filter_expression}
+        if self.having_expression:
+            spec["having"] = {"expression": self.having_expression}
         if self.select_fields:
             spec["selectFields"] = [f.to_dict() for f in self.select_fields]
         if self.order:
             spec["order"] = [o.to_dict() if hasattr(o, "to_dict") else o for o in self.order]
         if self.aggregations:
             spec["aggregations"] = [agg.to_dict() if hasattr(agg, "to_dict") else agg for agg in self.aggregations]
+        if self.group_by:
+            spec["groupBy"] = [k.to_dict() for k in self.group_by]
         if self.step_interval is not None:
             spec["stepInterval"] = self.step_interval
 
-        return {"type": "builder_query", "spec": spec}
+        return {"type": self.query_type, "spec": spec}
 
 
 @dataclass
@@ -168,6 +175,7 @@ def make_query_request(
     variables: dict | None = None,
     no_cache: bool = True,
     timeout: int = QUERY_TIMEOUT,
+    headers: dict | None = None,
 ) -> requests.Response:
     if format_options is None:
         format_options = {"formatTableResultForUI": False, "fillGaps": False}
@@ -187,9 +195,62 @@ def make_query_request(
     return requests.post(
         signoz.self.host_configs["8080"].get("/api/v5/query_range"),
         timeout=timeout,
+        headers={"authorization": f"Bearer {token}", **(headers or {})},
+        json=payload,
+    )
+
+
+def make_preview_query_request(
+    signoz: types.SigNoz,
+    token: str,
+    start_ms: int,
+    end_ms: int,
+    queries: list[dict],
+    *,
+    request_type: str = RequestType.TIME_SERIES,
+    format_options: dict | None = None,
+    variables: dict | None = None,
+    verbose: bool = True,
+    timeout: int = QUERY_TIMEOUT,
+) -> requests.Response:
+    """Dry-run the same payload as make_query_request against /query_range/preview.
+    Verbose (the default) renders the underlying ClickHouse statement per query."""
+    if format_options is None:
+        format_options = {"formatTableResultForUI": False, "fillGaps": False}
+
+    payload = {
+        "schemaVersion": "v1",
+        "start": start_ms,
+        "end": end_ms,
+        "requestType": request_type,
+        "compositeQuery": {"queries": queries},
+        "formatOptions": format_options,
+    }
+    if variables:
+        payload["variables"] = variables
+
+    return requests.post(
+        signoz.self.host_configs["8080"].get("/api/v5/query_range/preview"),
+        params={"verbose": str(verbose).lower()},
+        timeout=timeout,
         headers={"authorization": f"Bearer {token}"},
         json=payload,
     )
+
+
+def get_preview_statements(response: requests.Response, name: str) -> list[dict[str, Any]]:
+    """The rendered statements for the named query in a preview response."""
+    assert response.status_code == HTTPStatus.OK, response.text
+    preview = response.json()["data"]["compositeQuery"][name]
+    assert preview["valid"], f"preview for query {name} is invalid: {preview['error']}"
+    return preview["statements"]
+
+
+def get_preview_sql(response: requests.Response, name: str) -> str:
+    """The single rendered ClickHouse statement for the named query in a preview response."""
+    statements = get_preview_statements(response, name)
+    assert len(statements) == 1, f"expected 1 statement for query {name}, got {len(statements)}"
+    return statements[0]["db.statement.query"]
 
 
 def aligned_epoch(ago: timedelta, step_seconds: int = DEFAULT_STEP_INTERVAL) -> int:

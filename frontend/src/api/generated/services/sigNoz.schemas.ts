@@ -2815,6 +2815,9 @@ export enum CloudintegrationtypesServiceIDDTO {
 	redis = 'redis',
 	cloudsql_postgres = 'cloudsql_postgres',
 	memorystore_redis = 'memorystore_redis',
+	computeengine = 'computeengine',
+	gke = 'gke',
+	cloudstorage = 'cloudstorage',
 }
 export type CloudintegrationtypesCloudIntegrationServiceDTOAnyOf = {
 	/**
@@ -4298,6 +4301,18 @@ export interface Querybuildertypesv5QueryEnvelopeBuilderDTO {
 	type: Querybuildertypesv5QueryEnvelopeBuilderDTOType;
 }
 
+export enum Querybuildertypesv5QueryEnvelopeBuilderAIDTOType {
+	builder_ai_query = 'builder_ai_query',
+}
+export interface Querybuildertypesv5QueryEnvelopeBuilderAIDTO {
+	spec?: Querybuildertypesv5QueryBuilderQueryGithubComSigNozSignozPkgTypesQuerybuildertypesQuerybuildertypesv5TraceAggregationDTO;
+	/**
+	 * @type string
+	 * @enum builder_ai_query
+	 */
+	type: Querybuildertypesv5QueryEnvelopeBuilderAIDTOType;
+}
+
 export interface Querybuildertypesv5QueryBuilderFormulaDTO {
 	/**
 	 * @type boolean
@@ -4481,6 +4496,7 @@ export interface Querybuildertypesv5QueryEnvelopeClickHouseSQLDTO {
 
 export type Querybuildertypesv5QueryEnvelopeDTO =
 	| Querybuildertypesv5QueryEnvelopeBuilderDTO
+	| Querybuildertypesv5QueryEnvelopeBuilderAIDTO
 	| Querybuildertypesv5QueryEnvelopeFormulaDTO
 	| Querybuildertypesv5QueryEnvelopeTraceOperatorDTO
 	| Querybuildertypesv5QueryEnvelopePromQLDTO
@@ -8284,6 +8300,7 @@ export interface Querybuildertypesv5QueryRangeResponseDTO {
 
 export enum Querybuildertypesv5QueryTypeDTO {
 	builder_query = 'builder_query',
+	builder_ai_query = 'builder_ai_query',
 	builder_formula = 'builder_formula',
 	builder_trace_operator = 'builder_trace_operator',
 	clickhouse_sql = 'clickhouse_sql',
@@ -8320,6 +8337,14 @@ export interface RulestatehistorytypesGettableRuleStateHistoryDTO {
 	 * @type boolean
 	 */
 	overallStateChanged: boolean;
+	/**
+	 * @type string
+	 */
+	relatedLogsLink?: string;
+	/**
+	 * @type string
+	 */
+	relatedTracesLink?: string;
 	/**
 	 * @type string
 	 */
@@ -8468,6 +8493,8 @@ export enum RuletypesCompareOperatorDTO {
 	below = 'below',
 	equal = 'equal',
 	not_equal = 'not_equal',
+	above_or_equal = 'above_or_equal',
+	below_or_equal = 'below_or_equal',
 	outside_bounds = 'outside_bounds',
 }
 export interface RuletypesBasicRuleThresholdDTO {
@@ -8831,6 +8858,112 @@ export interface RuletypesRuleDTO {
 export enum RuletypesThresholdKindDTO {
 	basic = 'basic',
 }
+export interface SavedviewtypesDisplayDTO {
+	/**
+	 * @type string
+	 */
+	color?: string;
+	/**
+	 * @type string
+	 */
+	fontSize?: string;
+	/**
+	 * @type string
+	 */
+	format?: string;
+	/**
+	 * @type integer
+	 */
+	maxLines?: number;
+}
+
+export enum SavedviewtypesPanelTypeDTO {
+	value = 'value',
+	graph = 'graph',
+	table = 'table',
+	list = 'list',
+	trace = 'trace',
+}
+export interface SavedviewtypesSavedViewSpecDTO {
+	display: SavedviewtypesDisplayDTO;
+	/**
+	 * @type string
+	 */
+	displayName: string;
+	panelType: SavedviewtypesPanelTypeDTO;
+	/**
+	 * @type array
+	 */
+	queries: Querybuildertypesv5QueryEnvelopeDTO[];
+	/**
+	 * @type array
+	 */
+	selectedFields: TelemetrytypesTelemetryFieldKeyDTO[];
+}
+
+export interface SavedviewtypesSavedViewDataDTO {
+	/**
+	 * @type string
+	 */
+	schemaVersion: string;
+	spec: SavedviewtypesSavedViewSpecDTO;
+}
+
+export enum SavedviewtypesSourceDTO {
+	traces = 'traces',
+	logs = 'logs',
+	metrics = 'metrics',
+	meter = 'meter',
+}
+export interface SavedviewtypesPostableSavedViewDTO {
+	data: SavedviewtypesSavedViewDataDTO;
+	/**
+	 * @type boolean
+	 */
+	generateName?: boolean;
+	/**
+	 * @type string
+	 */
+	name?: string;
+	source: SavedviewtypesSourceDTO;
+}
+
+export interface SavedviewtypesSavedViewDTO {
+	/**
+	 * @type string
+	 * @format date-time
+	 */
+	createdAt?: string;
+	/**
+	 * @type string
+	 */
+	createdBy?: string;
+	data?: SavedviewtypesSavedViewDataDTO;
+	/**
+	 * @type string
+	 */
+	id: string;
+	/**
+	 * @type string
+	 */
+	name?: string;
+	source?: SavedviewtypesSourceDTO;
+	/**
+	 * @type string
+	 * @format date-time
+	 */
+	updatedAt?: string;
+	/**
+	 * @type string
+	 */
+	updatedBy?: string;
+}
+
+export interface SavedviewtypesUpdatableSavedViewDTO {
+	data: SavedviewtypesSavedViewDataDTO;
+	source: SavedviewtypesSourceDTO;
+}
+
 export interface ServiceaccounttypesDeprecatedPostableServiceAccountRoleDTO {
 	/**
 	 * @type string
@@ -10196,14 +10329,6 @@ export type GetConnectionCredentials200 = {
 export type ListServicesMetadataPathParameters = {
 	cloudProvider: string;
 };
-export type ListServicesMetadataParams = {
-	/**
-	 * @type string
-	 * @description undefined
-	 */
-	cloud_integration_id?: string;
-};
-
 export type ListServicesMetadata200 = {
 	data: CloudintegrationtypesGettableServicesMetadataDTO;
 	/**
@@ -10216,14 +10341,6 @@ export type GetServicePathParameters = {
 	cloudProvider: string;
 	serviceId: string;
 };
-export type GetServiceParams = {
-	/**
-	 * @type string
-	 * @description undefined
-	 */
-	cloud_integration_id?: string;
-};
-
 export type GetService200 = {
 	data: CloudintegrationtypesServiceDTO;
 	/**
@@ -11167,6 +11284,17 @@ export type UnlockDashboardV2PathParameters = {
 export type LockDashboardV2PathParameters = {
 	id: string;
 };
+export type MigrateDashboardV2PathParameters = {
+	id: string;
+};
+export type MigrateDashboardV2200 = {
+	data: DashboardtypesGettableDashboardV2DTO;
+	/**
+	 * @type string
+	 */
+	status: string;
+};
+
 export type GetFeatures200 = {
 	/**
 	 * @type array
@@ -12034,6 +12162,54 @@ export type TestRule200 = {
 	status: string;
 };
 
+export type ListSavedViewsParams = {
+	/**
+	 * @description undefined
+	 */
+	source?: SavedviewtypesSourceDTO;
+	/**
+	 * @type string
+	 * @description undefined
+	 */
+	name?: string;
+};
+
+export type ListSavedViews200 = {
+	/**
+	 * @type array,null
+	 */
+	data: SavedviewtypesSavedViewDTO[] | null;
+	/**
+	 * @type string
+	 */
+	status: string;
+};
+
+export type CreateSavedView201 = {
+	data: TypesIdentifiableDTO;
+	/**
+	 * @type string
+	 */
+	status: string;
+};
+
+export type DeleteSavedViewPathParameters = {
+	id: string;
+};
+export type GetSavedViewPathParameters = {
+	id: string;
+};
+export type GetSavedView200 = {
+	data: SavedviewtypesSavedViewDTO;
+	/**
+	 * @type string
+	 */
+	status: string;
+};
+
+export type UpdateSavedViewPathParameters = {
+	id: string;
+};
 export type GetSessionContext200 = {
 	data: AuthtypesSessionContextDTO;
 	/**

@@ -47,4 +47,4 @@ jobs:
 
       - name: Push mirror branch (no-op when upstream is static)
         run: |
-          git push --force origin refs/remotes/upstream/main:refs/heads/main
+          git push --force origin refs/remotes/upstream/main:refs/heads/rezus/mirror-main

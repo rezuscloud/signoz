@@ -537,7 +537,8 @@ function SideNav({ isPinned }: { isPinned: boolean }): JSX.Element {
 		} else if (isCommunityEnterpriseUser) {
 			setLicenseTag('Free');
 		} else if (isCommunityUser) {
-			setLicenseTag('Community');
+			// rezuscloud fork: this is our customized build, not plain community
+			setLicenseTag('RezusCloud');
 		}
 	}, [
 		isCloudUser,

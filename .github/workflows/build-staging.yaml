@@ -1,9 +1,11 @@
 name: build-staging
 
+# rezuscloud fork: `push: branches: [main]` is DISARMED — `main` is the
+# upstream-mirror branch (see upstream-mirror.yml): it force-moves whenever
+# upstream moves, and a staging build per mirror move is pure waste. Mirror
+# pushes must be a silent trigger signal for harmostes fork-maintenance.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: {}
   pull_request:
     types: [labeled]
 

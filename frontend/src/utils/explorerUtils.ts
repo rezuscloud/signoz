@@ -14,6 +14,8 @@ export const panelTypeToExplorerView: Record<PANEL_TYPES, ExplorerViews> = {
 	[PANEL_TYPES.BAR]: ExplorerViews.TIMESERIES,
 	[PANEL_TYPES.PIE]: ExplorerViews.TIMESERIES,
 	[PANEL_TYPES.HISTOGRAM]: ExplorerViews.TIMESERIES,
+	// Dashboard-only visualisation; explorers never offer it.
+	[PANEL_TYPES.TEXT]: ExplorerViews.LIST,
 	[PANEL_TYPES.EMPTY_WIDGET]: ExplorerViews.LIST,
 };
 
@@ -69,7 +71,12 @@ export const getMetricsExplorerUrl = ({
 	const params = new URLSearchParams();
 	params.set(
 		QueryParams.compositeQuery,
-		encodeURIComponent(JSON.stringify(query)),
+		// `unit` must always be present: the query builder provider rewrites (and
+		// pushes a new history entry for) any compositeQuery missing a key of
+		// `initialQueriesMap`, which traps the browser back button.
+		// Since this is only being used by infra-monitoring, I will keep this fix one line
+		// instead of going and update each chart configuration.
+		encodeURIComponent(JSON.stringify({ unit: '', ...query })),
 	);
 
 	if (relativeTime) {

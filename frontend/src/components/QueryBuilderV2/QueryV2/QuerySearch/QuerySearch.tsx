@@ -16,8 +16,6 @@ import { githubLight } from '@uiw/codemirror-theme-github';
 import CodeMirror, { EditorView, keymap, Prec } from '@uiw/react-codemirror';
 import { Button, Card, Collapse, Popover, Tooltip } from 'antd';
 import { Badge } from '@signozhq/ui/badge';
-import { getKeySuggestions } from 'api/querySuggestions/getKeySuggestions';
-import { getValueSuggestions } from 'api/querySuggestions/getValueSuggestion';
 import cx from 'classnames';
 import {
 	negationQueryOperatorSuggestions,
@@ -27,7 +25,7 @@ import {
 	QUERY_BUILDER_OPERATORS_BY_KEY_TYPE,
 	queryOperatorSuggestions,
 } from 'constants/antlrQueryConstants';
-import { useDashboardVariablesByType } from 'hooks/dashboard/useDashboardVariablesByType';
+import { useDynamicVariableSuggestions } from 'hooks/dashboard/useDynamicVariableSuggestions';
 import { useIsDarkMode } from 'hooks/useDarkMode';
 import useDebounce from 'hooks/useDebounce';
 import { debounce, isNull } from 'lodash-es';
@@ -38,7 +36,7 @@ import {
 } from 'types/antlrQueryTypes';
 import { IBuilderQuery } from 'types/api/queryBuilder/queryBuilderData';
 import { QueryKeyDataSuggestionsProps } from 'types/api/querySuggestions/types';
-import { DataSource } from 'types/common/queryBuilder';
+import { DATA_SOURCE_TO_SIGNAL, DataSource } from 'types/common/queryBuilder';
 import {
 	getCurrentValueIndexAtCursor,
 	getQueryContextAtCursor,
@@ -47,14 +45,26 @@ import { validateQuery } from 'utils/queryValidationUtils';
 import { unquote } from 'utils/stringUtils';
 
 import { getRecentQueries } from 'lib/recentQueries/getRecentQueries';
+import type {
+	TelemetrytypesGettableFieldKeysDTOKeysAnyOf,
+	TelemetrytypesSourceDTO,
+	TelemetrytypesTelemetryFieldKeyDTO,
+} from 'api/generated/services/sigNoz.schemas';
+import { getFieldKeySuggestions } from 'api/querySuggestions/getFieldKeySuggestions';
+import { getFieldValueSuggestions } from 'api/querySuggestions/getFieldValueSuggestions';
 import type { SignalType } from 'types/api/v5/queryRange';
 
-import { queryExamples, SUGGESTIONS_SECTION } from './constants';
+import {
+	queryExamples,
+	SUGGESTION_FETCH_DEBOUNCE_MS,
+	SUGGESTIONS_SECTION,
+} from './constants';
 import {
 	combineInitialAndUserExpression,
 	dedupeOptionsByLabel,
 	getFieldContextPrefix,
 	getRecentOptions,
+	isSupportedFunction,
 	renderRecentDeleteButton,
 } from './utils';
 
@@ -98,6 +108,15 @@ interface QuerySearchProps {
 	showFilterSuggestionsWithoutMetric?: boolean;
 	/** When set, the editor shows only the user expression; API/filter uses `initial AND (user)`. */
 	initialExpression?: string;
+	/** When set, replaces the generic value-suggestion API with a custom fetcher. */
+	valueSuggestionsOverride?: (
+		key: string,
+		searchText: string,
+	) => Promise<{
+		stringValues: string[];
+		numberValues: number[];
+		complete: boolean;
+	}>;
 }
 
 function QuerySearch({
@@ -111,6 +130,7 @@ function QuerySearch({
 	showFilterSuggestionsWithoutMetric,
 	initialExpression,
 	metricNamespace,
+	valueSuggestionsOverride,
 }: QuerySearchProps): JSX.Element {
 	const isDarkMode = useIsDarkMode();
 	const [valueSuggestions, setValueSuggestions] = useState<any[]>([]);
@@ -169,15 +189,14 @@ function QuerySearch({
 				isProgrammaticChangeRef.current = true;
 			}
 
+			const changes = view.state.changes({
+				from: 0,
+				to: currentValue.length,
+				insert: value,
+			});
 			view.dispatch({
-				changes: {
-					from: 0,
-					to: currentValue.length,
-					insert: value,
-				},
-				selection: {
-					anchor: value.length,
-				},
+				changes,
+				selection: { anchor: changes.newLength },
 			});
 		},
 		[],
@@ -244,16 +263,13 @@ function QuerySearch({
 	const lastValueRef = useRef<string>('');
 	const isMountedRef = useRef<boolean>(true);
 
-	const dashboardDynamicVariables = useDashboardVariablesByType(
-		'DYNAMIC',
-		'values',
-	);
+	const dashboardDynamicVariables = useDynamicVariableSuggestions();
 
 	// Add back the generateOptions function and useEffect
-	const generateOptions = (keys: {
-		[key: string]: QueryKeyDataSuggestionsProps[];
-	}): any[] =>
-		Object.values(keys).flatMap((items: QueryKeyDataSuggestionsProps[]) =>
+	const generateOptions = (
+		keys: TelemetrytypesGettableFieldKeysDTOKeysAnyOf,
+	): any[] =>
+		Object.values(keys).flatMap((items: TelemetrytypesTelemetryFieldKeyDTO[]) =>
 			items.map(({ name, fieldDataType, fieldContext }) => ({
 				label: name,
 				type: fieldDataType === 'string' ? 'keyword' : fieldDataType,
@@ -306,16 +322,19 @@ function QuerySearch({
 
 			lastFetchedKeyRef.current = searchText || '';
 
-			const response = await getKeySuggestions({
-				signal: dataSource,
-				searchText: searchText || '',
-				metricName: debouncedMetricName ?? undefined,
-				signalSource: signalSource as 'meter' | '',
-				metricNamespace,
-			});
+			const response = await getFieldKeySuggestions(
+				{
+					signal: DATA_SOURCE_TO_SIGNAL[dataSource],
+					searchText: searchText || '',
+					metricName: debouncedMetricName ?? undefined,
+					source: signalSource as TelemetrytypesSourceDTO,
+					metricNamespace,
+				},
+				queryData.builderQueryType,
+			);
 
-			if (response.data.data) {
-				const { keys } = response.data.data;
+			if (response.data.keys) {
+				const { keys } = response.data;
 				const options = generateOptions(keys);
 				// Deduplicate by full variant identity (name + context + data type), NOT by
 				// label. deduping by label removes varient which is not expected. If we need
@@ -349,11 +368,12 @@ function QuerySearch({
 			hardcodedAttributeKeys,
 			showFilterSuggestionsWithoutMetric,
 			metricNamespace,
+			queryData.builderQueryType,
 		],
 	);
 
 	const debouncedFetchKeySuggestions = useMemo(
-		() => debounce(fetchKeySuggestions, 300),
+		() => debounce(fetchKeySuggestions, SUGGESTION_FETCH_DEBOUNCE_MS),
 		[fetchKeySuggestions],
 	);
 
@@ -480,13 +500,27 @@ function QuerySearch({
 			const sanitizedSearchText = searchText ? searchText?.trim() : '';
 
 			try {
-				const response = await getValueSuggestions({
-					key,
-					searchText: sanitizedSearchText,
-					signal: dataSource,
-					signalSource: signalSource as 'meter' | '',
-					metricName: debouncedMetricName ?? undefined,
-				});
+				const values = valueSuggestionsOverride
+					? await valueSuggestionsOverride(key, sanitizedSearchText)
+					: await getFieldValueSuggestions(
+							{
+								signal: DATA_SOURCE_TO_SIGNAL[dataSource],
+								name: key,
+								searchText: sanitizedSearchText,
+								source: signalSource as TelemetrytypesSourceDTO,
+								metricName: debouncedMetricName ?? undefined,
+							},
+							queryData.builderQueryType,
+						).then((response) => {
+							const responseData = response.data;
+							const responseDataValues = responseData.values;
+
+							return {
+								stringValues: responseDataValues.stringValues ?? [],
+								numberValues: responseDataValues.numberValues ?? [],
+								complete: responseData.complete ?? false,
+							};
+						});
 
 				// Skip updates if component unmounted or key changed
 				if (
@@ -498,8 +532,6 @@ function QuerySearch({
 				}
 
 				// Process the response data
-				const responseData = response.data as any;
-				const values = responseData.data?.values || {};
 				const stringValues = values.stringValues || [];
 				const numberValues = values.numberValues || [];
 
@@ -580,11 +612,13 @@ function QuerySearch({
 			debouncedMetricName,
 			signalSource,
 			toggleSuggestions,
+			valueSuggestionsOverride,
+			queryData.builderQueryType,
 		],
 	);
 
 	const debouncedFetchValueSuggestions = useMemo(
-		() => debounce(fetchValueSuggestions, 300),
+		() => debounce(fetchValueSuggestions, SUGGESTION_FETCH_DEBOUNCE_MS),
 		[fetchValueSuggestions],
 	);
 
@@ -1164,8 +1198,8 @@ function QuerySearch({
 			);
 
 			// Add dynamic variables suggestions for the current key
-			const variableName = dashboardDynamicVariables?.find(
-				(variable) => variable?.dynamicVariablesAttribute === keyName,
+			const variableName = dashboardDynamicVariables.find(
+				(variable) => variable.attribute === keyName,
 			)?.name;
 
 			if (variableName) {
@@ -1252,11 +1286,13 @@ function QuerySearch({
 		}
 
 		if (queryContext.isInFunction) {
-			options = Object.values(QUERY_BUILDER_FUNCTIONS).map((option) => ({
-				label: option,
-				apply: `${option}()`,
-				type: 'function',
-			}));
+			options = Object.values(QUERY_BUILDER_FUNCTIONS)
+				.filter((option) => isSupportedFunction(option, dataSource))
+				.map((option) => ({
+					label: option,
+					apply: `${option}()`,
+					type: 'function',
+				}));
 
 			// Add space after selection for functions
 			const optionsWithSpace = addSpaceToOptions(options);

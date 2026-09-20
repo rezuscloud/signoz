@@ -1,4 +1,16 @@
-import { Bot, Key, Shield } from '@signozhq/icons';
+import {
+	Bot,
+	ChartLine,
+	DraftingCompass,
+	FileKey,
+	Gauge,
+	Grid3X3,
+	Key,
+	ListFilter,
+	Logs,
+	Receipt,
+	Shield,
+} from '@signozhq/icons';
 
 import permissionsType from 'lib/authz/hooks/useAuthZ/permissions.type';
 import {
@@ -14,12 +26,15 @@ type IconComponent = typeof Shield;
 
 const OBJECT_SCOPED_VERB_SET = new Set<string>(OBJECT_SCOPED_VERBS);
 
+export type SelectorType = 'input' | 'telemetryBuilder';
+
 export interface ResourcePanelConfig {
 	label: string;
 	description: string;
 	icon: IconComponent;
 	selectorPlaceholder: string;
 	docsAnchor: string;
+	selectorType?: SelectorType;
 }
 
 /**
@@ -28,6 +43,14 @@ export interface ResourcePanelConfig {
  * not all of them
  */
 export const RESOURCE_PANELS: Record<AuthZResource, ResourcePanelConfig> = {
+	dashboard: {
+		label: 'Dashboards',
+		description: 'Dashboards and their panels across the workspace.',
+		icon: Grid3X3,
+		selectorPlaceholder:
+			'Type dashboard ID, separate multiple with comma or space',
+		docsAnchor: 'dashboard',
+	},
 	'factor-api-key': {
 		label: 'API Keys',
 		description: 'Programmatic access tokens for the workspace.',
@@ -50,9 +73,71 @@ export const RESOURCE_PANELS: Record<AuthZResource, ResourcePanelConfig> = {
 			'Type service account ID, separate multiple with comma or space',
 		docsAnchor: 'service-account',
 	},
+	license: {
+		label: 'Licenses',
+		description: 'Licenses of the workspace, including the license key.',
+		icon: FileKey,
+		selectorPlaceholder: 'Type license ID, separate multiple with comma or space',
+		docsAnchor: 'license',
+	},
+	subscription: {
+		label: 'Subscription',
+		description: 'The workspace subscription, its usage and billing details.',
+		icon: Receipt,
+		selectorPlaceholder: 'Type * to cover the workspace subscription',
+		docsAnchor: 'subscription',
+	},
+	'quick-filter': {
+		label: 'Quick Filters',
+		description: 'Quick filters shown in the logs, traces, and other explorers.',
+		icon: ListFilter,
+		selectorPlaceholder:
+			'Type quick filter ID, separate multiple with comma or space',
+		docsAnchor: 'quick-filter',
+	},
+	logs: {
+		label: 'Logs',
+		description: 'Log data collected across the workspace.',
+		icon: Logs,
+		selectorPlaceholder:
+			'Enter selector as <query-type>/<key>/<value> or <query-type>/* or use wizard...',
+		docsAnchor: 'logs',
+		selectorType: 'telemetryBuilder',
+	},
+	traces: {
+		label: 'Traces',
+		description: 'Distributed tracing data collected across the workspace.',
+		icon: DraftingCompass,
+		selectorPlaceholder:
+			'Enter selector as <query-type>/<key>/<value> or <query-type>/* or use wizard...',
+		docsAnchor: 'traces',
+		selectorType: 'telemetryBuilder',
+	},
+	metrics: {
+		label: 'Metrics',
+		description: 'Metric data collected across the workspace.',
+		icon: ChartLine,
+		selectorPlaceholder:
+			'Enter selector as <query-type>/<key>/<value> or <query-type>/* or use wizard...',
+		docsAnchor: 'metrics',
+		selectorType: 'telemetryBuilder',
+	},
+	'meter-metrics': {
+		label: 'Meter Metrics',
+		description: 'Usage metering data for the workspace.',
+		icon: Gauge,
+		selectorPlaceholder:
+			'Enter selector as <query-type>/<key>/<value> or <query-type>/* or use wizard...',
+		docsAnchor: 'meter-metrics',
+		selectorType: 'telemetryBuilder',
+	},
 };
 
-export const RESOURCE_ORDER = Object.keys(RESOURCE_PANELS) as AuthZResource[];
+export const RESOURCE_ORDER = (
+	Object.keys(RESOURCE_PANELS) as AuthZResource[]
+).sort((left, right) =>
+	RESOURCE_PANELS[left].label.localeCompare(RESOURCE_PANELS[right].label),
+);
 
 export function getResourcePanel(resource: AuthZResource): ResourcePanelConfig {
 	const panel = RESOURCE_PANELS[resource];

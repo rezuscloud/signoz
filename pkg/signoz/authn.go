@@ -5,6 +5,8 @@ import (
 
 	"github.com/SigNoz/signoz/pkg/authn"
 	"github.com/SigNoz/signoz/pkg/authn/callbackauthn/googlecallbackauthn"
+	"github.com/SigNoz/signoz/pkg/authn/callbackauthn/oidccallbackauthn"
+	"github.com/SigNoz/signoz/pkg/authn/callbackauthn/samlcallbackauthn"
 	"github.com/SigNoz/signoz/pkg/authn/passwordauthn/emailpasswordauthn"
 	"github.com/SigNoz/signoz/pkg/factory"
 	"github.com/SigNoz/signoz/pkg/global"
@@ -20,8 +22,20 @@ func NewAuthNs(ctx context.Context, providerSettings factory.ProviderSettings, s
 		return nil, err
 	}
 
+	oidcCallbackAuthN, err := oidccallbackauthn.New(store, licensing, providerSettings, globalConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	samlCallbackAuthN, err := samlcallbackauthn.New(ctx, store, licensing, globalConfig)
+	if err != nil {
+		return nil, err
+	}
+
 	return map[authtypes.AuthNProvider]authn.AuthN{
 		authtypes.AuthNProviderEmailPassword: emailPasswordAuthN,
 		authtypes.AuthNProviderGoogleAuth:    googleCallbackAuthN,
+		authtypes.AuthNProviderOIDC:          oidcCallbackAuthN,
+		authtypes.AuthNProviderSAML:          samlCallbackAuthN,
 	}, nil
 }

@@ -24,6 +24,7 @@ export enum SignalType {
 	API_MONITORING = 'api_monitoring',
 	EXCEPTIONS = 'exceptions',
 	METER_EXPLORER = 'meter',
+	AI_OBSERVABILITY = 'ai_observability',
 }
 
 /**
@@ -42,11 +43,19 @@ export interface IQuickFiltersConfig {
 	defaultOpen: boolean;
 }
 
+export interface QuickFilterChangeEventData {
+	filterKey: string;
+	expression: string;
+	filterItemKeys: string[];
+}
+
 export interface IQuickFiltersProps {
 	config: IQuickFiltersConfig[];
 	handleFilterVisibilityChange: () => void;
 	source: QuickFiltersSource;
 	onFilterChange?: (query: Query) => void;
+	onQuickFilterChange?: (data: QuickFilterChangeEventData) => void;
+	/** Pass to fetch quick filters for this signal; omit to use `config` as-is */
 	signal?: SignalType;
 	className?: string;
 	showFilterCollapse?: boolean;
@@ -61,6 +70,7 @@ export enum QuickFiltersSource {
 	API_MONITORING = 'api-monitoring',
 	EXCEPTIONS = 'exceptions',
 	METER_EXPLORER = 'meter',
+	AI_OBSERVABILITY = 'ai-observability',
 }
 
 /**

@@ -7,11 +7,10 @@ import (
 	"time"
 
 	"github.com/SigNoz/signoz/pkg/errors"
-	"github.com/SigNoz/signoz/pkg/flagger"
 	"github.com/SigNoz/signoz/pkg/modules/llmpricingrule"
 	"github.com/SigNoz/signoz/pkg/querier"
 	"github.com/SigNoz/signoz/pkg/query-service/agentConf"
-	"github.com/SigNoz/signoz/pkg/types/featuretypes"
+	"github.com/SigNoz/signoz/pkg/types/aiobservabilitytypes"
 	"github.com/SigNoz/signoz/pkg/types/llmpricingruletypes"
 	"github.com/SigNoz/signoz/pkg/types/opamptypes"
 	qbtypes "github.com/SigNoz/signoz/pkg/types/querybuildertypes/querybuildertypesv5"
@@ -25,11 +24,10 @@ const unmappedModelsLookback = time.Hour
 type module struct {
 	store   llmpricingruletypes.Store
 	querier querier.Querier
-	flagger flagger.Flagger
 }
 
-func NewModule(store llmpricingruletypes.Store, flagger flagger.Flagger, querier querier.Querier) llmpricingrule.Module {
-	return &module{store: store, flagger: flagger, querier: querier}
+func NewModule(store llmpricingruletypes.Store, querier querier.Querier) llmpricingrule.Module {
+	return &module{store: store, querier: querier}
 }
 
 func (module *module) List(ctx context.Context, orgID valuer.UUID, offset, limit int, search string, isOverride *bool) ([]*llmpricingruletypes.LLMPricingRule, int, error) {
@@ -122,16 +120,6 @@ func (module *module) AgentFeatureType() agentConf.AgentFeatureType {
 func (module *module) RecommendAgentConfig(orgID valuer.UUID, currentConfYaml []byte, configVersion *opamptypes.AgentConfigVersion) ([]byte, string, error) {
 	ctx := context.Background()
 
-	// Skip the llm pricing processor unless AI observability is enabled for the org.
-	evalCtx := featuretypes.NewFlaggerEvaluationContext(orgID)
-	enabled, err := module.flagger.Boolean(ctx, flagger.FeatureEnableAIObservability, evalCtx)
-	if err != nil {
-		return nil, "", err
-	}
-	if !enabled {
-		return currentConfYaml, "", nil
-	}
-
 	rules, err := module.getEnabledRules(ctx, orgID)
 	if err != nil {
 		return nil, "", err
@@ -213,18 +201,18 @@ func (module *module) discoverModels(ctx context.Context, orgID valuer.UUID) ([]
 					Spec: qbtypes.QueryBuilderQuery[qbtypes.TraceAggregation]{
 						Name:   "A",
 						Signal: telemetrytypes.SignalTraces,
-						Filter: &qbtypes.Filter{Expression: fmt.Sprintf("%s EXISTS", llmpricingruletypes.GenAIRequestModel)},
+						Filter: &qbtypes.Filter{Expression: fmt.Sprintf("%s EXISTS", aiobservabilitytypes.GenAIRequestModel)},
 						Aggregations: []qbtypes.TraceAggregation{
 							{Expression: "count()", Alias: "spanCount"},
 						},
 						GroupBy: []qbtypes.GroupByKey{
 							{TelemetryFieldKey: telemetrytypes.TelemetryFieldKey{
-								Name:          llmpricingruletypes.GenAIRequestModel,
+								Name:          aiobservabilitytypes.GenAIRequestModel,
 								FieldContext:  telemetrytypes.FieldContextSpan,
 								FieldDataType: telemetrytypes.FieldDataTypeString,
 							}},
 							{TelemetryFieldKey: telemetrytypes.TelemetryFieldKey{
-								Name:          llmpricingruletypes.GenAIProviderName,
+								Name:          aiobservabilitytypes.GenAIProviderName,
 								FieldContext:  telemetrytypes.FieldContextSpan,
 								FieldDataType: telemetrytypes.FieldDataTypeString,
 							}},
@@ -254,9 +242,9 @@ func (module *module) discoverModels(ctx context.Context, orgID valuer.UUID) ([]
 		switch c.Type {
 		case qbtypes.ColumnTypeGroup:
 			switch c.Name {
-			case llmpricingruletypes.GenAIRequestModel:
+			case aiobservabilitytypes.GenAIRequestModel:
 				modelIdx = i
-			case llmpricingruletypes.GenAIProviderName:
+			case aiobservabilitytypes.GenAIProviderName:
 				providerIdx = i
 			}
 		case qbtypes.ColumnTypeAggregation:

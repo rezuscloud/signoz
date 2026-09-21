@@ -63,6 +63,9 @@ type Module interface {
 
 	GetV2(ctx context.Context, orgID valuer.UUID, id valuer.UUID) (*dashboardtypes.DashboardV2, error)
 
+	// MigrateV2 retries the v1→v2 migration on a dashboard still stored in the v1 schema.
+	MigrateV2(ctx context.Context, orgID valuer.UUID, id valuer.UUID) (*dashboardtypes.DashboardV2, error)
+
 	ListV2(ctx context.Context, orgID valuer.UUID, params *dashboardtypes.ListDashboardsV2Params) (*dashboardtypes.ListableDashboardV2, error)
 
 	ListForUserV2(ctx context.Context, orgID valuer.UUID, userID valuer.UUID, params *dashboardtypes.ListDashboardsV2Params) (*dashboardtypes.ListableDashboardForUserV2, error)
@@ -78,6 +81,10 @@ type Module interface {
 	UnpinV2(ctx context.Context, orgID valuer.UUID, userID valuer.UUID, id valuer.UUID) error
 
 	DeleteV2(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error
+
+	// DeleteUnsafeV2 deletes a v2 dashboard and its related state without applying deletion guards.
+	// Intended for internal system callers.
+	DeleteUnsafeV2(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error
 
 	DeletePreferencesForUser(ctx context.Context, orgID valuer.UUID, userID valuer.UUID) error
 
@@ -96,6 +103,14 @@ type Module interface {
 	DeleteView(ctx context.Context, orgID valuer.UUID, id valuer.UUID) error
 
 	GetByMetricNamesV2(ctx context.Context, orgID valuer.UUID, metricNames []string) (map[string][]dashboardtypes.DashboardPanelRef, error)
+
+	// ════════════════════════════════════════════════════════════════════════
+	// System dashboard methods
+	// ════════════════════════════════════════════════════════════════════════
+
+	ReconcileSystemDashboards(ctx context.Context, orgID valuer.UUID) error
+
+	GetSystemDashboard(ctx context.Context, orgID valuer.UUID, name string) (*dashboardtypes.DashboardV2, error)
 }
 
 type Handler interface {
@@ -132,6 +147,8 @@ type Handler interface {
 
 	GetV2(http.ResponseWriter, *http.Request)
 
+	MigrateV2(http.ResponseWriter, *http.Request)
+
 	ListV2(http.ResponseWriter, *http.Request)
 
 	ListForUserV2(http.ResponseWriter, *http.Request)
@@ -157,4 +174,6 @@ type Handler interface {
 	UpdateView(http.ResponseWriter, *http.Request)
 
 	DeleteView(http.ResponseWriter, *http.Request)
+
+	GetSystemDashboard(http.ResponseWriter, *http.Request)
 }

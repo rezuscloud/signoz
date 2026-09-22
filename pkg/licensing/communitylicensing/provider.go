@@ -94,7 +94,10 @@ func communityLicense(organizationID valuer.UUID) *licensetypes.License {
 		ID:       valuer.MustNewUUID(organizationID.StringValue()),
 		Key:      "community",
 		Plan: licensetypes.LicensePlan{
-			Name:        licensetypes.PlanNameEnterprise,
+			// RZ: basic plan — the frontend classifies basic+features as the
+			// community edition (badge: REZUSCLOUD); "enterprise" flips the
+			// sidebar badge to Enterprise.
+			Name:        licensetypes.PlanNameBasic,
 			Description: "rezuscloud community build — all features active",
 			IsActive:    true,
 			CreatedAt:   now,

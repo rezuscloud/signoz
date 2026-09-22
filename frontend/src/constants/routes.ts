@@ -6,9 +6,8 @@ const ROUTES = {
 	SERVICE_METRICS: '/services/:servicename',
 	SERVICE_TOP_LEVEL_OPERATIONS: '/services/:servicename/top-level-operations',
 	SERVICE_MAP: '/service-map',
-	TRACE: '/trace',
+	TRACE_BASE: '/trace',
 	TRACE_DETAIL: '/trace/:id',
-	TRACE_DETAIL_OLD: '/trace-old/:id',
 	TRACES_EXPLORER: '/traces-explorer',
 	ONBOARDING: '/onboarding',
 	GET_STARTED_WITH_CLOUD: '/get-started-with-signoz-cloud',
@@ -16,7 +15,6 @@ const ROUTES = {
 	APPLICATION: '/services',
 	ALL_DASHBOARD: '/dashboard',
 	DASHBOARD: '/dashboard/:dashboardId',
-	DASHBOARD_WIDGET: '/dashboard/:dashboardId/:widgetId',
 	DASHBOARD_PANEL_EDITOR: '/dashboard/:dashboardId/panel/:panelId',
 	EDIT_ALERTS: '/alerts/edit',
 	LIST_ALL_ALERT: '/alerts',
@@ -92,6 +90,7 @@ const ROUTES = {
 	AI_OBSERVABILITY_ATTRIBUTE_MAPPING: '/ai-observability/attribute-mapping',
 	AI_OBSERVABILITY_BASE: '/ai-observability',
 	AI_OBSERVABILITY_OVERVIEW: '/ai-observability/overview',
+	AI_OBSERVABILITY_EXPLORER: '/ai-observability/explorer',
 	AI_OBSERVABILITY_CONFIGURATION: '/ai-observability/configuration',
 } as const;
 

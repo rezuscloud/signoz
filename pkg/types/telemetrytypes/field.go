@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/SigNoz/signoz/pkg/clickhousesql"
 	"github.com/SigNoz/signoz/pkg/valuer"
 )
 
@@ -202,19 +203,19 @@ func TelemetryFieldKeyToText(key *TelemetryFieldKey) string {
 }
 
 func FieldKeyToMaterializedColumnName(key *TelemetryFieldKey) string {
-	return fmt.Sprintf("`%s_%s_%s`",
+	return clickhousesql.Identifier(fmt.Sprintf("%s_%s_%s",
 		key.FieldContext.String,
 		fieldDataTypes[key.FieldDataType.StringValue()].StringValue(),
 		strings.ReplaceAll(key.Name, ".", "$$"),
-	)
+	))
 }
 
 func FieldKeyToMaterializedColumnNameForExists(key *TelemetryFieldKey) string {
-	return fmt.Sprintf("`%s_%s_%s_exists`",
+	return clickhousesql.Identifier(fmt.Sprintf("%s_%s_%s_exists",
 		key.FieldContext.String,
 		fieldDataTypes[key.FieldDataType.StringValue()].StringValue(),
 		strings.ReplaceAll(key.Name, ".", "$$"),
-	)
+	))
 }
 
 type TelemetryFieldValues struct {
@@ -244,6 +245,27 @@ type FieldKeySelector struct {
 	SelectorMatchType FieldSelectorMatchType `json:"selectorMatchType"`
 	Limit             int                    `json:"limit"`
 	MetricContext     *MetricContext         `json:"metricContext,omitempty"`
+}
+
+// MatchesKey reports whether a statically defined key satisfies the selector, so
+// callers can suggest keys that were never ingested.
+func (s *FieldKeySelector) MatchesKey(key *TelemetryFieldKey) bool {
+	if s.FieldContext != FieldContextUnspecified && s.FieldContext != key.FieldContext {
+		return false
+	}
+
+	if s.FieldDataType != FieldDataTypeUnspecified && s.FieldDataType != key.FieldDataType {
+		return false
+	}
+
+	if s.Name == "" {
+		return true
+	}
+
+	if s.SelectorMatchType == FieldSelectorMatchTypeExact {
+		return strings.EqualFold(s.Name, key.Name)
+	}
+	return strings.Contains(strings.ToLower(key.Name), strings.ToLower(s.Name))
 }
 
 type FieldValueSelector struct {

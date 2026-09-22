@@ -13,7 +13,6 @@ import {
 	DashboardPage,
 	DashboardPanelEditorPage,
 	DashboardsListPage,
-	DashboardWidget,
 	EditRulesPage,
 	ErrorDetails,
 	ForgotPassword,
@@ -48,9 +47,7 @@ import {
 	SomethingWentWrong,
 	StatusPage,
 	SupportPage,
-	TraceDetailOldRedirect,
 	TraceDetailV3,
-	TraceFilter,
 	TracesExplorer,
 	TracesFunnelDetails,
 	TracesFunnels,
@@ -133,14 +130,6 @@ const routes: AppRoutes[] = [
 		exact: true,
 		key: 'LOGS_SAVE_VIEWS',
 	},
-	// Legacy /trace-old/:id redirects to the current /trace/:id view.
-	{
-		path: ROUTES.TRACE_DETAIL_OLD,
-		exact: true,
-		component: TraceDetailOldRedirect,
-		isPrivate: true,
-		key: 'TRACE_DETAIL_OLD',
-	},
 	{
 		path: ROUTES.TRACE_DETAIL,
 		exact: true,
@@ -184,13 +173,6 @@ const routes: AppRoutes[] = [
 		key: 'PUBLIC_DASHBOARD',
 	},
 	{
-		path: ROUTES.DASHBOARD_WIDGET,
-		exact: true,
-		component: DashboardWidget,
-		isPrivate: true,
-		key: 'DASHBOARD_WIDGET',
-	},
-	{
 		path: ROUTES.DASHBOARD_PANEL_EDITOR,
 		exact: true,
 		component: DashboardPanelEditorPage,
@@ -231,13 +213,6 @@ const routes: AppRoutes[] = [
 		component: AlertOverview,
 		isPrivate: true,
 		key: 'ALERT_OVERVIEW',
-	},
-	{
-		path: ROUTES.TRACE,
-		exact: true,
-		component: TraceFilter,
-		isPrivate: true,
-		key: 'TRACE',
 	},
 	{
 		path: ROUTES.TRACES_EXPLORER,
@@ -525,6 +500,13 @@ const routes: AppRoutes[] = [
 		exact: true,
 		component: LLMObservabilityPage,
 		key: 'AI_OBSERVABILITY_OVERVIEW',
+		isPrivate: true,
+	},
+	{
+		path: ROUTES.AI_OBSERVABILITY_EXPLORER,
+		exact: true,
+		component: LLMObservabilityPage,
+		key: 'AI_OBSERVABILITY_EXPLORER',
 		isPrivate: true,
 	},
 	{

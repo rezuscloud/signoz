@@ -12,6 +12,11 @@ builds:
   - id: signoz
     binary: bin/signoz
     main: ./cmd/community
+    # RZ: the release image is alpine (musl) — a CGO binary links glibc and
+    # fails with "exec ./signoz-community: no such file or directory".
+    # sqlite is modernc.org (pure Go), so CGO is not needed.
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
       - darwin

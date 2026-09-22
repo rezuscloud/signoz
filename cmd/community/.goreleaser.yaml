@@ -66,6 +66,12 @@ release:
 # RZ: fork image release (OSS goreleaser; upstream builds images in a
 # separate pro-split pipeline we don't license). Ported from the proven
 # rezus/0.127 release flow.
+# Tag-shape contract (tibrezus/harmostes#595): the rezus ordinal must stay
+# a digit-only semver prerelease identifier — the variant is DOT-joined
+# (v…-rezus.11.community), never dash-fused (…-rezus.11-community). A fused
+# identifier is alphanumeric and ranks LEXICALLY ("10-community" <
+# "9-community"), silently stalling the Flux ImagePolicy at every 9→10
+# boundary. Dot-joined, the ordinal ranks numerically through any width.
 dockers:
   - id: signoz-community-amd64
     ids:
@@ -80,7 +86,7 @@ dockers:
       - frontend/build
       - templates
     image_templates:
-      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}.community-amd64"
   - id: signoz-community-arm64
     ids:
       - signoz
@@ -94,13 +100,13 @@ dockers:
       - frontend/build
       - templates
     image_templates:
-      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}.community-arm64"
 
 docker_manifests:
   - id: signoz-community
-    name_template: "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community"
+    name_template: "ghcr.io/rezuscloud/signoz:v{{ .Version }}.community"
     # goreleaser v2 requires the explicit image list — without it the
     # manifest pipe skips with "manifest has no images".
     image_templates:
-      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
-      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}.community-amd64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}.community-arm64"

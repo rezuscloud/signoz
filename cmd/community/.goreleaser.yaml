@@ -94,3 +94,8 @@ dockers:
 docker_manifests:
   - id: signoz-community
     name_template: "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community"
+    # goreleaser v2 requires the explicit image list — without it the
+    # manifest pipe skips with "manifest has no images".
+    image_templates:
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-amd64"
+      - "ghcr.io/rezuscloud/signoz:v{{ .Version }}-community-arm64"

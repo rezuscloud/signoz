@@ -5,6 +5,12 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"
+      # RZ: fork release tags (v0.139.0-rezus.N) — cut by the fork-maintenance
+      # engine's auto-release / manually. Without this the release image never
+      # builds (this pattern existed only on the rezus/0.127 line; the merge
+      # from upstream brought back the stock trigger block).
+      - "v[0-9]+.[0-9]+.[0-9]+-rezus.[0-9]+"
+  workflow_dispatch: {}
 
 permissions:
   contents: write

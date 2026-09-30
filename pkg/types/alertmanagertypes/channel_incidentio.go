@@ -1,19 +1,79 @@
 package alertmanagertypes
 
 import (
-	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/SigNoz/signoz/pkg/errors"
+	"github.com/SigNoz/signoz/pkg/valuer"
 	"github.com/prometheus/alertmanager/config"
 	commoncfg "github.com/prometheus/common/config"
 )
 
-// incidentIOEventsPathPrefix is the path of incident.io's HTTP alert source
-// endpoint (Alert Events V2 API). The full URL is per-source:
-// https://api.incident.io/v2/alert_events/http/<source_config_id>.
-const incidentIOEventsPathPrefix = "/v2/alert_events/http/"
+type ChannelIncidentIOConfig struct {
+	SendResolved *bool                        `json:"sendResolved,omitempty"`
+	URL          string                       `json:"url" required:"true"`
+	Token        string                       `json:"token" required:"true" format:"password"`
+	Title        valuer.UnsetOrNonEmptyString `json:"title,omitzero"`
+	Description  valuer.UnsetOrNonEmptyString `json:"description,omitzero"`
+	Metadata     map[string]string            `json:"metadata,omitzero"`
+}
+
+func (c *ChannelIncidentIOConfig) UnmarshalJSON(data []byte) error {
+	type alias ChannelIncidentIOConfig
+	if err := decodeStrict(data, (*alias)(c)); err != nil {
+		return err
+	}
+
+	fillSendResolved(&c.SendResolved, DefaultIncidentIOReceiverConfig.VSendResolved)
+	c.Title.SetIfUnset(DefaultIncidentIOReceiverConfig.Title)
+	c.Description.SetIfUnset(DefaultIncidentIOReceiverConfig.Description)
+
+	return c.Validate()
+}
+
+func (c ChannelIncidentIOConfig) Validate() error {
+	if c.URL == "" {
+		return errors.NewInvalidInputf(ErrCodeAlertmanagerChannelInvalid, "config.spec.url is required for an incidentio channel")
+	}
+
+	if c.Token == "" {
+		return errors.NewInvalidInputf(ErrCodeAlertmanagerChannelInvalid, "config.spec.token is required for an incidentio channel")
+	}
+
+	return nil
+}
+
+func (c ChannelIncidentIOConfig) toUndefaultedReceiver(displayName string) (*Receiver, error) {
+	return &Receiver{
+		Receiver: &config.Receiver{Name: displayName},
+		IncidentIOConfigs: []*IncidentIOReceiverConfig{{
+			NotifierConfig: config.NotifierConfig{VSendResolved: resolveSendResolved(c.SendResolved, DefaultIncidentIOReceiverConfig.VSendResolved)},
+			URL:            c.URL,
+			Token:          config.Secret(c.Token),
+			Title:          c.Title.StringValue(),
+			Description:    c.Description.StringValue(),
+			Metadata:       c.Metadata,
+		}},
+	}, nil
+}
+
+func newChannelIncidentIOConfigFromReceiver(name string, receiver *Receiver) (ChannelSpec, error) {
+	incidentio := receiver.IncidentIOConfigs[0]
+	sendResolved := incidentio.VSendResolved
+
+	if err := rejectAnyHTTPAuth(name, incidentio.HTTPConfig); err != nil {
+		return nil, err
+	}
+
+	return &ChannelIncidentIOConfig{
+		SendResolved: &sendResolved,
+		URL:          incidentio.URL,
+		Token:        string(incidentio.Token),
+		Title:        valuer.UnsetIfEmpty(incidentio.Title),
+		Description:  valuer.UnsetIfEmpty(incidentio.Description),
+		Metadata:     incidentio.Metadata,
+	}, nil
+}
 
 // The description is markdown; incident.io renders it natively. The templates
 // mirror Google Chat / Jira / JSM for a consistent default across channels.
@@ -78,19 +138,8 @@ func (c *IncidentIOReceiverConfig) UnmarshalYAML(unmarshal func(any) error) erro
 		c.Description = DefaultIncidentIODescriptionTemplate
 	}
 
-	// Values are stored and sent exactly as configured, so anything that is
-	// not already canonical is rejected rather than rewritten.
-	if c.URL != strings.TrimSpace(c.URL) {
-		return errors.New(errors.TypeInvalidInput, errors.CodeInvalidInput, "incidentio url must not have leading or trailing whitespace")
-	}
-	u, err := url.Parse(c.URL)
-	if c.URL == "" || err != nil || u.Scheme != "https" || u.Host == "" ||
-		!strings.Contains(u.Path, incidentIOEventsPathPrefix) ||
-		strings.HasSuffix(u.Path, incidentIOEventsPathPrefix) {
-		return errors.New(errors.TypeInvalidInput, errors.CodeInvalidInput, fmt.Sprintf("incidentio url must be an alert events URL (https://api.incident.io%s<source_config_id>)", incidentIOEventsPathPrefix))
-	}
-	if strings.HasSuffix(c.URL, "/") {
-		return errors.New(errors.TypeInvalidInput, errors.CodeInvalidInput, "incidentio url must not end with a trailing slash")
+	if c.URL == "" {
+		return errors.New(errors.TypeInvalidInput, errors.CodeInvalidInput, "incidentio url is required")
 	}
 
 	token := string(c.Token)
